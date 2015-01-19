@@ -63,10 +63,10 @@ public class PongTest extends BasicGame {
 
 
 	@Override
-	public void update(GameContainer gc, int Δ) throws SlickException {
-		leftPad.move(in, Δ);
+	public void update(GameContainer gc, int delt) throws SlickException {
+		leftPad.move(in, delt);
 		rightPad.autoMove(ball);
-		ball.move(Δ, leftPad, rightPad);
+		ball.move(delt, leftPad, rightPad);
 		
 		if(ball.getRect().getX() <= 0) {
 			ball.reset();
