@@ -79,7 +79,7 @@ public class PongTest extends BasicGame {
 		}
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		try
 		{
 			AppGameContainer appgc;
@@ -91,6 +91,6 @@ public class PongTest extends BasicGame {
 		{
 			Logger.getLogger(PongTest.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	}
+	}*/
 
 }
