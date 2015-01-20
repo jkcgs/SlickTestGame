@@ -24,13 +24,14 @@ public class GravityTest extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		level = new Level(gc);
-		level.addRect(10f, 440f, 600f, 10f, Color.gray);
-		level.addRect(200f, 350f, 20f, 100f);
-		level.addRect(220f, 350f, 100f, 20f);
-		level.addRect(320f, 270f, 20f, 100f);
-		level.addRect(340f, 270f, 100f, 20f);
+		level.addRect(0, 440, gc.getWidth(), 10, Color.gray);
+		level.addRect(0, 0, gc.getWidth(), 10, Color.gray);
+		level.addRect(200, 350, 20, 100);
+		level.addRect(220, 350, 100, 20);
+		level.addRect(320, 270, 20, 100);
+		level.addRect(340, 270, 100, 20);
 		
-		Rectangle r = new Rectangle(10, 10, 20, 50);
+		Rectangle r = new Rectangle(10, 50, 20, 50);
 		player = new Player(gc, r);
 		player.setColor(Color.blue);
 	}

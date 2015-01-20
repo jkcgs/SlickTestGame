@@ -40,9 +40,19 @@ public class EntityRect extends Entity {
 			for(EntityRect r: level.getRects()) {
 				if(collisionInY(r)) {
 					speedY = 0;
+					if(collisionSide(r) == Direction.NORTH) {
+						rect.setY(r.getRect().getY() + r.getRect().getHeight());
+					} else {
+						rect.setY(r.getRect().getY() - rect.getHeight());
+					}
 				}
 				if(collisionInX(r)) {
 					speedX = 0;
+					if(collisionSide(r) == Direction.WEST) {
+						rect.setX(r.getRect().getX() + r.getRect().getWidth());
+					} else {
+						rect.setX(r.getRect().getX() - rect.getWidth());
+					}
 				}
 			}
 		}
@@ -96,9 +106,9 @@ public class EntityRect extends Entity {
 
 		    if (wy > hx) {
 		        if (wy > -hx) return Direction.NORTH;
-		        else return Direction.WEST;
+		        else return Direction.EAST;
 		    } else {
-		        if (wy > -hx) return Direction.EAST;
+		        if (wy > -hx) return Direction.WEST;
 		        else return Direction.SOUTH;
 		    }
 		}
