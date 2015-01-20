@@ -11,8 +11,9 @@ import org.newdawn.slick.geom.Rectangle;
 import com.makzk.games.entities.EntityRect;
 
 public class Level {
-	GameContainer gc;
-	List<EntityRect> rects = new ArrayList<EntityRect>();
+	private GameContainer gc;
+	private List<EntityRect> rects = new ArrayList<EntityRect>();
+
 	public Level(GameContainer gc) {
 		this.gc = gc;
 	}
@@ -36,5 +37,9 @@ public class Level {
 			g.setColor(r.getColor());
 			g.fill(r.getRect());
 		}
+	}
+	
+	public List<EntityRect> getRects() {
+		return rects;
 	}
 }

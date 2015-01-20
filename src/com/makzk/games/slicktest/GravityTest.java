@@ -8,11 +8,14 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
+import com.makzk.games.entities.Player;
 
 public class GravityTest extends BasicGame {
 	Level level;
+	Player player;
 
 	public GravityTest() {
 		super("SlickGravity");
@@ -21,22 +24,26 @@ public class GravityTest extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		level = new Level(gc);
-		level.addRect(10.0f, 440.0f, 600.0f, 10.0f, Color.gray);
-		level.addRect(200.0f, 350.0f, 20.0f, 100.0f);
-		level.addRect(220.0f, 350.0f, 100.0f, 20.0f);
-		level.addRect(320.0f, 270.0f, 20.0f, 100.0f);
-		level.addRect(340.0f, 270.0f, 100.0f, 20.0f);
+		level.addRect(10f, 440f, 600f, 10f, Color.gray);
+		level.addRect(200f, 350f, 20f, 100f);
+		level.addRect(220f, 350f, 100f, 20f);
+		level.addRect(320f, 270f, 20f, 100f);
+		level.addRect(340f, 270f, 100f, 20f);
+		
+		Rectangle r = new Rectangle(10, 10, 20, 50);
+		player = new Player(gc, r);
+		player.setColor(Color.blue);
 	}
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		level.drawAll(g);
+		player.draw();
 	}
 
-
 	@Override
-	public void update(GameContainer gc, int delt) throws SlickException {
-
+	public void update(GameContainer gc, int delta) throws SlickException {
+		player.move(level, delta);
 	}
 
 	public static void main(String[] args) {

@@ -4,12 +4,15 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 
+import com.makzk.games.Level;
 import com.makzk.games.util.Direction;
 
 public class EntityRect extends Entity {
 	protected Rectangle rect;
 	protected Color color;
 	protected boolean keepOnScreen = true;
+	protected boolean gravity = false;
+	protected boolean solid = true;
 
 	public EntityRect(GameContainer gc, Rectangle rect) {
 		super(gc);
@@ -22,10 +25,28 @@ public class EntityRect extends Entity {
 		gc.getGraphics().fill(rect);
 	}
 
-	public void move(int delta) {
+	public void move(Level level, int delta) {
 		rect.setX(rect.getX() + (speedX * delta));
 		rect.setY(rect.getY() + (speedY * delta));
 		
+		if(gravity) {
+			speedY += .01;
+			if(speedY > 1) {
+				speedY = 1;
+			}
+		}
+		
+		if(solid && level != null) {
+			for(EntityRect r: level.getRects()) {
+				if(collisionInY(r)) {
+					speedY = 0;
+				}
+				if(collisionInX(r)) {
+					speedX = 0;
+				}
+			}
+		}
+
 		if(keepOnScreen) {
 			if (rect.getX() < 0) {
 				rect.setX(0);
@@ -39,6 +60,10 @@ public class EntityRect extends Entity {
 				rect.setY(gc.getHeight() - rect.getHeight());
 			}
 		}
+	}
+	
+	public void move(int delta) {
+		move(null, delta);
 	}
 
 	public Rectangle getRect() {
