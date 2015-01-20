@@ -11,7 +11,7 @@ public class Player extends EntityRect {
 	private int controlRight = Input.KEY_D;
 	private int controlJump = Input.KEY_SPACE;
 	private float speed = 1f;
-	private float jumpImpulse = 5;
+	private float jumpImpulse = 1.5f;
 	private float initialX;
 	private float initialY;
 
@@ -24,10 +24,14 @@ public class Player extends EntityRect {
 	}
 	
 	public void move(Level level, int delta) {
-		if(rect.getY() > gc.getHeight()
-				|| rect.getX() + rect.getWidth() < 0
-				|| rect.getX() > gc.getWidth()) {
+		if(rect.getY() > gc.getHeight()) {
 			reset();
+		}
+		if(rect.getX() < 0) {
+			rect.setX(gc.getWidth() - 1);
+		}
+		if(rect.getX() >= gc.getWidth()) {
+			rect.setX(0);
 		}
 		
 		Input in = gc.getInput();
@@ -43,12 +47,13 @@ public class Player extends EntityRect {
 				speedX = speed;
 			}
 		}
+
 		if(in.isKeyDown(controlJump)) {
-			speedY -= jumpImpulse;
-			if(speedY < -speed) {
-				speedY = -speed;
+			if(speedY == 0 && onGround) {
+				speedY = -jumpImpulse;
 			}
-		} 
+		}
+
 		if(!in.isKeyDown(controlLeft) 
 				&& !in.isKeyDown(controlRight) 
 				&& !in.isKeyDown(controlJump)){

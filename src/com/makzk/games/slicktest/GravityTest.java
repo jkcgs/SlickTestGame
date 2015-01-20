@@ -40,6 +40,10 @@ public class GravityTest extends BasicGame {
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		level.drawAll(g);
 		player.draw();
+		
+		g.setColor(Color.white);
+		g.drawString(String.format("OnGround: %s", player.isOnGround()), 10, 30);
+		g.drawString(String.format("[Speed] X: %s Y: %s", player.getSpeedX(), player.getSpeedY()), 10, 55);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ public class EntityRect extends Entity {
 	protected boolean keepOnScreen = true;
 	protected boolean gravity = false;
 	protected boolean solid = true;
+	protected boolean onGround = false;
 
 	public EntityRect(GameContainer gc, Rectangle rect) {
 		super(gc);
@@ -37,14 +38,17 @@ public class EntityRect extends Entity {
 		}
 		
 		if(solid && level != null) {
+			boolean southCollision = false;
 			for(EntityRect r: level.getRects()) {
 				if(collisionInY(r)) {
 					speedY = 0;
 					if(collisionSide(r) == Direction.NORTH) {
 						rect.setY(r.getRect().getY() + r.getRect().getHeight());
-					} else {
+					} else if(collisionSide(r) == Direction.SOUTH) {
 						rect.setY(r.getRect().getY() - rect.getHeight());
-					}
+						southCollision = true;
+					} 
+					
 				}
 				if(collisionInX(r)) {
 					speedX = 0;
@@ -55,6 +59,8 @@ public class EntityRect extends Entity {
 					}
 				}
 			}
+			
+			onGround = southCollision;
 		}
 
 		if(keepOnScreen) {
@@ -124,5 +130,9 @@ public class EntityRect extends Entity {
 	public boolean collisionInY(EntityRect other) {
 		Direction side = collisionSide(other);
 		return side == Direction.NORTH || side == Direction.SOUTH;
+	}
+
+	public boolean isOnGround() {
+		return onGround;
 	}
 }
