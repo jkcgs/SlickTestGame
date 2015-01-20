@@ -26,6 +26,7 @@ public class GravityTest extends BasicGame {
 		level = new Level(gc);
 		level.addRect(0, 440, gc.getWidth(), 10, Color.gray);
 		level.addRect(0, 0, gc.getWidth(), 10, Color.gray);
+		level.addRect(0, 200, gc.getWidth(), 10, Color.gray);
 		level.addRect(200, 350, 20, 100);
 		level.addRect(220, 350, 100, 20);
 		level.addRect(320, 270, 20, 100);
@@ -44,6 +45,7 @@ public class GravityTest extends BasicGame {
 		g.setColor(Color.white);
 		g.drawString(String.format("OnGround: %s", player.isOnGround()), 10, 30);
 		g.drawString(String.format("[Speed] X: %s Y: %s", player.getSpeedX(), player.getSpeedY()), 10, 55);
+		g.drawString(String.format("[Position] X: %s Y: %s", player.getRect().getX(), player.getRect().getY()), 10, 70);
 	}
 
 	@Override
