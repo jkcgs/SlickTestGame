@@ -32,7 +32,7 @@ public class GravityTest extends BasicGame {
 		level.addRect(320, 270, 20, 100);
 		level.addRect(340, 270, 100, 20);
 		
-		Rectangle r = new Rectangle(10, 50, 20, 50);
+		Rectangle r = new Rectangle(10, 201, 20, 50);
 		player = new Player(gc, r);
 		player.setColor(Color.blue);
 	}
@@ -41,7 +41,6 @@ public class GravityTest extends BasicGame {
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		level.drawAll(g);
 		player.draw();
-		
 		g.setColor(Color.white);
 		g.drawString(String.format("OnGround: %s", player.isOnGround()), 10, 30);
 		g.drawString(String.format("[Speed] X: %s Y: %s", player.getSpeedX(), player.getSpeedY()), 10, 55);
