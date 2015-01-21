@@ -41,10 +41,10 @@ public class EntityRect extends Entity {
 			boolean southCollision = false;
 			for(EntityRect r: level.getRects()) {
 				if(collisionInY(r)) {
-					speedY = 0;
 					if(collisionSide(r) == Direction.NORTH) {
 						rect.setY(r.getRect().getY() + r.getRect().getHeight());
 					} else if(collisionSide(r) == Direction.SOUTH) {
+						speedY = 0;
 						rect.setY(r.getRect().getY() - rect.getHeight());
 						southCollision = true;
 					} 
