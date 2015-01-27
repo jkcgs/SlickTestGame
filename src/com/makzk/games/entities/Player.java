@@ -1,7 +1,10 @@
 package com.makzk.games.entities;
 
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
@@ -14,18 +17,22 @@ public class Player extends EntityRect {
 	private float jumpImpulse = 1.5f;
 	private float initialX;
 	private float initialY;
+	private SpriteSheet daveSprite;
+	private Animation daveAnim;
 
-	public Player(GameContainer gc, Rectangle rect) {
+	public Player(GameContainer gc, Rectangle rect) throws SlickException {
 		super(gc, rect);
 		gravity = true;
 		keepOnScreen = false;
 		initialX = rect.getX();
 		initialY = rect.getY();
+		daveSprite = new SpriteSheet("data/sprites/daveSprite.png", 15, 15);
+		daveAnim = new Animation(daveSprite, 100);
+		
 	}
 	
 	public void move(Level level, int delta) {
 		super.move(level, delta);
-
 		if(rect.getY() > gc.getHeight()) {
 			reset();
 		}
