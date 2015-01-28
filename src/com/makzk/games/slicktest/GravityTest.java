@@ -34,7 +34,7 @@ public class GravityTest extends BasicGame {
 		
 		Rectangle r = new Rectangle(10, 201, 20, 50);
 		player = new Player(gc, r);
-		player.setColor(Color.transparent);
+		player.setColor(Color.blue);
 	}
 
 	@Override
