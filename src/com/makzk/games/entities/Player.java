@@ -17,8 +17,8 @@ public class Player extends EntityRect {
 	private float jumpImpulse = 1.5f;
 	private float initialX;
 	private float initialY;
-	private SpriteSheet daveSprite;
-	private Animation daveAnim;
+	private SpriteSheet sprite;
+	private Animation animation;
 
 	public Player(GameContainer gc, Rectangle rect) throws SlickException {
 		super(gc, rect);
@@ -26,8 +26,8 @@ public class Player extends EntityRect {
 		keepOnScreen = false;
 		initialX = rect.getX();
 		initialY = rect.getY();
-		daveSprite = new SpriteSheet("data/sprites/daveSprite.png", 15, 15);
-		daveAnim = new Animation(daveSprite, 100);
+		sprite = new SpriteSheet("data/sprites/daveSprite.png", 15, 15);
+		animation = new Animation(sprite, 100);
 		
 	}
 	
@@ -85,5 +85,10 @@ public class Player extends EntityRect {
 		rect.setX(initialX);
 		rect.setY(initialY);
 	}
-
+	
+	public void draw() {
+		super.draw();
+		
+		animation.draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+	}
 }
