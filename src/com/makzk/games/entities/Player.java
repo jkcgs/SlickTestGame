@@ -3,6 +3,8 @@ package com.makzk.games.entities;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_TOTAL;
 
+import java.util.Arrays;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
@@ -22,9 +24,8 @@ public class Player extends EntityRect {
 	private float jumpImpulse = 1.5f;
 	private float initialX;
 	private float initialY;
-	private SpriteSheet sprite;
-	private Animation[] animations;
-	private int actualAnimation;
+	private Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];
+	private int actualAnimation = ANIMATION_STAND.ordinal();
 
 	public Player(GameContainer gc, Rectangle rect) throws SlickException {
 		super(gc, rect);
@@ -32,16 +33,26 @@ public class Player extends EntityRect {
 		keepOnScreen = false;
 		initialX = rect.getX();
 		initialY = rect.getY();
-		sprite = new SpriteSheet("data/sprites/dave.png", 20, 40);
 		
-		animations = new Animation[ANIMATION_TOTAL.ordinal()];
-		actualAnimation = ANIMATION_STAND.ordinal();
-		
-		setupAnimation(ANIMATION_STAND, 0, 0, 3, 0, 200);
+		SpriteSheet sprite = new SpriteSheet("data/sprites/dave.png", 20, 40);
+		setupAnimation(sprite, ANIMATION_STAND, new int[]{0,1,2,3,2,1}, 200);
 	}
 	
-	public void setupAnimation(PlayerAnimations anim, int x1, int y1, int x2, int y2, int duration) {
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int x1, int y1, int x2, int y2, int duration) {
 		animations[anim.ordinal()] = new Animation(sprite, x1, y1, x2, y2, true, duration, true);
+	}
+	
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int[] xpositions, int duration) {
+		int[] frames = new int[xpositions.length*2];
+		int[] durations = new int[xpositions.length];
+		
+		Arrays.fill(durations, duration);
+		for(int i = 0; i < xpositions.length; i++) {
+			frames[i*2] = xpositions[i];
+			frames[i*2+1] = 0;
+		}
+
+		animations[anim.ordinal()] = new Animation(sprite, frames, durations);
 	}
 	
 	public void move(Level level, int delta) {

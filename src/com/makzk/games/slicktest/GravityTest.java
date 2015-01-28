@@ -23,6 +23,7 @@ public class GravityTest extends BasicGame {
 	
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		System.out.println("Init level");
 		level = new Level(gc);
 		level.addRect(0, 440, gc.getWidth(), 10, Color.gray);
 		level.addRect(0, 0, gc.getWidth(), 10, Color.gray);
@@ -32,9 +33,12 @@ public class GravityTest extends BasicGame {
 		level.addRect(320, 270, 20, 100);
 		level.addRect(340, 270, 100, 20);
 		
+		System.out.println("Init player");
 		Rectangle r = new Rectangle(10, 201, 20, 50);
 		player = new Player(gc, r);
 		player.setColor(Color.blue);
+		
+		System.out.println("Done loading");
 	}
 
 	@Override
