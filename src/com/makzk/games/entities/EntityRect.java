@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
 import com.makzk.games.util.Direction;
+import static com.makzk.games.util.Direction.*;
 
 public class EntityRect extends Entity {
 	protected Rectangle rect;
@@ -41,9 +42,9 @@ public class EntityRect extends Entity {
 			boolean southCollision = false;
 			for(EntityRect r: level.getRects()) {
 				if(collisionInY(r)) {
-					if(collisionSide(r) == Direction.NORTH) {
+					if(collisionSide(r) == NORTH) {
 						rect.setY(r.getRect().getY() + r.getRect().getHeight());
-					} else if(collisionSide(r) == Direction.SOUTH) {
+					} else if(collisionSide(r) == SOUTH) {
 						speedY = 0;
 						rect.setY(r.getRect().getY() - rect.getHeight());
 						southCollision = true;
@@ -52,7 +53,7 @@ public class EntityRect extends Entity {
 				}
 				if(collisionInX(r)) {
 					speedX = 0;
-					if(collisionSide(r) == Direction.WEST) {
+					if(collisionSide(r) == WEST) {
 						rect.setX(r.getRect().getX() + r.getRect().getWidth());
 					} else {
 						rect.setX(r.getRect().getX() - rect.getWidth());
@@ -111,11 +112,11 @@ public class EntityRect extends Entity {
 		    float hx = h * dx;
 
 		    if (wy > hx) {
-		        if (wy > -hx) return Direction.NORTH;
+		        if (wy > -hx) return NORTH;
 		        else return Direction.EAST;
 		    } else {
-		        if (wy > -hx) return Direction.WEST;
-		        else return Direction.SOUTH;
+		        if (wy > -hx) return WEST;
+		        else return SOUTH;
 		    }
 		}
 		
@@ -124,12 +125,12 @@ public class EntityRect extends Entity {
 
 	public boolean collisionInX(EntityRect other) {
 		Direction side = collisionSide(other);
-		return side == Direction.EAST || side == Direction.WEST;
+		return side == EAST || side == WEST;
 	}
 
 	public boolean collisionInY(EntityRect other) {
 		Direction side = collisionSide(other);
-		return side == Direction.NORTH || side == Direction.SOUTH;
+		return side == NORTH || side == SOUTH;
 	}
 
 	public boolean isOnGround() {
