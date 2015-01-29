@@ -42,6 +42,10 @@ public class Camera {
 	public void moveY(float x) {
 		rect.setX(rect.getX() + x);
 	}
+	
+	public void setX(float x) {
+		rect.setX(x);
+	}
 
 	public float getX() {
 		return rect.getX();

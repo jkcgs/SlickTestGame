@@ -73,6 +73,13 @@ public class CameraTest extends BasicGame {
 		}
 
 		player.move(level, delta);
+		float pjXOnScreen = player.getRect().getX() - cam.getX();
+		float absSpeed = Math.abs(player.getSpeedX());
+		if(pjXOnScreen > container.getWidth() / 2) {
+			cam.moveX(absSpeed);
+		} else if(pjXOnScreen < container.getWidth() / 2) {
+			cam.moveX(-absSpeed);
+		}
 	}
 
 	public void keyPressed(int key, char c) {
