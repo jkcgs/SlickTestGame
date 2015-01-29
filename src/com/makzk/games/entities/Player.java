@@ -4,6 +4,7 @@ import static com.makzk.games.util.PlayerAnimations.ANIMATION_JUMP;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_TOTAL;
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_FALL;
 
 import java.util.Arrays;
 
@@ -39,10 +40,13 @@ public class Player extends EntityRect {
 		initialY = rect.getY();
 		
 		// Configurar animaciones
-		SpriteSheet sprite = new SpriteSheet("data/sprites/dave.png", 20, 40);
-		setupAnimation(sprite, ANIMATION_STAND, new int[]{0,1,2,3,2,1}, 500);
-		setupAnimation(sprite, ANIMATION_RUN, new int[]{0,1,2,3,2,1}, 200);
-		setupAnimation(sprite, ANIMATION_JUMP, new int[]{0,1,2,3,2,1}, 200);
+		SpriteSheet spriteIddle = new SpriteSheet("data/sprites/iddle1.png", 410, 425);
+		SpriteSheet spriteJump = new SpriteSheet("data/sprites/jump.png",404,458);
+		SpriteSheet spriteFall = new SpriteSheet("data/sprites/fall.png",458,461);
+		setupAnimation(spriteIddle, ANIMATION_STAND, new int[]{0,1}, 500);
+		setupAnimation(spriteIddle, ANIMATION_RUN, new int[]{0,1}, 200);
+		setupAnimation(spriteJump, ANIMATION_JUMP, new int[]{0}, 200);
+		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200);
 	}
 	
 	/**
@@ -156,24 +160,27 @@ public class Player extends EntityRect {
 		
 		// Se determina si el jugador ha ido a la izquierda o no, para 
 		// voltear al sprite
-		if(speedX < 0) {
+		if(speedX > 0) {
 			spriteFlipHorizontal = true;
-		} else if(speedX > 0) {
+		} else if(speedX < 0) {
 			spriteFlipHorizontal = false;
 		}
-
-		if(speedY != 0) {
-			// El jugador está cayendo o saltando
+		
+		if(speedY < 0) {
+			// El jugador está saltando
 			actualAnimation = ANIMATION_JUMP.ordinal();
 		} else if(speedX != 0) {
 			// El jugador está yendo hacia los lados, pero no saltando (else if)
 			actualAnimation = ANIMATION_RUN.ordinal();
 			animations[actualAnimation].setSpeed(Math.abs(speedY));
+		} else if (!isOnGround() && speedY > 0) {
+			//El jugador esta cayendo
+			actualAnimation = ANIMATION_FALL.ordinal();
 		} else {
 			// El jugador está detenido
 			actualAnimation = ANIMATION_STAND.ordinal();
 		}
-		
+
 		// Dibujar el sprite, con su volteo correspondiente si corresponde, y
 		// según el rectángulo del elemento
 		// TODO: Agregar un rectángulo distinto para el sprite, en vez del usado para colisiones
