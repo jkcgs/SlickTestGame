@@ -77,7 +77,6 @@ public class Player extends EntityRect {
 		Input in = gc.getInput();
 		
 		if(in.isKeyDown(controlReset)) {
-			speedX = 0f;
 			reset();
 		}
 		
@@ -119,6 +118,8 @@ public class Player extends EntityRect {
 	}
 	
 	public void reset() {
+		speedX = 0;
+		speedY = 0;
 		rect.setX(initialX);
 		rect.setY(initialY);
 	}
