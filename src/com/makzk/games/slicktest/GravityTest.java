@@ -34,7 +34,7 @@ public class GravityTest extends BasicGame {
 		level.addRect(340, 270, 100, 20);
 		
 		System.out.println("Init player");
-		Rectangle r = new Rectangle(10, 201, 20, 50);
+		Rectangle r = new Rectangle(50, 300, 20, 50);
 		player = new Player(gc, r);
 		player.setColor(Color.blue);
 		
