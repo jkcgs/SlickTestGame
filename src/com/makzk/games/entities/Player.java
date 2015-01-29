@@ -15,6 +15,7 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
+import com.makzk.games.util.Camera;
 import com.makzk.games.util.PlayerAnimations;
 
 public class Player extends EntityRect {
@@ -92,12 +93,6 @@ public class Player extends EntityRect {
 		if(rect.getY() > gc.getHeight()) {
 			reset();
 		}
-		if(rect.getX() < 0) {
-			rect.setX(gc.getWidth() - 1);
-		}
-		if(rect.getX() >= gc.getWidth()) {
-			rect.setX(0);
-		}
 		
 		Input in = gc.getInput();
 		
@@ -153,7 +148,11 @@ public class Player extends EntityRect {
 	 * determinadas según la velocidad del jugador
 	 */
 	public void draw() {
-		super.draw();
+		draw(null);
+	}
+
+	public void draw(Camera cam) {
+		super.draw(cam);
 		
 		// Se determina si el jugador ha ido a la izquierda o no, para 
 		// voltear al sprite
@@ -178,7 +177,12 @@ public class Player extends EntityRect {
 		// Dibujar el sprite, con su volteo correspondiente si corresponde, y
 		// según el rectángulo del elemento
 		// TODO: Agregar un rectángulo distinto para el sprite, en vez del usado para colisiones
-		animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
+		if(cam == null) {
+			animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
 			.draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+		} else {
+			animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
+			.draw(rect.getX() - cam.getX(), rect.getY() - cam.getY(), rect.getWidth(), rect.getHeight());
+		}
 	}
 }

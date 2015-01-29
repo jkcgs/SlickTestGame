@@ -1,12 +1,17 @@
 package com.makzk.games.entities;
 
+import static com.makzk.games.util.Direction.EAST;
+import static com.makzk.games.util.Direction.NORTH;
+import static com.makzk.games.util.Direction.SOUTH;
+import static com.makzk.games.util.Direction.WEST;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
+import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
-import static com.makzk.games.util.Direction.*;
 
 public class EntityRect extends Entity {
 	protected Rectangle rect;
@@ -26,9 +31,23 @@ public class EntityRect extends Entity {
 	 * Dibuja el elemento sólo si no se trata de un rectángulo transparente
 	 */
 	public void draw() {
+		Camera cam = null;
+		draw(cam);
+	}
+
+	/**
+	 * Dibuja el elemento sólo si no se trata de un rectángulo transparente
+	 * en base a la posición de una cámara
+	 */
+	public void draw(Camera cam) {
 		if(color != Color.transparent) {
 			gc.getGraphics().setColor(color);
-			gc.getGraphics().fill(rect);
+			if(cam == null) {
+				gc.getGraphics().fill(rect);
+			} else {
+				gc.getGraphics().fillRect(rect.getX() - cam.getX(), rect.getY() - cam.getY(), 
+						rect.getWidth(), rect.getHeight());
+			}
 		}
 	}
 
