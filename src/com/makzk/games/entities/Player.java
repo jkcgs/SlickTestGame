@@ -21,7 +21,7 @@ public class Player extends EntityRect {
 	private int controlRight = Input.KEY_D;
 	private int controlJump = Input.KEY_SPACE;
 	private float speed = 0.5f;
-	private float jumpImpulse = 1.5f;
+	private float jumpImpulse = 1.0f;
 	private float initialX;
 	private float initialY;
 	private Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];

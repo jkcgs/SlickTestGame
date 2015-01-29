@@ -13,6 +13,7 @@ public class EntityRect extends Entity {
 	protected Color color;
 	protected boolean keepOnScreen = true;
 	protected boolean gravity = false;
+	protected float gravityImpulse = .005f;
 	protected boolean solid = true;
 	protected boolean onGround = false;
 
@@ -30,25 +31,26 @@ public class EntityRect extends Entity {
 	public void move(Level level, int delta) {
 		rect.setX(rect.getX() + (speedX * delta));
 		rect.setY(rect.getY() + (speedY * delta));
-		
+
 		if(gravity) {
-			speedY += .01;
+			speedY += gravityImpulse;
 			if(speedY > 1) {
 				speedY = 1;
 			}
 		}
-		
+
 		if(solid && level != null) {
 			boolean southCollision = false;
 			for(EntityRect r: level.getRects()) {
 				if(collisionInY(r)) {
 					if(collisionSide(r) == NORTH) {
+						speedY = gravityImpulse; // empujar un poco hacia abajo
 						rect.setY(r.getRect().getY() + r.getRect().getHeight());
 					} else if(collisionSide(r) == SOUTH) {
 						speedY = 0;
 						rect.setY(r.getRect().getY() - rect.getHeight());
 						southCollision = true;
-					} 
+					}
 					
 				}
 				if(collisionInX(r)) {
