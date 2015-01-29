@@ -1,5 +1,7 @@
 package com.makzk.games.entities;
 
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_JUMP;
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_TOTAL;
 
@@ -27,6 +29,7 @@ public class Player extends EntityRect {
 	private float initialY;
 	private Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];
 	private int actualAnimation = ANIMATION_STAND.ordinal();
+	private boolean spriteFlipHorizontal = false;
 
 	public Player(GameContainer gc, Rectangle rect) throws SlickException {
 		super(gc, rect);
@@ -36,7 +39,9 @@ public class Player extends EntityRect {
 		initialY = rect.getY();
 		
 		SpriteSheet sprite = new SpriteSheet("data/sprites/dave.png", 20, 40);
-		setupAnimation(sprite, ANIMATION_STAND, new int[]{0,1,2,3,2,1}, 200);
+		setupAnimation(sprite, ANIMATION_STAND, new int[]{0,1,2,3,2,1}, 500);
+		setupAnimation(sprite, ANIMATION_RUN, new int[]{0,1,2,3,2,1}, 200);
+		setupAnimation(sprite, ANIMATION_JUMP, new int[]{0,1,2,3,2,1}, 200);
 	}
 	
 	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int x1, int y1, int x2, int y2, int duration) {
@@ -121,6 +126,22 @@ public class Player extends EntityRect {
 	public void draw() {
 		super.draw();
 		
-		animations[actualAnimation].draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+		if(speedX < 0) {
+			spriteFlipHorizontal = true;
+		} else if(speedX > 0) {
+			spriteFlipHorizontal = false;
+		}
+
+		if(speedY != 0) {
+			actualAnimation = ANIMATION_JUMP.ordinal();
+		} else if(speedX != 0) {
+			actualAnimation = ANIMATION_RUN.ordinal();
+			animations[actualAnimation].setSpeed(Math.abs(speedY));
+		} else {
+			actualAnimation = ANIMATION_STAND.ordinal();
+		}
+		
+		animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
+			.draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 	}
 }
