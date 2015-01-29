@@ -1,9 +1,5 @@
 package com.makzk.games.slicktest;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -15,6 +11,12 @@ import com.makzk.games.entities.Ball;
 import com.makzk.games.entities.Pad;
 import com.makzk.games.util.Direction;
 
+/**
+ * Prueba de colisiones con pads y una pelota en movimiento. 
+ * En resumen, el juego pong.
+ * 
+ * @author makzk
+ */
 public class PongTest extends BasicGame {
 
 	Pad leftPad, rightPad;
@@ -79,6 +81,7 @@ public class PongTest extends BasicGame {
 		}
 	}
 
+	// Por ahora no estamos usando esta prueba dospuntostres
 	/*public static void main(String[] args) {
 		try
 		{

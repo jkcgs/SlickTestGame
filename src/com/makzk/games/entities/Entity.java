@@ -5,8 +5,8 @@ import org.newdawn.slick.GameContainer;
 
 public class Entity {
 	protected GameContainer gc;
-	protected float speedX;
-	protected float speedY;
+	protected float speedX = 0;
+	protected float speedY = 0;
 	protected Color color;
 	protected boolean keepOnScreen = true;
 	protected boolean gravity = false;
@@ -15,8 +15,6 @@ public class Entity {
 
 	public Entity(GameContainer gc) {
 		this.gc = gc;
-		speedX = 0;
-		speedY = 0;
 	}
 
 	public float getSpeedX() {

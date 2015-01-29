@@ -15,6 +15,15 @@ import org.newdawn.slick.util.Log;
 import com.makzk.games.Level;
 import com.makzk.games.entities.Player;
 
+/**
+ * Prueba de gravedad y colisiones de un elemento con otros en un nivel
+ * Consiste en que un jugador (Player) que puede moverse y saltar se le
+ * aplique gravedad y la capacidad de colisionar con otros elementos sólidos
+ * 
+ * @author makzk
+ * @author japple
+ *
+ */
 public class GravityTest extends BasicGame {
 	Level level;
 	Player player;
@@ -26,6 +35,8 @@ public class GravityTest extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		Log.info("Init level");
+		// Preparar nivel con unos cuantos rectángulos caguais
+		// TODO: Hacer esto en un archivo externo para poder manejar varios niveles
 		level = new Level(gc);
 		level.addRect(0, 440, gc.getWidth(), 10, Color.gray);
 		level.addRect(0, 0, gc.getWidth(), 10, Color.gray);
@@ -35,15 +46,16 @@ public class GravityTest extends BasicGame {
 		level.addRect(320, 270, 20, 100);
 		level.addRect(340, 270, 100, 20);
 		
+		// Preparar jugador con su rectángulo (dimensiones y posición)
 		Log.info("Init player");
 		Rectangle r = new Rectangle(50, 300, 20, 50);
 		player = new Player(gc, r);
-		player.setColor(Color.blue);
 		
 		Log.info("Done loading");
 	}
 	
 	public void keyPressed(int key, char c) {
+		// Reiniciar la posición del jugador
 		if(key == Input.KEY_R) {
 			player.reset();
 		}
