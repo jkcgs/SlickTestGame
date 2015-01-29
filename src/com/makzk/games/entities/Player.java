@@ -22,7 +22,6 @@ public class Player extends EntityRect {
 	private int controlLeft = Input.KEY_A;
 	private int controlRight = Input.KEY_D;
 	private int controlJump = Input.KEY_SPACE;
-	private int controlReset = Input.KEY_R;
 	private float speed = 0.5f;
 	private float jumpImpulse = 1.0f;
 	private float initialX;
@@ -75,10 +74,6 @@ public class Player extends EntityRect {
 		}
 		
 		Input in = gc.getInput();
-		
-		if(in.isKeyDown(controlReset)) {
-			reset();
-		}
 		
 		if(in.isKeyDown(controlLeft)) {
 			speedX -= .01f;

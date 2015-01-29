@@ -7,8 +7,10 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
 import com.makzk.games.entities.Player;
@@ -23,7 +25,7 @@ public class GravityTest extends BasicGame {
 	
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-		System.out.println("Init level");
+		Log.info("Init level");
 		level = new Level(gc);
 		level.addRect(0, 440, gc.getWidth(), 10, Color.gray);
 		level.addRect(0, 0, gc.getWidth(), 10, Color.gray);
@@ -33,13 +35,19 @@ public class GravityTest extends BasicGame {
 		level.addRect(320, 270, 20, 100);
 		level.addRect(340, 270, 100, 20);
 		
-		System.out.println("Init player");
+		Log.info("Init player");
 		Rectangle r = new Rectangle(50, 300, 20, 50);
 		player = new Player(gc, r);
 		player.setColor(Color.blue);
 		
-		System.out.println("Done loading");
+		Log.info("Done loading");
 	}
+	
+	public void keyPressed(int key, char c) {
+		if(key == Input.KEY_R) {
+			player.reset();
+		}
+	};
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
@@ -47,8 +55,8 @@ public class GravityTest extends BasicGame {
 		player.draw();
 		g.setColor(Color.white);
 		g.drawString(String.format("OnGround: %s", player.isOnGround()), 10, 30);
-		g.drawString(String.format("[Speed] X: %s Y: %s", player.getSpeedX(), player.getSpeedY()), 10, 55);
-		g.drawString(String.format("[Position] X: %s Y: %s", player.getRect().getX(), player.getRect().getY()), 10, 70);
+		g.drawString(String.format("[Speed] X: %.2f Y: %.2f", player.getSpeedX(), player.getSpeedY()), 10, 55);
+		g.drawString(String.format("[Position] X: %.1f Y: %.1f", player.getRect().getX(), player.getRect().getY()), 10, 70);
 	}
 
 	@Override
