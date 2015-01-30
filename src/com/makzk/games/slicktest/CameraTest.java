@@ -11,6 +11,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
+import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
@@ -18,6 +19,7 @@ public class CameraTest extends BasicGame {
 	Level level;
 	Camera cam;
 	Player player;
+	Enemy enemy;
 	
 	public CameraTest() {
 		super("Camera Test");
@@ -47,6 +49,9 @@ public class CameraTest extends BasicGame {
 		Log.info("Init player");
 		Rectangle r = new Rectangle(50, 300, 102, 110);
 		player = new Player(gc, r);
+		
+		Log.info("Init an enemy");
+		enemy = new Enemy(gc, new Rectangle(200, 100, 38, 82));
 
 		Log.info("Done");
 	}
@@ -56,6 +61,7 @@ public class CameraTest extends BasicGame {
 			throws SlickException {
 		level.drawAll(g, cam);
 		player.draw(cam);
+		enemy.draw(cam);
 		
 		g.setColor(Color.white);
 		g.drawString(String.format("[PJPos] X: %.1f Y: %.1f", player.getRect().getX(), player.getRect().getY()), 10, 70);
@@ -80,6 +86,8 @@ public class CameraTest extends BasicGame {
 		} else if(pjXOnScreen < container.getWidth() / 2) {
 			cam.moveX(-absSpeed);
 		}
+		
+		enemy.move(level, delta);
 	}
 
 	public void keyPressed(int key, char c) {

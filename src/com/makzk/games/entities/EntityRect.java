@@ -4,14 +4,24 @@ import static com.makzk.games.util.Direction.EAST;
 import static com.makzk.games.util.Direction.NORTH;
 import static com.makzk.games.util.Direction.SOUTH;
 import static com.makzk.games.util.Direction.WEST;
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_FALL;
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_JUMP;
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
+import static com.makzk.games.util.PlayerAnimations.ANIMATION_TOTAL;
 
+import java.util.Arrays;
+
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
+import com.makzk.games.util.PlayerAnimations;
 
 public class EntityRect extends Entity {
 	protected Rectangle rect;
@@ -21,10 +31,50 @@ public class EntityRect extends Entity {
 	protected float gravityImpulse = .005f;
 	protected boolean solid = true;
 	protected boolean onGround = false;
+	protected Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];
+	protected int actualAnimation = ANIMATION_STAND.ordinal();
+	protected boolean spriteFlipHorizontal = false;
 
 	public EntityRect(GameContainer gc, Rectangle rect) {
 		super(gc);
 		this.rect = rect;
+	}
+
+	/**
+	 * Configurar una animación para una posición determinada, determinado
+	 * por un rango de posiciones de la grilla de sprites del SpriteSheet
+	 * @param sprite El SpriteSheet que contiene los sprites
+	 * @param anim La posición a configurar
+	 * @param x1 El primer elemento en X de la grilla de sprites del SpriteSheet
+	 * @param y1 El primer elemento en Y de la grilla de sprites del SpriteSheet
+	 * @param x2 El último elemento en X de la grilla de sprites del SpriteSheet
+	 * @param y2 El último elemento en Y de la grilla de sprites del SpriteSheet
+	 * @param duration
+	 */
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int x1, int y1, int x2, int y2, int duration) {
+		animations[anim.ordinal()] = new Animation(sprite, x1, y1, x2, y2, true, duration, true);
+	}
+	
+	/**
+	 * Configurar una animación para una posición determinada, determinado
+	 * por una o varias posiciones de la grilla de sprites del SpriteSheet, 
+	 * sólo en la primera fila de éste
+	 * @param sprite El SpriteSheet que contiene los sprites
+	 * @param anim La posición a configurar
+	 * @param xpositions Las posiciones en X a usar
+	 * @param duration La duración de cada posición
+	 */
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int[] xpositions, int duration) {
+		int[] frames = new int[xpositions.length*2];
+		int[] durations = new int[xpositions.length];
+		
+		Arrays.fill(durations, duration);
+		for(int i = 0; i < xpositions.length; i++) {
+			frames[i*2] = xpositions[i];
+			frames[i*2+1] = 0;
+		}
+
+		animations[anim.ordinal()] = new Animation(sprite, frames, durations);
 	}
 	
 	/**
@@ -47,6 +97,42 @@ public class EntityRect extends Entity {
 			} else {
 				gc.getGraphics().fillRect(rect.getX() - cam.getX(), rect.getY() - cam.getY(), 
 						rect.getWidth(), rect.getHeight());
+			}
+		}
+
+		// Se determina si la entity ha ido a la izquierda o no, para 
+		// voltear al sprite
+		if(speedX > 0) {
+			spriteFlipHorizontal = true;
+		} else if(speedX < 0) {
+			spriteFlipHorizontal = false;
+		}
+		
+		if(speedY < 0) {
+			// La entity está saltando
+			actualAnimation = ANIMATION_JUMP.ordinal();
+		} else if(speedX != 0) {
+			// La entity está yendo hacia los lados, pero no saltando (else if)
+			actualAnimation = ANIMATION_RUN.ordinal();
+			animations[actualAnimation].setSpeed(Math.abs(speedY));
+		} else if (!isOnGround() && speedY > 0) {
+			// La entity esta cayenda
+			actualAnimation = ANIMATION_FALL.ordinal();
+		} else {
+			// La entity está detenida
+			actualAnimation = ANIMATION_STAND.ordinal();
+		}
+	
+		// Dibujar el sprite, con su volteo correspondiente si corresponde, y
+		// según el rectángulo del elemento
+		// TODO: Agregar un rectángulo distinto para el sprite, en vez del usado para colisiones
+		if(animations[actualAnimation] != null) {
+			if(cam == null) {
+				animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
+				.draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+			} else {
+				animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
+				.draw(rect.getX() - cam.getX(), rect.getY() - cam.getY(), rect.getWidth(), rect.getHeight());
 			}
 		}
 	}
@@ -86,11 +172,13 @@ public class EntityRect extends Entity {
 					if(collisionSide(r) == NORTH) {
 						speedY = gravityImpulse; // empujar un poco hacia abajo
 						rect.setY(r.getRect().getY() + r.getRect().getHeight());
+						onCollision(NORTH, r);
 					} else if(collisionSide(r) == SOUTH) {
 						// Si hay colisión por abajo, como con algún piso.
 						speedY = 0; // Detener movimiento y colocar encima
 						rect.setY(r.getRect().getY() - rect.getHeight());
 						southCollision = true;
+						onCollision(SOUTH, r);
 					}
 					
 				}
@@ -99,8 +187,10 @@ public class EntityRect extends Entity {
 					speedX = 0;
 					if(collisionSide(r) == WEST) {
 						rect.setX(r.getRect().getX() + r.getRect().getWidth());
+						onCollision(WEST, r);
 					} else {
 						rect.setX(r.getRect().getX() - rect.getWidth());
+						onCollision(EAST, r);
 					}
 				}
 			}
@@ -123,6 +213,10 @@ public class EntityRect extends Entity {
 			} else if(rect.getY() > (gc.getHeight() - rect.getHeight())) {
 				rect.setY(gc.getHeight() - rect.getHeight());
 			}
+		}
+
+		if(animations[actualAnimation] != null) {
+			animations[actualAnimation].update(delta);
 		}
 	}
 	
@@ -192,4 +286,6 @@ public class EntityRect extends Entity {
 	public boolean isSolid() {
 		return solid;
 	}
+	
+	public void onCollision(Direction dir, EntityRect other) {}
 }
