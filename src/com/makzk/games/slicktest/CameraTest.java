@@ -28,7 +28,7 @@ public class CameraTest extends BasicGame {
 		
 		Log.info("Init level");
 		level = new Level(gc, 2000);
-		level.addRect(0, 800, level.getWidth(), 10, Color.gray);
+		level.addRect(0, 500, level.getWidth(), 10, Color.gray);
 		level.addRect(200, 350, 20, 100);
 		level.addRect(220, 350, 100, 20);
 		level.addRect(320, 270, 20, 100);
@@ -45,7 +45,7 @@ public class CameraTest extends BasicGame {
 		cam = new Camera(gc, level);
 		
 		Log.info("Init player");
-		Rectangle r = new Rectangle(50, 300, 205, 221);
+		Rectangle r = new Rectangle(50, 300, 102, 110);
 		player = new Player(gc, r);
 
 		Log.info("Done");
@@ -93,7 +93,7 @@ public class CameraTest extends BasicGame {
 		try {
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new CameraTest());
-			appgc.setDisplayMode(1600, 900, false);
+			appgc.setDisplayMode(1280, 720, false);
 			appgc.start();
 		} catch (SlickException e) {
 			Log.error(null, e);
