@@ -17,6 +17,7 @@ public class Enemy extends EntityRect {
 		super(gc, rect);
 		gravity = true;
 		solid = true;
+		keepOnScreen = false;
 
 		// Configurar animaciones
 		SpriteSheet sprite = new SpriteSheet("data/sprites/bugs_walk.png", 43, 82);
