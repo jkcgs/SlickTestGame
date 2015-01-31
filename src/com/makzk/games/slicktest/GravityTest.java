@@ -1,8 +1,5 @@
 package com.makzk.games.slicktest;
 
-import java.util.logging.Logger;
-
-import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -28,8 +25,8 @@ public class GravityTest extends BasicGame {
 	Level level;
 	Player player;
 
-	public GravityTest() {
-		super("SlickGravity");
+	public GravityTest(String title) {
+		super(title);
 	}
 	
 	@Override
@@ -74,20 +71,6 @@ public class GravityTest extends BasicGame {
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		player.move(level, delta);
-	}
-
-	public static void main(String[] args) {
-		try
-		{
-			AppGameContainer appgc;
-			appgc = new AppGameContainer(new GravityTest());
-			appgc.setDisplayMode(640, 480, false);
-			appgc.start();
-		}
-		catch (SlickException ex)
-		{
-			Logger.getLogger(GravityTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		}
 	}
 
 }

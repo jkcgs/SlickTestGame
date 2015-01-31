@@ -25,8 +25,8 @@ public class PongTest extends BasicGame {
 	
 	int scoreA, scoreB;
 
-	public PongTest() {
-		super("SlickPong");
+	public PongTest(String title) {
+		super(title);
 	}
 	
 	@Override
@@ -80,20 +80,5 @@ public class PongTest extends BasicGame {
 			scoreA++;
 		}
 	}
-
-	// Por ahora no estamos usando esta prueba dospuntostres
-	/*public static void main(String[] args) {
-		try
-		{
-			AppGameContainer appgc;
-			appgc = new AppGameContainer(new PongTest());
-			appgc.setDisplayMode(640, 480, false);
-			appgc.start();
-		}
-		catch (SlickException ex)
-		{
-			Logger.getLogger(PongTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}*/
 
 }

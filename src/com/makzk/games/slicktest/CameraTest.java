@@ -1,6 +1,5 @@
 package com.makzk.games.slicktest;
 
-import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -21,8 +20,8 @@ public class CameraTest extends BasicGame {
 	Player player;
 	Enemy enemy;
 	
-	public CameraTest() {
-		super("Camera Test");
+	public CameraTest(String title) {
+		super(title);
 	}
 
 	@Override
@@ -96,15 +95,4 @@ public class CameraTest extends BasicGame {
 			player.reset();
 		}
 	};
-
-	public static void main(String[] args) {
-		try {
-			AppGameContainer appgc;
-			appgc = new AppGameContainer(new CameraTest());
-			appgc.setDisplayMode(1280, 720, false);
-			appgc.start();
-		} catch (SlickException e) {
-			Log.error(null, e);
-		}
-	}
 }
