@@ -71,21 +71,18 @@ public class CameraTest extends BasicGame {
 	@Override
 	public void update(GameContainer container, int delta)
 			throws SlickException {
+		//This is bullshit
 		Input in = container.getInput();
 		if(in.isKeyDown(Input.KEY_LEFT)) {
 			cam.moveX(-.5f * delta);
 		} else if(in.isKeyDown(Input.KEY_RIGHT)) {
 			cam.moveX(.5f * delta);
 		}
-
+		//THE REAL DEAL HERE
 		player.move(level, delta);
-		float pjXOnScreen = player.getX() - cam.getX();
-		float absSpeed = Math.abs(player.getSpeedX());
-		if(pjXOnScreen > container.getWidth() / 2) {
-			cam.moveX(absSpeed);
-		} else if(pjXOnScreen < container.getWidth() / 2) {
-			cam.moveX(-absSpeed);
-		}
+		
+		float pjXOnScreen = player.getRect().getCenterX();
+		cam.moveX(pjXOnScreen);
 		
 		enemy.move(level, delta);
 	}

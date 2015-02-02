@@ -29,14 +29,8 @@ public class Camera {
 	}
 	
 	public void moveX(float x) {
-		rect.setX(rect.getX() + x);
-		if(keepOnLevel) {
-			if(rect.getX() < 0) {
-				rect.setX(0);
-			} else if(rect.getX() + rect.getWidth() > level.getWidth()) {
-				rect.setX(level.getWidth() - rect.getWidth());
-			}
-		}
+		rect.setX(x-(rect.getWidth()/2));
+		//Espacio para if (tall) then do some shit
 	}
 	
 	public void moveY(float x) {
