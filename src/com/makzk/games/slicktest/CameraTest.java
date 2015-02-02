@@ -78,11 +78,11 @@ public class CameraTest extends BasicGame {
 		} else if(in.isKeyDown(Input.KEY_RIGHT)) {
 			cam.moveX(.5f * delta);
 		}
-		//THE REAL DEAL HERE
+		//
 		player.move(level, delta);
 		
 		float pjXOnScreen = player.getRect().getCenterX();
-		cam.moveX(pjXOnScreen);
+		cam.autoMove(pjXOnScreen);
 		
 		enemy.move(level, delta);
 	}
