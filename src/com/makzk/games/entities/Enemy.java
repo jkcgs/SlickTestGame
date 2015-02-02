@@ -4,11 +4,14 @@ import static com.makzk.games.util.PlayerAnimations.ANIMATION_FALL;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 
+import java.util.Iterator;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
+import com.makzk.games.Level;
 import com.makzk.games.util.Direction;
 
 public class Enemy extends EntityRect {
@@ -16,8 +19,8 @@ public class Enemy extends EntityRect {
 	private float initialY;
 	private float walkSpeed = .1f;
 
-	public Enemy(GameContainer gc, Rectangle rect) throws SlickException {
-		super(gc, rect);
+	public Enemy(GameContainer gc, Rectangle rect, Level level) throws SlickException {
+		super(gc, rect, level);
 		gravity = true;
 		solid = true;
 
@@ -31,9 +34,13 @@ public class Enemy extends EntityRect {
 		initialX = rect.getX();
 		initialY = rect.getY();
 	}
+	public Enemy(GameContainer gc, Rectangle rect) throws SlickException {
+		this(gc, rect, null);
+	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	public void onCollision(Direction dir, EntityRect other) {
+	public void onCollision(Direction dir, EntityRect other, Iterator it) {
 		if(dir == Direction.EAST) {
 			speedX = -walkSpeed;
 		}

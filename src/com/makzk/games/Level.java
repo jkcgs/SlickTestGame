@@ -35,11 +35,12 @@ public class Level {
 	}
 	
 	public void addRect(EntityRect rect) {
+		rect.setLevel(this);
 		rects.add(rect);
 	}
 	
 	public void addRect(float x, float y, float width, float height, Color color) {
-		EntityRect r = new EntityRect(gc, new Rectangle(x, y, width, height));
+		EntityRect r = new EntityRect(gc, new Rectangle(x, y, width, height), this);
 		r.setColor(color);
 		addRect(r);
 	}
@@ -63,7 +64,7 @@ public class Level {
 	}
 	
 	public void addEnemy(float x, float y, float width, float height) throws SlickException {
-		Enemy e = new Enemy(gc, new Rectangle(x, y, width, height));
+		Enemy e = new Enemy(gc, new Rectangle(x, y, width, height), this);
 		enemies.add(e);
 	}
 	
