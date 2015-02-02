@@ -37,10 +37,10 @@ public class PongTest extends BasicGame {
 		in = gc.getInput();
 
 		leftPad = new Pad(gc);
-		leftPad.getRect().setY(100);
+		leftPad.setY(100);
 		rightPad = new Pad(gc);
-		rightPad.getRect().setY(100);
-		rightPad.getRect().setX(gc.getWidth() - rightPad.getRect().getWidth());
+		rightPad.setY(100);
+		rightPad.setX(gc.getWidth() - rightPad.getWidth());
 		rightPad.setMovementSpeed(.5f);
 
 		ball = new Ball(gc);
@@ -67,15 +67,15 @@ public class PongTest extends BasicGame {
 	@Override
 	public void update(GameContainer gc, int delt) throws SlickException {
 		leftPad.move(in, delt);
-		rightPad.autoMove(ball);
+		rightPad.autoMove(ball, delt);
 		ball.move(delt, leftPad, rightPad);
 		
-		if(ball.getRect().getX() <= 0) {
+		if(ball.getX() <= 0) {
 			ball.reset();
 			scoreB++;
 		}
-		
-		if(ball.getRect().getX() + ball.getRect().getWidth() >= gc.getWidth()) {
+
+		if(ball.getMaxX() >= gc.getWidth()) {
 			ball.reset();
 			scoreA++;
 		}

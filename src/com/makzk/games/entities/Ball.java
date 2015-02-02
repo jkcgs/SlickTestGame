@@ -1,5 +1,6 @@
 package com.makzk.games.entities;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
@@ -12,6 +13,7 @@ public class Ball extends EntityRect {
 	public Ball(GameContainer gc) {
 		super(gc, new Rectangle(0, 0, 10, 10));
 		speed = .5f;
+		color = Color.white;
 	}
 	
 	public void move(int delta, Pad leftPad, Pad rightPad) {
@@ -20,9 +22,8 @@ public class Ball extends EntityRect {
 		if ( collisionInX(leftPad) || collisionInX(rightPad) ) {
 			speedX = -speedX;
 		}
-
-		if (rect.getY() <= 0 
-				|| rect.getY() + rect.getHeight() >= gc.getHeight()
+		if (getY() <= 0 
+				|| rect.getMaxY() >= gc.getHeight()
 				|| collisionInY(leftPad)
 				|| collisionInY(rightPad)) {
 			speedY = -speedY;
@@ -30,8 +31,8 @@ public class Ball extends EntityRect {
 	}
 
 	public void reset() {
-		rect.setX((gc.getWidth() / 2) - (rect.getWidth() / 2));
-		rect.setY((gc.getHeight() / 2) - (rect.getHeight() / 2));
+		setX((gc.getWidth() / 2) - (getWidth() / 2));
+		setY((gc.getHeight() / 2) - (getHeight() / 2));
 
 		Direction newDir;
 		switch((int) (Math.random() * 4)) {
@@ -41,11 +42,6 @@ public class Ball extends EntityRect {
 			default: newDir = Direction.SOUTH_WEST;
 		}
 		setDirection(newDir);
-	}
-	
-	public void setSize(float size) {
-		rect.setWidth(size);
-		rect.setHeight(size);
 	}
 	
 	public void setDirection(Direction dir) {

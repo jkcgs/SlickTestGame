@@ -26,7 +26,7 @@ import com.makzk.games.util.PlayerAnimations;
 public class EntityRect extends Entity {
 	protected Rectangle rect;
 	protected Color color = Color.transparent;
-	protected boolean keepOnScreen = true;
+	protected boolean keepOnScreen = false;
 	protected boolean gravity = false;
 	protected float gravityImpulse = .005f;
 	protected boolean solid = true;
@@ -95,8 +95,8 @@ public class EntityRect extends Entity {
 			if(cam == null) {
 				gc.getGraphics().fill(rect);
 			} else {
-				gc.getGraphics().fillRect(rect.getX() - cam.getX(), rect.getY() - cam.getY(), 
-						rect.getWidth(), rect.getHeight());
+				gc.getGraphics().fillRect(getX() - cam.getX(), getY() - cam.getY(), 
+						getWidth(), getHeight());
 			}
 		}
 
@@ -114,8 +114,10 @@ public class EntityRect extends Entity {
 		} else if(speedX != 0) {
 			// La entity está yendo hacia los lados, pero no saltando (else if)
 			actualAnimation = ANIMATION_RUN.ordinal();
-			animations[actualAnimation].setSpeed(Math.abs(speedY));
-		} else if (!isOnGround() && speedY > 0) {
+			if(animations[actualAnimation] != null) {
+				animations[actualAnimation].setSpeed(Math.abs(speedY));
+			}
+		} else if (!onGround && speedY > 0) {
 			// La entity esta cayenda
 			actualAnimation = ANIMATION_FALL.ordinal();
 		} else {
@@ -129,10 +131,10 @@ public class EntityRect extends Entity {
 		if(animations[actualAnimation] != null) {
 			if(cam == null) {
 				animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
-				.draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+				.draw(getX(), getY(), getWidth(), getHeight());
 			} else {
 				animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
-				.draw(rect.getX() - cam.getX(), rect.getY() - cam.getY(), rect.getWidth(), rect.getHeight());
+				.draw(getX() - cam.getX(), getY() - cam.getY(), getWidth(), getHeight());
 			}
 		}
 	}
@@ -143,11 +145,34 @@ public class EntityRect extends Entity {
 	 * @param delta Delta de diferencia de rendimiento del juego para no variar la velocidad
 	 */
 	public void move(Level level, int delta) {
-		// Movimiento básico
-		rect.setX(rect.getX() + (speedX * delta));
-		rect.setY(rect.getY() + (speedY * delta));
+		// Guardar posiciones anteriores
+		float prevX = getX();
+		float prevY = getY();
 
-		// Movimiento hacia abajo según la gravedad
+		// Movimiento en eje X
+		moveX(speedX * delta);
+		if(solid && level != null) {
+			// Revisar colisiones en el eje X con elementos del nivel
+			for(EntityRect r: level.getRects()) {
+				// Si el elemento no es sólido, no hay qué revisar
+				if(!r.isSolid()) {
+					continue;
+				}
+
+				if(collisionInX(r)) {
+					if(collisionSide(r) == EAST) {
+						onCollision(EAST, r);
+					} else if (collisionSide(r) == WEST) {
+						onCollision(WEST, r);
+					}
+
+					speedX = 0;
+					setX(prevX);
+				}
+			}
+		}
+		
+		// Movimiento en el eje Y
 		if(gravity && !onGround) {
 			speedY += gravityImpulse;
 			// Limitar gravedad a 1
@@ -155,6 +180,8 @@ public class EntityRect extends Entity {
 				speedY = 1;
 			}
 		}
+		moveY(speedY * delta);
+		// Movimiento hacia abajo según la gravedad sólo si no está en el suelo
 
 		if(solid && level != null) {
 			// Revisar si hay colisión por debajo
@@ -170,28 +197,14 @@ public class EntityRect extends Entity {
 				if(collisionInY(r)) {
 					// Si hay colisión por arriba (un "techo")
 					if(collisionSide(r) == NORTH) {
-						speedY = gravityImpulse; // empujar un poco hacia abajo
-						rect.setY(r.getRect().getY() + r.getRect().getHeight());
 						onCollision(NORTH, r);
+						setY(prevY);
 					} else if(collisionSide(r) == SOUTH) {
-						// Si hay colisión por abajo, como con algún piso.
-						speedY = 0; // Detener movimiento y colocar encima
-						rect.setY(r.getRect().getY() - rect.getHeight());
 						southCollision = true;
+						setY(r.getY() - getHeight());
 						onCollision(SOUTH, r);
 					}
-					
-				}
-				if(collisionInX(r)) {
-					// Si hay colisión por los lados, se detiene el movimiento lateral
-					speedX = 0;
-					if(collisionSide(r) == WEST) {
-						rect.setX(r.getRect().getX() + r.getRect().getWidth());
-						onCollision(WEST, r);
-					} else {
-						rect.setX(r.getRect().getX() - rect.getWidth());
-						onCollision(EAST, r);
-					}
+					speedY = 0;
 				}
 			}
 			
@@ -199,19 +212,20 @@ public class EntityRect extends Entity {
 			onGround = southCollision;
 		}
 
+
 		// Si es necesario mantener el objeto en pantalla, cualquier movimiento
 		// fuera de esta, hará que se retorne al último borde alcanzado.
 		if(keepOnScreen) {
-			if (rect.getX() < 0) {
-				rect.setX(0);
-			} else if(rect.getX() > (gc.getWidth() - rect.getWidth())) {
-				rect.setX(gc.getWidth() - rect.getWidth());
+			if (getX() < 0) {
+				setX(0);
+			} else if(getX() > (gc.getWidth() - getWidth())) {
+				setX(gc.getWidth() - getWidth());
 			}
 			
-			if (rect.getY() < 0) {
-				rect.setY(0);
-			} else if(rect.getY() > (gc.getHeight() - rect.getHeight())) {
-				rect.setY(gc.getHeight() - rect.getHeight());
+			if (getY() < 0) {
+				setY(0);
+			} else if(getY() > (gc.getHeight() - getHeight())) {
+				setY(gc.getHeight() - getHeight());
 			}
 		}
 
@@ -223,22 +237,6 @@ public class EntityRect extends Entity {
 	public void move(int delta) {
 		move(null, delta);
 	}
-
-	public Rectangle getRect() {
-		return rect;
-	}
-
-	public void setRect(Rectangle rect) {
-		this.rect = rect;
-	}
-
-	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
 	
 	/**
 	 * Obtener el lado de la colisión con otro objeto.
@@ -247,8 +245,8 @@ public class EntityRect extends Entity {
 	 * @return La dirección de colisión. Si no hubo colisión se retorna Direction.NONE
 	 */
 	public Direction collisionSide(EntityRect other) {
-		float w = (float) (0.5 * (rect.getWidth() + other.getRect().getWidth()));
-		float h = (float) (0.5 * (rect.getHeight() + other.getRect().getHeight()));
+		float w = (float) (0.5 * (getWidth() + other.getWidth()));
+		float h = (float) (0.5 * (getHeight() + other.getHeight()));
 		float dx = rect.getCenterX() - other.getRect().getCenterX();
 		float dy = rect.getCenterY() - other.getRect().getCenterY();
 
@@ -279,13 +277,36 @@ public class EntityRect extends Entity {
 		return side == NORTH || side == SOUTH;
 	}
 
-	public boolean isOnGround() {
-		return onGround;
-	}
-	
-	public boolean isSolid() {
-		return solid;
-	}
+	// Propiedades fisicas
+	public boolean isGravityAffected() { return gravity; }
+	public boolean isOnGround() { return onGround; }
+	public boolean isSolid() { return solid; }
+
+	// get rekt m7
+	public Rectangle getRect() { return rect; }
+	public void setRect(Rectangle rect) { this.rect = rect; }
+
+	// Shorthands para posición y movimiento
+	public float getX() { return rect.getX(); }
+	public float getMaxX() { return rect.getMaxX(); }
+	public float getY() { return rect.getY(); }
+	public float getMaxY() { return rect.getMaxY(); }
+	public void setX(float x) { rect.setX(x); }
+	public void setY(float y) { rect.setY(y); }
+	public void moveX(float x) { setX(getX() + x); }
+	public void moveY(float y) { setY(getY() + y); }
+	public void movePos(float x, float y) { moveX(x); moveY(y); }
+
+	// Shorthands de tamaño
+	public float getWidth() { return rect.getWidth(); }
+	public float getHeight() { return rect.getHeight(); }
+	public void setWidth(float w) { rect.setWidth(w); }
+	public void setHeight(float h) { rect.setHeight(h); }
+	public void setSize(float size){ setWidth(size); setHeight(size); }
+
+	// Color
+	public Color getColor() { return color; }
+	public void setColor(Color color) { this.color = color; }
 	
 	public void onCollision(Direction dir, EntityRect other) {}
 }

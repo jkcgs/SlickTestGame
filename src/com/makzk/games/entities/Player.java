@@ -19,14 +19,13 @@ public class Player extends EntityRect {
 	private int controlRight = Input.KEY_D;
 	private int controlJump = Input.KEY_SPACE;
 	private float speed = 0.5f;
-	private float jumpImpulse = 1.6f;
+	private float jumpImpulse = 1.5f;
 	private float initialX;
 	private float initialY;
 
 	public Player(GameContainer gc, Rectangle rect) throws SlickException {
 		super(gc, rect);
 		gravity = true;
-		keepOnScreen = false;
 		initialX = rect.getX();
 		initialY = rect.getY();
 		
@@ -47,7 +46,8 @@ public class Player extends EntityRect {
 	public void move(Level level, int delta) {
 		super.move(level, delta);
 		
-		if(rect.getY() > gc.getHeight()) {
+		// Reiniciar al caer hacia el olvido
+		if(getY() > gc.getHeight()) {
 			reset();
 		}
 		
@@ -70,6 +70,10 @@ public class Player extends EntityRect {
 			if(speedY == 0 && onGround) {
 				speedY = -jumpImpulse;
 			}
+		} else if(speedY < 0) {
+			// Terminar impulso de salto si no está
+			// presionada la tecla para saltar
+			speedY -= speedY / 30;
 		}
 
 		if(!in.isKeyDown(controlLeft) 
@@ -96,7 +100,7 @@ public class Player extends EntityRect {
 	public void reset() {
 		speedX = 0;
 		speedY = 0;
-		rect.setX(initialX);
-		rect.setY(initialY);
+		setX(initialX);
+		setY(initialY);
 	}
 }

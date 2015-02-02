@@ -63,7 +63,7 @@ public class CameraTest extends BasicGame {
 		enemy.draw(cam);
 		
 		g.setColor(Color.white);
-		g.drawString(String.format("[PJPos] X: %.1f Y: %.1f", player.getRect().getX(), player.getRect().getY()), 10, 70);
+		g.drawString(String.format("[PJPos] X: %.1f Y: %.1f", player.getX(), player.getY()), 10, 70);
 		g.drawString(String.format("[CamPos] X: %.2f Y: %.2f", cam.getX(), cam.getY()), 10, 30);
 	}
 
@@ -78,7 +78,7 @@ public class CameraTest extends BasicGame {
 		}
 
 		player.move(level, delta);
-		float pjXOnScreen = player.getRect().getX() - cam.getX();
+		float pjXOnScreen = player.getX() - cam.getX();
 		float absSpeed = Math.abs(player.getSpeedX());
 		if(pjXOnScreen > container.getWidth() / 2) {
 			cam.moveX(absSpeed);

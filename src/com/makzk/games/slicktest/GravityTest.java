@@ -65,7 +65,7 @@ public class GravityTest extends BasicGame {
 		g.setColor(Color.white);
 		g.drawString(String.format("OnGround: %s", player.isOnGround()), 10, 30);
 		g.drawString(String.format("[Speed] X: %.2f Y: %.2f", player.getSpeedX(), player.getSpeedY()), 10, 55);
-		g.drawString(String.format("[Position] X: %.1f Y: %.1f", player.getRect().getX(), player.getRect().getY()), 10, 70);
+		g.drawString(String.format("[Position] X: %.1f Y: %.1f", player.getX(), player.getY()), 10, 70);
 	}
 
 	@Override

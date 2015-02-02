@@ -1,5 +1,6 @@
 package com.makzk.games.entities;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
@@ -14,6 +15,8 @@ public class Pad extends EntityRect {
 
 	public Pad(GameContainer gc) {
 		super(gc, new Rectangle(0, 0, 10, 100));
+		keepOnScreen = true;
+		color = Color.white;
 	}
 	
 	public void setDirection(Direction dir) {
@@ -43,13 +46,13 @@ public class Pad extends EntityRect {
 		}
 	}
 
-	public void autoMove(Ball ball) {
-		if(ball.getRect().getY() < rect.getY()) {
-			rect.setY(rect.getY() - movementSpeed);
+	public void autoMove(Ball ball, int delta) {
+		if(ball.getY() < getY()) {
+			moveY(-movementSpeed * delta);
 		}
 		
-		if(ball.getRect().getY() > (rect.getY() + rect.getHeight())) {
-			rect.setY(rect.getY() + movementSpeed);
+		if(ball.getY() > (getY() + getHeight())) {
+			moveY(movementSpeed * delta);
 		}
 	}
 	
