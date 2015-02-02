@@ -31,6 +31,7 @@ public class EntityRect extends Entity {
 	protected float gravityImpulse = .03f;
 	protected boolean solid = true;
 	protected boolean onGround = false;
+	protected boolean wall = false;
 	protected Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];
 	protected int actualAnimation = ANIMATION_STAND.ordinal();
 	protected boolean spriteFlipHorizontal = false;
@@ -145,73 +146,57 @@ public class EntityRect extends Entity {
 	 * @param delta Delta de diferencia de rendimiento del juego para no variar la velocidad
 	 */
 	public void move(Level level, int delta) {
-		// Guardar posiciones anteriores
-		float prevX = getX();
-		float prevY = getY();
-
-		// Movimiento en eje X
-		moveX(speedX * delta);
-		if(solid && level != null) {
-			// Revisar colisiones en el eje X con elementos del nivel
-			for(EntityRect r: level.getRects()) {
-				// Si el elemento no es sólido, no hay qué revisar
-				if(!r.isSolid()) {
-					continue;
-				}
-
-				if(collisionInX(r)) {
-					if(collisionSide(r) == EAST) {
-						onCollision(EAST, r);
-					} else if (collisionSide(r) == WEST) {
-						onCollision(WEST, r);
-					}
-
-					speedX = 0;
-					setX(prevX);
-				}
-			}
-		}
 		
-		// Movimiento en el eje Y
-		if(gravity && !onGround) {
-			speedY += gravityImpulse;
-			// Limitar gravedad a 1
-			if(speedY > 1) {
-				speedY = 1;
-			}
-		}
-		moveY(speedY * delta);
-		// Movimiento hacia abajo según la gravedad sólo si no está en el suelo
+		float nextY = speedY * delta + getY();
+		float nextX = speedX * delta + getX();
+		onGround = false;
 
 		if(solid && level != null) {
 			// Revisar si hay colisión por debajo
-			boolean southCollision = false;
-			
-			// Revisar cada elemento del nivel
+			wall = false;
+
+			// Revisar colisiones con elementos del nivel
 			for(EntityRect r: level.getRects()) {
 				// Si el elemento no es sólido, no hay qué revisar
 				if(!r.isSolid()) {
 					continue;
 				}
-
-				if(collisionInY(r)) {
-					// Si hay colisión por arriba (un "techo")
-					if(collisionSide(r) == NORTH) {
-						onCollision(NORTH, r);
-						setY(prevY);
-					} else if(collisionSide(r) == SOUTH) {
-						southCollision = true;
-						setY(r.getY() - getHeight());
-						onCollision(SOUTH, r);
+				
+				if(getX() < r.getX() + r.getWidth() && getX() > r.getX() - getWidth()) {
+					// Colisión abajo
+					if(getY() + getHeight() <= r.getY() && nextY + getHeight() >= r.getY()) {
+						nextY = r.getY() - getHeight();
+						speedY = 0;
+						onGround = true;
 					}
-					speedY = 0;
+					// Colisión arriba
+					else if(r.getY() + r.getHeight() <= getY() && r.getY() + r.getHeight() > nextY) {
+						nextY = r.getY() + r.getHeight();
+						speedY = 0;
+					}
+				}
+				
+				if((getY() < r.getY() + r.getHeight()) && (getY() + getHeight() > r.getY())) {
+					// Colisión derecha
+					if(getX() + getWidth() <= r.getX() && nextX + getWidth() > r.getX()) {
+						nextX = r.getX() - getWidth();
+						speedX = 0;
+						wall = true;
+						onCollision(EAST, r);
+					}
+					// Colisión izquierda
+					else if(r.getX() + r.getWidth() <= getX() && r.getX() + r.getWidth() > nextX) {
+						nextX = r.getX() + r.getWidth();
+						speedX = 0;
+						onCollision(WEST, r);
+						wall = true;
+					}
 				}
 			}
-			
-			// Como hay colisión por abajo, el elemento está en el "suelo"
-			onGround = southCollision;
 		}
 
+		setY(nextY);
+		setX(nextX);
 
 		// Si es necesario mantener el objeto en pantalla, cualquier movimiento
 		// fuera de esta, hará que se retorne al último borde alcanzado.
@@ -226,6 +211,15 @@ public class EntityRect extends Entity {
 				setY(0);
 			} else if(getY() > (gc.getHeight() - getHeight())) {
 				setY(gc.getHeight() - getHeight());
+			}
+		}
+
+		// Gravedad
+		if(gravity && !onGround) {
+			speedY += gravityImpulse;
+			// Limitar gravedad a 1
+			if(speedY > 1) {
+				speedY = 1;
 			}
 		}
 
@@ -245,23 +239,11 @@ public class EntityRect extends Entity {
 	 * @return La dirección de colisión. Si no hubo colisión se retorna Direction.NONE
 	 */
 	public Direction collisionSide(EntityRect other) {
-		float w = (float) (0.5 * (getWidth() + other.getWidth()));
-		float h = (float) (0.5 * (getHeight() + other.getHeight()));
-		float dx = rect.getCenterX() - other.getRect().getCenterX();
-		float dy = rect.getCenterY() - other.getRect().getCenterY();
-
-		if (Math.abs(dx) <= w && Math.abs(dy) <= h)
-		{
-		    float wy = w * dy;
-		    float hx = h * dx;
-
-		    if (wy > hx) {
-		        if (wy > -hx) return NORTH;
-		        else return Direction.EAST;
-		    } else {
-		        if (wy > -hx) return WEST;
-		        else return SOUTH;
-		    }
+		if(rect.intersects(other.getRect())) {
+			if(speedX < 0) return Direction.WEST;
+			else if(speedX >= 0) return Direction.EAST;
+			else if(speedY < 0) return Direction.NORTH;
+			else if(speedY >= 0) return Direction.SOUTH;
 		}
 		
 		return Direction.NONE;
@@ -281,6 +263,7 @@ public class EntityRect extends Entity {
 	public boolean isGravityAffected() { return gravity; }
 	public boolean isOnGround() { return onGround; }
 	public boolean isSolid() { return solid; }
+	public boolean isTouchingWall() { return wall; }
 
 	// get rekt m7
 	public Rectangle getRect() { return rect; }
