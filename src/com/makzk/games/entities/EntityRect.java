@@ -168,11 +168,13 @@ public class EntityRect extends Entity {
 						nextY = r.getY() - getHeight();
 						speedY = 0;
 						onGround = true;
+						onCollision(SOUTH, r);
 					}
 					// Colisión arriba
 					else if(r.getY() + r.getHeight() <= getY() && r.getY() + r.getHeight() > nextY) {
 						nextY = r.getY() + r.getHeight();
 						speedY = 0;
+						onCollision(NORTH, r);
 					}
 				}
 				

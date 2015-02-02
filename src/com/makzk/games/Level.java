@@ -7,6 +7,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
 
 import com.makzk.games.entities.EntityRect;
 import com.makzk.games.util.Camera;
@@ -43,6 +44,21 @@ public class Level {
 	
 	public void addRect(float x, float y, float width, float height) {
 		addRect(x, y, width, height, Color.white);
+	}
+	
+	public void addRects(float[][] rects, Color color) {
+		for(float[] rect : rects) {
+			if(rect.length == 7) {
+				color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
+				Log.info(rect[4] + " " + rect[5] + " " + rect[6]);
+			}
+
+			if(color != null) {
+				addRect(rect[0], rect[1], rect[2], rect[3], color);
+			} else {
+				addRect(rect[0], rect[1], rect[2], rect[3]);
+			}
+		}
 	}
 
 	public void drawAll(Graphics g) {
