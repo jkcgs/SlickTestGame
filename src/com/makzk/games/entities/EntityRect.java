@@ -148,7 +148,7 @@ public class EntityRect extends Entity {
 		rect.setY(rect.getY() + (speedY * delta));
 
 		// Movimiento hacia abajo según la gravedad
-		if(gravity) {
+		if(gravity && !onGround) {
 			speedY += gravityImpulse;
 			// Limitar gravedad a 1
 			if(speedY > 1) {
