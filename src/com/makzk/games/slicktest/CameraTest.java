@@ -35,6 +35,7 @@ public class CameraTest extends BasicGame {
 		level.addRect(320, 270, 20, 100);
 		level.addRect(340, 270, 100, 20);
 		level.addRect(1600, 340, 100, 15);
+		level.addRect(0, 480, 10, 20);
 
 		level.addRect(800, 270, 300, 20);
 		level.addRect(1100, 350, 300, 15);
@@ -59,12 +60,12 @@ public class CameraTest extends BasicGame {
 	public void render(GameContainer container, Graphics g)
 			throws SlickException {
 		level.drawAll(g, cam);
-		player.draw(cam);
 		enemy.draw(cam);
+		player.draw(cam);
 		
 		g.setColor(Color.white);
-		g.drawString(String.format("[PJ] X: %.1f Y: %.1f sX: %.2f sY: %.2f g: %s", 
-				player.getX(), player.getY(), player.getSpeedX(), player.getSpeedY(), player.isOnGround()), 10, 50);
+		g.drawString(String.format("[PJ] X: %.1f Y: %.1f sX: %.2f sY: %.2f g: %s w: %s", 
+				player.getX(), player.getY(), player.getSpeedX(), player.getSpeedY(), player.isOnGround(), player.isTouchingWall()), 10, 50);
 		g.drawString(String.format("[CamPos] X: %.2f Y: %.2f", cam.getX(), cam.getY()), 10, 30);
 	}
 
@@ -85,6 +86,9 @@ public class CameraTest extends BasicGame {
 		cam.autoMove(pjXOnScreen);
 		
 		enemy.move(level, delta);
+		if(enemy.getX() < 0 || enemy.getY() > container.getHeight()) {
+			enemy.reset();
+		}
 	}
 
 	public void keyPressed(int key, char c) {

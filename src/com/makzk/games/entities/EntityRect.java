@@ -164,24 +164,39 @@ public class EntityRect extends Entity {
 				
 				if(getX() < r.getX() + r.getWidth() && getX() > r.getX() - getWidth()) {
 					// Colisión abajo
-					if(getY() <= r.getY() - getHeight() && nextY >= r.getY() - getHeight()) {
+					if(getY() + getHeight() <= r.getY() && nextY + getHeight() >= r.getY()) {
 						nextY = r.getY() - getHeight();
 						speedY = 0;
 						onGround = true;
 					}
 					// Colisión arriba
-					if(getY() >= r.getY() + getHeight() && nextY <= r.getY() + getHeight()) {
+					else if(r.getY() + r.getHeight() <= getY() && r.getY() + r.getHeight() > nextY) {
 						nextY = r.getY() + r.getHeight();
 						speedY = 0;
 					}
 				}
-
+				
+				if((getY() < r.getY() + r.getHeight()) && (getY() + getHeight() > r.getY())) {
+					// Colisión derecha
+					if(getX() + getWidth() <= r.getX() && nextX + getWidth() > r.getX()) {
+						nextX = r.getX() - getWidth();
+						speedX = 0;
+						wall = true;
+						onCollision(EAST, r);
+					}
+					// Colisión izquierda
+					else if(r.getX() + r.getWidth() <= getX() && r.getX() + r.getWidth() > nextX) {
+						nextX = r.getX() + r.getWidth();
+						speedX = 0;
+						onCollision(WEST, r);
+						wall = true;
+					}
+				}
 			}
 		}
 
 		setY(nextY);
 		setX(nextX);
-
 
 		// Si es necesario mantener el objeto en pantalla, cualquier movimiento
 		// fuera de esta, hará que se retorne al último borde alcanzado.
@@ -226,9 +241,9 @@ public class EntityRect extends Entity {
 	public Direction collisionSide(EntityRect other) {
 		if(rect.intersects(other.getRect())) {
 			if(speedX < 0) return Direction.WEST;
-			else if(speedX > 0) return Direction.EAST;
+			else if(speedX >= 0) return Direction.EAST;
 			else if(speedY < 0) return Direction.NORTH;
-			else if(speedY > 0) return Direction.SOUTH;
+			else if(speedY >= 0) return Direction.SOUTH;
 		}
 		
 		return Direction.NONE;
