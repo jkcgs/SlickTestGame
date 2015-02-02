@@ -35,6 +35,8 @@ public class EntityRect extends Entity {
 	protected Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];
 	protected int actualAnimation = ANIMATION_STAND.ordinal();
 	protected boolean spriteFlipHorizontal = false;
+	protected float nextX = 0;
+	protected float nextY = 0;
 
 	public EntityRect(GameContainer gc, Rectangle rect) {
 		super(gc);
@@ -147,53 +149,19 @@ public class EntityRect extends Entity {
 	 */
 	public void move(Level level, int delta) {
 		
-		float nextY = speedY * delta + getY();
-		float nextX = speedX * delta + getX();
+		nextY = speedY * delta + getY();
+		nextX = speedX * delta + getX();
 		onGround = false;
 
 		if(solid && level != null) {
-			// Revisar si hay colisión por debajo
 			wall = false;
 
 			// Revisar colisiones con elementos del nivel
 			for(EntityRect r: level.getRects()) {
-				// Si el elemento no es sólido, no hay qué revisar
-				if(!r.isSolid()) {
-					continue;
-				}
-				
-				if(getX() < r.getX() + r.getWidth() && getX() > r.getX() - getWidth()) {
-					// Colisión abajo
-					if(getY() + getHeight() <= r.getY() && nextY + getHeight() >= r.getY()) {
-						nextY = r.getY() - getHeight();
-						speedY = 0;
-						onGround = true;
-						onCollision(SOUTH, r);
-					}
-					// Colisión arriba
-					else if(r.getY() + r.getHeight() <= getY() && r.getY() + r.getHeight() > nextY) {
-						nextY = r.getY() + r.getHeight();
-						speedY = 0;
-						onCollision(NORTH, r);
-					}
-				}
-				
-				if((getY() < r.getY() + r.getHeight()) && (getY() + getHeight() > r.getY())) {
-					// Colisión derecha
-					if(getX() + getWidth() <= r.getX() && nextX + getWidth() > r.getX()) {
-						nextX = r.getX() - getWidth();
-						speedX = 0;
-						wall = true;
-						onCollision(EAST, r);
-					}
-					// Colisión izquierda
-					else if(r.getX() + r.getWidth() <= getX() && r.getX() + r.getWidth() > nextX) {
-						nextX = r.getX() + r.getWidth();
-						speedX = 0;
-						onCollision(WEST, r);
-						wall = true;
-					}
-				}
+				resolveCollisions(r);
+			}
+			for(EntityRect r: level.getEnemies()) {
+				resolveCollisions(r);
 			}
 		}
 
@@ -227,6 +195,47 @@ public class EntityRect extends Entity {
 
 		if(animations[actualAnimation] != null) {
 			animations[actualAnimation].update(delta);
+		}
+	}
+	
+	public void resolveCollisions(EntityRect r) {
+
+		// Si el elemento no es sólido, no hay qué revisar
+		if(!r.isSolid()) {
+			return;
+		}
+		
+		if(getX() < r.getX() + r.getWidth() && getX() > r.getX() - getWidth()) {
+			// Colisión abajo
+			if(getY() + getHeight() <= r.getY() && nextY + getHeight() >= r.getY()) {
+				nextY = r.getY() - getHeight();
+				speedY = 0;
+				onGround = true;
+				onCollision(SOUTH, r);
+			}
+			// Colisión arriba
+			else if(r.getY() + r.getHeight() <= getY() && r.getY() + r.getHeight() > nextY) {
+				nextY = r.getY() + r.getHeight();
+				speedY = 0;
+				onCollision(NORTH, r);
+			}
+		}
+		
+		if((getY() < r.getY() + r.getHeight()) && (getY() + getHeight() > r.getY())) {
+			// Colisión derecha
+			if(getX() + getWidth() <= r.getX() && nextX + getWidth() > r.getX()) {
+				nextX = r.getX() - getWidth();
+				speedX = 0;
+				wall = true;
+				onCollision(EAST, r);
+			}
+			// Colisión izquierda
+			else if(r.getX() + r.getWidth() <= getX() && r.getX() + r.getWidth() > nextX) {
+				nextX = r.getX() + r.getWidth();
+				speedX = 0;
+				onCollision(WEST, r);
+				wall = true;
+			}
 		}
 	}
 	

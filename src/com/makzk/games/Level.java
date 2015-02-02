@@ -146,9 +146,12 @@ public class Level {
 			}
 		}
 	}
-	
+
 	public List<EntityRect> getRects() {
 		return rects;
+	}
+	public List<Enemy> getEnemies() {
+		return enemies;
 	}
 
 	public float getWidth() {
