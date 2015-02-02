@@ -102,9 +102,9 @@ public class EntityRect extends Entity {
 
 		// Se determina si la entity ha ido a la izquierda o no, para 
 		// voltear al sprite
-		if(speedX > 0) {
+		if(speedX < 0) {
 			spriteFlipHorizontal = true;
-		} else if(speedX < 0) {
+		} else if(speedX > 0) {
 			spriteFlipHorizontal = false;
 		}
 		
