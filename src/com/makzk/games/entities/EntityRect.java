@@ -112,15 +112,15 @@ public class EntityRect extends Entity {
 		if(speedY < 0) {
 			// La entity está saltando
 			actualAnimation = ANIMATION_JUMP.ordinal();
+		} else if (!onGround && speedY > 0) {
+			// La entity esta cayenda
+			actualAnimation = ANIMATION_FALL.ordinal();
 		} else if(speedX != 0) {
 			// La entity está yendo hacia los lados, pero no saltando (else if)
 			actualAnimation = ANIMATION_RUN.ordinal();
 			if(animations[actualAnimation] != null) {
 				animations[actualAnimation].setSpeed(Math.abs(speedY));
 			}
-		} else if (!onGround && speedY > 0) {
-			// La entity esta cayenda
-			actualAnimation = ANIMATION_FALL.ordinal();
 		} else {
 			// La entity está detenida
 			actualAnimation = ANIMATION_STAND.ordinal();
