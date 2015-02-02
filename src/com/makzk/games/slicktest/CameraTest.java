@@ -82,7 +82,8 @@ public class CameraTest extends BasicGame {
 		player.move(level, delta);
 		
 		float pjXOnScreen = player.getRect().getCenterX();
-		cam.autoMove(pjXOnScreen);
+		float pjYOnScreen = player.getRect().getCenterY();
+		cam.autoMove(pjXOnScreen, pjYOnScreen);
 		
 		enemy.move(level, delta);
 	}

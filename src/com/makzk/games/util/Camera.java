@@ -55,8 +55,19 @@ public class Camera {
 		return rect.getY();
 	}
 	
-	public void autoMove(float x) {
+	public void autoMove(float x, float y) {
 		rect.setX(x-(rect.getWidth()/2));
-		//Espacio para if (tall) then do some shit
+		if (y<0){
+			System.out.println("Y: "+y+" Height: "+rect.getHeight());
+		}
+		/*                ***Notas***
+		 * Crear Mapas con la propiedad Tall, si el nivel tiene dicha propiedad en false, no ajustar el eje y
+		 * Si el nivel tiene dicha propiedad en true, ajustar la posicion en Y al pasar la mitad de la pantalla.
+		 * 
+		 * Luego de elevar la camara esta se debe ajustar es decir luego de que el jugador alcanze la velocidad en
+		 * Y a 0, la camara debera decender de manera proporsional con el jugador hasta que este toque piso.
+		 * 
+		 * 
+		 */
 	}
 }
