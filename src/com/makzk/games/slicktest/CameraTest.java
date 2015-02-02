@@ -63,7 +63,8 @@ public class CameraTest extends BasicGame {
 		enemy.draw(cam);
 		
 		g.setColor(Color.white);
-		g.drawString(String.format("[PJPos] X: %.1f Y: %.1f", player.getX(), player.getY()), 10, 70);
+		g.drawString(String.format("[PJ] X: %.1f Y: %.1f sX: %.2f sY: %.2f g: %s", 
+				player.getX(), player.getY(), player.getSpeedX(), player.getSpeedY(), player.isOnGround()), 10, 50);
 		g.drawString(String.format("[CamPos] X: %.2f Y: %.2f", cam.getX(), cam.getY()), 10, 30);
 	}
 

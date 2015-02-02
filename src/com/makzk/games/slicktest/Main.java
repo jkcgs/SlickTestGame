@@ -11,7 +11,7 @@ public class Main {
 		int winWidth = 1280; // Ancho ventana
 		int winHeight = 700; // Alto ventana
 		String title = "Prueba Slick2D"; // Título de ventana
-		BasicGame test = new PongTest(title); // Clase a ejecutar
+		BasicGame test = new CameraTest(title); // Clase a ejecutar
 		
 		try {
 			AppGameContainer appgc;

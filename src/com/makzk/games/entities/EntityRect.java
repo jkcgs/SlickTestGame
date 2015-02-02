@@ -28,7 +28,7 @@ public class EntityRect extends Entity {
 	protected Color color = Color.transparent;
 	protected boolean keepOnScreen = false;
 	protected boolean gravity = false;
-	protected float gravityImpulse = .005f;
+	protected float gravityImpulse = .03f;
 	protected boolean solid = true;
 	protected boolean onGround = false;
 	protected Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];

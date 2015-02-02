@@ -18,8 +18,9 @@ public class Player extends EntityRect {
 	private int controlLeft = Input.KEY_A;
 	private int controlRight = Input.KEY_D;
 	private int controlJump = Input.KEY_SPACE;
-	private float speed = 0.5f;
-	private float jumpImpulse = 1.5f;
+	private float speed = .5f;
+	private float acceleration = .05f;
+	private float jumpImpulse = 1f;
 	private float initialX;
 	private float initialY;
 
@@ -54,13 +55,13 @@ public class Player extends EntityRect {
 		Input in = gc.getInput();
 		
 		if(in.isKeyDown(controlLeft)) {
-			speedX -= .01f;
+			speedX -= acceleration;
 			if(speedX < -speed) {
 				speedX = -speed;
 			}
 		}
 		if(in.isKeyDown(controlRight)) {
-			speedX += .01f;
+			speedX += acceleration;
 			if(speedX > speed) {
 				speedX = speed;
 			}
@@ -73,19 +74,19 @@ public class Player extends EntityRect {
 		} else if(speedY < 0) {
 			// Terminar impulso de salto si no está
 			// presionada la tecla para saltar
-			speedY -= speedY / 30;
+			speedY -= speedY / 10;
 		}
 
 		if(!in.isKeyDown(controlLeft) 
 				&& !in.isKeyDown(controlRight)){
 			if(speedX != 0) {
 				if(speedX > 0) {
-					speedX -= .01f;
+					speedX -= acceleration;
 					if(speedX < 0) {
 						speedX = 0;
 					}
 				} else {
-					speedX += .01f;
+					speedX += acceleration;
 					if(speedX > 0) {
 						speedX = 0;
 					}
