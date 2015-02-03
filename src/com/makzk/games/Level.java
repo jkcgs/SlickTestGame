@@ -120,7 +120,7 @@ public class Level {
 	public void updateEnemies(int delta) {
 		for(Enemy enemy : enemies) {
 			enemy.move(this, delta);
-			if(enemy.getX() < 0 || enemy.getY() > gc.getHeight()) {
+			if(enemy.getX() < 0 || enemy.getY() > this.getHeight()) {
 				enemy.reset();
 			}
 		}
