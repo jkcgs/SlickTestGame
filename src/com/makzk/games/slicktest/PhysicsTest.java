@@ -10,7 +10,6 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
-import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
@@ -18,7 +17,6 @@ public class PhysicsTest extends BasicGame {
 	Level level;
 	Camera cam;
 	Player player;
-	Enemy enemy;
 	
 	public PhysicsTest(String title) {
 		super(title);
@@ -107,7 +105,6 @@ public class PhysicsTest extends BasicGame {
 		float pjXOnScreen = player.getRect().getCenterX();
 		float pjYOnScreen = player.getRect().getCenterY();
 		cam.autoMove(pjXOnScreen, pjYOnScreen);
-		
 	}
 
 	public void keyPressed(int key, char c) {

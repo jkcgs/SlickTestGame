@@ -19,7 +19,6 @@ public class CameraTest extends BasicGame {
 	Camera cam;
 	Player player;
 	Enemy enemy;
-	private boolean tall = false;
 	
 	public CameraTest(String title) {
 		super(title);

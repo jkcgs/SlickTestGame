@@ -39,7 +39,7 @@ public class EntityRect extends Entity {
 	protected boolean spriteFlipHorizontal = false;
 	protected float nextX = 0;
 	protected float nextY = 0;
-	protected boolean display = true;
+	protected boolean enabled = true;
 
 	public EntityRect(GameContainer gc, Rectangle rect) {
 		super(gc);
@@ -92,10 +92,7 @@ public class EntityRect extends Entity {
 	 * Dibuja el elemento sólo si no se trata de un rectángulo transparente
 	 */
 	public void draw() {
-		if(display) {
-			Camera cam = null;
-			draw(cam);
-		}
+		draw(null);
 	}
 
 	/**
@@ -103,7 +100,7 @@ public class EntityRect extends Entity {
 	 * en base a la posición de una cámara
 	 */
 	public void draw(Camera cam) {
-		if(!display) {
+		if(!enabled) {
 			return;
 		}
 
@@ -162,6 +159,10 @@ public class EntityRect extends Entity {
 	 * @param delta Delta de diferencia de rendimiento del juego para no variar la velocidad
 	 */
 	public void move(Level level, int delta) {
+		if(!enabled) {
+			return;
+		}
+
 		nextY = speedY * delta + getY();
 		nextX = speedX * delta + getX();
 		onGround = false;
@@ -170,13 +171,11 @@ public class EntityRect extends Entity {
 			wall = false;
 
 			// Revisar colisiones con elementos del nivel
-			for (Iterator<EntityRect> iterator = level.getRects().iterator(); iterator.hasNext();) {
-			    EntityRect r = iterator.next();
-			    resolveCollisions(r, iterator);
+			for (EntityRect r : level.getRects()) {
+			    resolveCollisions(r);
 			}
-			for (Iterator<Enemy> iterator = level.getEnemies().iterator(); iterator.hasNext();) {
-			    EntityRect r = iterator.next();
-			    resolveCollisions(r, iterator);
+			for (Enemy r : level.getEnemies()) {
+			    resolveCollisions(r);
 			}
 		}
 
@@ -213,10 +212,9 @@ public class EntityRect extends Entity {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	public void resolveCollisions(EntityRect r, Iterator it) {
+	public void resolveCollisions(EntityRect r) {
 		// Si el elemento no es sólido, no hay qué revisar
-		if(!r.isSolid()) {
+		if(!r.isSolid() || !r.isEnabled()) {
 			return;
 		}
 		
@@ -226,13 +224,13 @@ public class EntityRect extends Entity {
 				nextY = r.getY() - getHeight();
 				speedY = 0;
 				onGround = true;
-				onCollision(SOUTH, r, it);
+				onCollision(SOUTH, r);
 			}
 			// Colisión arriba
 			else if(r.getY() + r.getHeight() <= getY() && r.getY() + r.getHeight() > nextY) {
 				nextY = r.getY() + r.getHeight();
 				speedY = 0;
-				onCollision(NORTH, r, it);
+				onCollision(NORTH, r);
 			}
 		}
 		
@@ -242,13 +240,13 @@ public class EntityRect extends Entity {
 				nextX = r.getX() - getWidth();
 				speedX = 0;
 				wall = true;
-				onCollision(EAST, r, it);
+				onCollision(EAST, r);
 			}
 			// Colisión izquierda
 			else if(r.getX() + r.getWidth() <= getX() && r.getX() + r.getWidth() > nextX) {
 				nextX = r.getX() + r.getWidth();
 				speedX = 0;
-				onCollision(WEST, r, it);
+				onCollision(WEST, r);
 				wall = true;
 			}
 		}
@@ -296,7 +294,6 @@ public class EntityRect extends Entity {
 	public boolean isOnGround() { return onGround; }
 	public boolean isSolid() { return solid; }
 	public boolean isTouchingWall() { return wall; }
-	public boolean isShown() { return display; }
 
 	// get rekt m7
 	public Rectangle getRect() { return rect; }
@@ -326,6 +323,9 @@ public class EntityRect extends Entity {
 	
 	public void setLevel(Level level) { this.level = level; }
 	public Level getLevel(){ return level; } 
+	
+	public void setEnabled(boolean enabled) { this.enabled = enabled; }
+	public boolean isEnabled() { return enabled; }
 
 	@SuppressWarnings("rawtypes")
 	public void onCollision(Direction dir, EntityRect other, Iterator it) {}

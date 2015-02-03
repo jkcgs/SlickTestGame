@@ -109,13 +109,12 @@ public class Player extends EntityRect {
 		setY(initialY);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void onCollision(Direction dir, EntityRect other, Iterator it) {
+	public void onCollision(Direction dir, EntityRect other) {
 		if(dir == Direction.SOUTH && other instanceof Enemy) {
 			// Collision with enemy!
 			speedY = gc.getInput().isKeyDown(controlJump) ? -.7f : -.5f;
-			it.remove();
+			other.setEnabled(false);
 		}
 	}
 }
