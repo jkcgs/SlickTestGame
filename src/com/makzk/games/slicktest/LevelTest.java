@@ -56,7 +56,7 @@ public class LevelTest extends BasicGame {
 	}
 
 	public void keyPressed(int key, char c) {
-		// Reiniciar la posición del jugador y los enemigos
+		// Reiniciar la posiciï¿½n del jugador y los enemigos
 		if(key == Input.KEY_R) {
 			level.reset(player);
 		}

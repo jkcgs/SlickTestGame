@@ -59,7 +59,11 @@ public class Camera {
 			if(rect.getY() < 0) {
 				rect.setY(0);
 			} else if(rect.getY() + rect.getHeight() > level.getHeight()){
-				rect.setY(level.getHeight() - rect.getHeight());
+				if(level.getHeight() >= gc.getHeight()) {
+					rect.setY(level.getHeight() - rect.getHeight());
+				} else if(rect.getY() + rect.getHeight() > gc.getHeight()) {
+					rect.setY(gc.getHeight() - rect.getHeight());
+				}
 			}
 			
 		}
