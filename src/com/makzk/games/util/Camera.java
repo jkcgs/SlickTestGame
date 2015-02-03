@@ -9,6 +9,7 @@ public class Camera {
 	private Rectangle rect;
 	private Level level;
 	private boolean keepOnLevel = true;
+	private GameContainer gc;
 	
 	public Camera(Rectangle rect, Level level) {
 		this.rect = rect;
@@ -18,6 +19,7 @@ public class Camera {
 	public Camera(GameContainer gc, Level level) {
 		this.rect = new Rectangle(0, 0, gc.getWidth(), gc.getHeight());
 		this.level = level;
+		this.gc = gc;
 	}
 
 	public Rectangle getRect() {
@@ -39,10 +41,14 @@ public class Camera {
 	public void setX(float x) {
 		rect.setX(x);
 		if (keepOnLevel){
-			if(rect.getX() < 0){
+			if(rect.getX() < 0) {
 				rect.setX(0);
-			}else if(rect.getX() + rect.getWidth() > level.getWidth()){
-				rect.setX(level.getWidth() - rect.getWidth());
+			} else if(rect.getX() + rect.getWidth() > level.getWidth()) {
+				if(rect.getWidth() > gc.getWidth()) {
+					rect.setX(level.getWidth() - rect.getWidth());
+				} else if(rect.getX() + rect.getWidth() > gc.getWidth()) {
+					rect.setX(gc.getWidth() - rect.getWidth());
+				}
 			}
 			
 		}
@@ -50,9 +56,9 @@ public class Camera {
 	public void setY(float y) {
 		rect.setY(y);
 		if (keepOnLevel){
-			if(rect.getY() < 0){
+			if(rect.getY() < 0) {
 				rect.setY(0);
-			}else if(rect.getY() + rect.getHeight() > level.getHeight()){
+			} else if(rect.getY() + rect.getHeight() > level.getHeight()){
 				rect.setY(level.getHeight() - rect.getHeight());
 			}
 			
