@@ -25,7 +25,6 @@ public class PhysicsTest extends BasicGame {
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-		
 		Log.info("Init level");
 		level = new Level(gc, 2600, 800);
 		float[][] rects = new float[][]{
@@ -74,7 +73,7 @@ public class PhysicsTest extends BasicGame {
 		cam = new Camera(gc, level);
 		
 		Log.info("Init player");
-		Rectangle r = new Rectangle(50, 10, 102, 110);
+		Rectangle r = new Rectangle(50, 10, 50, 105);
 		player = new Player(gc, r);
 		
 		Log.info("Init enemies");
@@ -103,8 +102,8 @@ public class PhysicsTest extends BasicGame {
 		player.move(level, delta);
 		level.updateEnemies(delta);
 		
-		float pjXOnScreen = player.getRect().getCenterX();
-		float pjYOnScreen = player.getRect().getCenterY();
+		float pjXOnScreen = player.getCollisionBox().getCenterX();
+		float pjYOnScreen = player.getCollisionBox().getCenterY();
 		cam.autoMove(pjXOnScreen, pjYOnScreen);
 	}
 

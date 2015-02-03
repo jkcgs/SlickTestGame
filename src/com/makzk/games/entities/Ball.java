@@ -23,7 +23,7 @@ public class Ball extends EntityRect {
 			speedX = -speedX;
 		}
 		if (getY() <= 0 
-				|| rect.getMaxY() >= gc.getHeight()
+				|| collisionBox.getMaxY() >= gc.getHeight()
 				|| collisionInY(leftPad)
 				|| collisionInY(rightPad)) {
 			speedY = -speedY;

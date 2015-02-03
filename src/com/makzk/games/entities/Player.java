@@ -5,6 +5,7 @@ import static com.makzk.games.util.PlayerAnimations.ANIMATION_JUMP;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -30,16 +31,22 @@ public class Player extends EntityRect {
 		gravity = true;
 		initialX = rect.getX();
 		initialY = rect.getY();
+		setColor(Color.gray);
 		
 		// Configurar animaciones
+		float[] drawrect = new float[]{ 0, -5, 102, 110 };
+		float[] drawrect2 = new float[]{ -34, -5, 102, 110 };
+		float[] drawrect3 = new float[]{ -34, 0, 102, 105 };
+		float[] drawrect4 = new float[]{ -10, 0, 102, 105 };
+		
 		SpriteSheet spriteIddle = new SpriteSheet("data/sprites/iddle1.png", 410, 425);
 		SpriteSheet spriteJump = new SpriteSheet("data/sprites/jump.png",404,458);
 		SpriteSheet spriteFall = new SpriteSheet("data/sprites/fall.png",458,461);
 		SpriteSheet spriteRun = new SpriteSheet("data/sprites/Run.png",464,390);
-		setupAnimation(spriteIddle, ANIMATION_STAND, new int[]{0,1}, 500);
-		setupAnimation(spriteRun, ANIMATION_RUN, new int[]{0,1,2,3,4}, 70);
-		setupAnimation(spriteJump, ANIMATION_JUMP, new int[]{0}, 200);
-		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200);
+		setupAnimation(spriteIddle, ANIMATION_STAND, new int[]{0,1}, 500, drawrect, drawrect2);
+		setupAnimation(spriteRun, ANIMATION_RUN, new int[]{0,1,2,3,4}, 70, drawrect3, drawrect4);
+		setupAnimation(spriteJump, ANIMATION_JUMP, new int[]{0}, 200, drawrect, drawrect2);
+		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200, drawrect, drawrect2);
 	}
 	
 	/**

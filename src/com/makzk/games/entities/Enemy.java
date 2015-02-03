@@ -53,8 +53,8 @@ public class Enemy extends EntityRect {
 	public void reset() {
 		speedX = .1f;
 		speedY = 0;
-		rect.setX(initialX);
-		rect.setY(initialY);
+		collisionBox.setX(initialX);
+		collisionBox.setY(initialY);
 		enabled = true;
 	}
 }

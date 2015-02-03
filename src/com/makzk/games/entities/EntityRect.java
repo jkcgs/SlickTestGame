@@ -25,7 +25,9 @@ import com.makzk.games.util.Direction;
 import com.makzk.games.util.PlayerAnimations;
 
 public class EntityRect extends Entity {
-	protected Rectangle rect;
+	protected Rectangle collisionBox;
+	protected float[][] drawBoxes = new float[ANIMATION_TOTAL.ordinal()][4];
+	protected float[][] drawBoxesFlipped = new float[ANIMATION_TOTAL.ordinal()][4];
 	protected Level level;
 	protected Color color = Color.transparent;
 	protected boolean keepOnScreen = false;
@@ -41,14 +43,14 @@ public class EntityRect extends Entity {
 	protected float nextY = 0;
 	protected boolean enabled = true;
 
-	public EntityRect(GameContainer gc, Rectangle rect) {
+	public EntityRect(GameContainer gc, Rectangle collisionBox, Level level) {
 		super(gc);
-		this.rect = rect;
-	}
-	public EntityRect(GameContainer gc, Rectangle rect, Level level) {
-		super(gc);
-		this.rect = rect;
+		this.collisionBox = collisionBox;
 		this.level = level;
+	}
+
+	public EntityRect(GameContainer gc, Rectangle collisionBox) {
+		this(gc, collisionBox, null);
 	}
 
 	/**
@@ -60,10 +62,67 @@ public class EntityRect extends Entity {
 	 * @param y1 El primer elemento en Y de la grilla de sprites del SpriteSheet
 	 * @param x2 El 煤ltimo elemento en X de la grilla de sprites del SpriteSheet
 	 * @param y2 El 煤ltimo elemento en Y de la grilla de sprites del SpriteSheet
-	 * @param duration
+	 * @param duration La duraci髇 de cada animaci髇
 	 */
-	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int x1, int y1, int x2, int y2, int duration) {
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+			int x1, int y1, int x2, int y2, int duration, float[] drawBox, float[] drawBoxFlipped) {
 		animations[anim.ordinal()] = new Animation(sprite, x1, y1, x2, y2, true, duration, true);
+		this.drawBoxes[anim.ordinal()] = drawBox;
+		this.drawBoxesFlipped[anim.ordinal()] = drawBoxFlipped;
+	}
+
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+			int x1, int y1, int x2, int y2, int duration, float[] drawBox) {
+		setupAnimation(sprite, anim, x1, y1, x2, y2, duration, drawBox, null);
+	}
+
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+			int x1, int y1, int x2, int y2, int duration) {
+		setupAnimation(sprite, anim, x1, y1, x2, y2, duration, null, null);
+	}
+	
+	/**
+	 * Configurar una animaci贸n para una posici贸n determinada, determinado
+	 * por una o varias posiciones de la grilla de sprites del SpriteSheet, 
+	 * s贸lo en la primera fila de 茅ste
+	 * @param sprite El SpriteSheet que contiene los sprites
+	 * @param anim La posici贸n a configurar
+	 * @param xpositions Las posiciones en X a usar
+	 * @param duration La duraci贸n de cada posici贸n
+	 * @param drawBox La posici髇 y tama駉 de la animaci髇 y sprite. Las coordenadas del
+	 * rect醤gulo se usan como offset en base a la posici髇 del objeto, y no como posici髇 absoluta.
+	 * @param drawBoxFlipped Lo mismo para drawBox, pero para su animaci髇 invertida horizontalmente.
+	 */
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int[] xpositions, 
+			int duration, float[] drawBox, float[] drawBoxFlipped) {
+		int[] frames = new int[xpositions.length*2];
+		int[] durations = new int[xpositions.length];
+		
+		Arrays.fill(durations, duration);
+		for(int i = 0; i < xpositions.length; i++) {
+			frames[i*2] = xpositions[i];
+			frames[i*2+1] = 0;
+		}
+		
+		this.drawBoxes[anim.ordinal()] = drawBox;
+		this.drawBoxesFlipped[anim.ordinal()] = drawBoxFlipped;
+		animations[anim.ordinal()] = new Animation(sprite, frames, durations);
+	}
+
+	/**
+	 * Configurar una animaci贸n para una posici贸n determinada, determinado
+	 * por una o varias posiciones de la grilla de sprites del SpriteSheet, 
+	 * s贸lo en la primera fila de 茅ste
+	 * @param sprite El SpriteSheet que contiene los sprites
+	 * @param anim La posici贸n a configurar
+	 * @param xpositions Las posiciones en X a usar
+	 * @param duration La duraci贸n de cada posici贸n
+	 * @param drawBox La posici髇 y tama駉 de la animaci髇 y sprite. Las coordenadas del
+	 * rect醤gulo se usan como offset en base a la posici髇 del objeto, y no como posici髇 absoluta.
+	 */
+	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+			int[] xpositions, int duration, float[] drawBox) {
+		setupAnimation(sprite, anim, xpositions, duration, drawBox, null);
 	}
 	
 	/**
@@ -76,16 +135,7 @@ public class EntityRect extends Entity {
 	 * @param duration La duraci贸n de cada posici贸n
 	 */
 	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int[] xpositions, int duration) {
-		int[] frames = new int[xpositions.length*2];
-		int[] durations = new int[xpositions.length];
-		
-		Arrays.fill(durations, duration);
-		for(int i = 0; i < xpositions.length; i++) {
-			frames[i*2] = xpositions[i];
-			frames[i*2+1] = 0;
-		}
-
-		animations[anim.ordinal()] = new Animation(sprite, frames, durations);
+		setupAnimation(sprite, anim, xpositions, duration, null, null);
 	}
 	
 	/**
@@ -107,7 +157,7 @@ public class EntityRect extends Entity {
 		if(color != Color.transparent) {
 			gc.getGraphics().setColor(color);
 			if(cam == null) {
-				gc.getGraphics().fill(rect);
+				gc.getGraphics().fill(collisionBox);
 			} else {
 				gc.getGraphics().fillRect(getX() - cam.getX(), getY() - cam.getY(), 
 						getWidth(), getHeight());
@@ -131,9 +181,6 @@ public class EntityRect extends Entity {
 		} else if(speedX != 0) {
 			// La entity est谩 yendo hacia los lados, pero no saltando (else if)
 			actualAnimation = ANIMATION_RUN.ordinal();
-			if(animations[actualAnimation] != null) {
-				animations[actualAnimation].setSpeed(Math.abs(speedY));
-			}
 		} else {
 			// La entity est谩 detenida
 			actualAnimation = ANIMATION_STAND.ordinal();
@@ -141,15 +188,36 @@ public class EntityRect extends Entity {
 	
 		// Dibujar el sprite, con su volteo correspondiente si corresponde, y
 		// seg煤n el rect谩ngulo del elemento
-		// TODO: Agregar un rect谩ngulo distinto para el sprite, en vez del usado para colisiones
 		if(animations[actualAnimation] != null) {
-			if(cam == null) {
-				animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
-				.draw(getX(), getY(), getWidth(), getHeight());
-			} else {
-				animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
-				.draw(getX() - cam.getX(), getY() - cam.getY(), getWidth(), getHeight());
+			float finalX = getX();
+			float finalY = getY();
+			float width = getWidth();
+			float height = getHeight();
+
+			if(cam != null) {
+				finalX -= cam.getX();
+				finalY -= cam.getY();
 			}
+			
+			float[] dbf = drawBoxesFlipped[actualAnimation];
+			float[] dbox = drawBoxes[actualAnimation];
+
+			if(spriteFlipHorizontal && dbf != null) {
+				finalX += dbf[0];
+				finalY += dbf[1];
+				width = dbf[2];
+				height = dbf[3];
+			} else if(dbox != null || 
+				( spriteFlipHorizontal && dbf == null && dbox != null )
+			) {
+				finalX += dbox[0];
+				finalY += dbox[1];
+				width = dbox[2];
+				height = dbox[3];
+			}
+			
+			animations[actualAnimation].getCurrentFrame().getFlippedCopy(spriteFlipHorizontal, false)
+			.draw(finalX, finalY, width, height);
 		}
 	}
 
@@ -263,7 +331,7 @@ public class EntityRect extends Entity {
 	 * @return La direcci贸n de colisi贸n. Si no hubo colisi贸n se retorna Direction.NONE
 	 */
 	public Direction collisionSide(EntityRect other) {
-		if(rect.intersects(other.getRect())) {
+		if(collisionBox.intersects(other.getCollisionBox())) {
 			if(speedX < 0) return Direction.WEST;
 			else if(speedX >= 0) return Direction.EAST;
 			else if(speedY < 0) return Direction.NORTH;
@@ -296,25 +364,25 @@ public class EntityRect extends Entity {
 	public boolean isTouchingWall() { return wall; }
 
 	// get rekt m7
-	public Rectangle getRect() { return rect; }
-	public void setRect(Rectangle rect) { this.rect = rect; }
+	public Rectangle getCollisionBox() { return collisionBox; }
+	public void setCollisionBox(Rectangle collisionBox) { this.collisionBox = collisionBox; }
 
 	// Shorthands para posici贸n y movimiento
-	public float getX() { return rect.getX(); }
-	public float getMaxX() { return rect.getMaxX(); }
-	public float getY() { return rect.getY(); }
-	public float getMaxY() { return rect.getMaxY(); }
-	public void setX(float x) { rect.setX(x); }
-	public void setY(float y) { rect.setY(y); }
+	public float getX() { return collisionBox.getX(); }
+	public float getMaxX() { return collisionBox.getMaxX(); }
+	public float getY() { return collisionBox.getY(); }
+	public float getMaxY() { return collisionBox.getMaxY(); }
+	public void setX(float x) { collisionBox.setX(x); }
+	public void setY(float y) { collisionBox.setY(y); }
 	public void moveX(float x) { setX(getX() + x); }
 	public void moveY(float y) { setY(getY() + y); }
 	public void movePos(float x, float y) { moveX(x); moveY(y); }
 
 	// Shorthands de tama帽o
-	public float getWidth() { return rect.getWidth(); }
-	public float getHeight() { return rect.getHeight(); }
-	public void setWidth(float w) { rect.setWidth(w); }
-	public void setHeight(float h) { rect.setHeight(h); }
+	public float getWidth() { return collisionBox.getWidth(); }
+	public float getHeight() { return collisionBox.getHeight(); }
+	public void setWidth(float w) { collisionBox.setWidth(w); }
+	public void setHeight(float h) { collisionBox.setHeight(h); }
 	public void setSize(float size){ setWidth(size); setHeight(size); }
 
 	// Color
