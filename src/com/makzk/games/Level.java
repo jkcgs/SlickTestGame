@@ -1,13 +1,20 @@
 package com.makzk.games;
 
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
 
 import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.EntityRect;
@@ -44,6 +51,49 @@ public class Level {
 		this(gc, gc.getWidth(), gc.getHeight());
 	}
 	
+	/**
+	 * Crear un nivel desde un archivo json
+	 * @param filepath La ubicación del archivo. Normalmente estarían en data/levels
+	 * @param gc El contenedor del juego
+	 * @return El nivel diseñado en base al archivo json
+	 */
+	public static Level loadFromFile(String filepath, GameContainer gc) {
+		Level level = null;
+		try {
+			byte[] lines = Files.readAllBytes(Paths.get(filepath));
+			String content = new String(lines, Charset.defaultCharset());
+			JSONObject json = new JSONObject(content);
+
+			float width = json.has("width") ? json.getInt("width") : gc.getWidth();
+			float height = json.has("height") ? json.getInt("height") : gc.getHeight();
+			level = new Level(gc, width, height);
+
+			if(json.has("playerInitial")) {
+				JSONObject pjInitial = json.getJSONObject("playerInitial");
+				level.setPjInitialX(pjInitial.has("x") ? pjInitial.getInt("x") : 0);
+				level.setPjInitialY(pjInitial.has("y") ? pjInitial.getInt("y") : 0);
+			} else {
+				level.setPjInitialX(0);
+				level.setPjInitialY(0);
+			}
+
+			if(json.has("rects")) {
+				level.addRects(json.getJSONArray("rects"));
+			}
+			if(json.has("enemies")) {
+				level.addEnemies(json.getJSONArray("enemies"));
+			}
+			if(json.has("entities")) {
+				level.addEntities(json.getJSONArray("entities"));
+			}
+		} catch (Throwable e) {
+			Log.error("Error while parsing JSON file", e);
+			return null;
+		}
+		
+		return level;
+	}
+	
 	public void addRect(EntityRect rect) {
 		rect.setLevel(this);
 		rects.add(rect);
@@ -72,6 +122,14 @@ public class Level {
 			}
 		}
 	}
+	public void addRects(JSONArray rects) {
+		for(int i = 0; i < rects.length(); i++) {
+			JSONArray rect = rects.getJSONArray(i);
+			this.addRect(
+					rect.getInt(0), rect.getInt(1), rect.getInt(2), rect.getInt(3), 
+					new Color(rect.getInt(4), rect.getInt(5), rect.getInt(6)));
+		}
+	}
 	
 	public void addEnemy(float x, float y, float width, float height) throws SlickException {
 		Enemy e = new Enemy(gc, new Rectangle(x, y, width, height), this);
@@ -81,6 +139,13 @@ public class Level {
 	public void addEnemies(float[][] enemiesPos) throws SlickException {
 		for(float[] rect: enemiesPos) {
 			addEnemy(rect[0], rect[1], rect[2], rect[3]);
+		}
+	}
+	public void addEnemies(JSONArray enemies) throws JSONException, SlickException {
+		for(int i = 0; i < enemies.length(); i++) {
+			JSONArray enemy = enemies.getJSONArray(i);
+			this.addEnemy(
+					enemy.getInt(0), enemy.getInt(1), enemy.getInt(2), enemy.getInt(3));
 		}
 	}
 	
@@ -125,6 +190,17 @@ public class Level {
 				}
 			}
 		}
+	}
+	public void addEntities(JSONArray entities) throws SlickException {
+		float[][] rects = new float[entities.length()][];
+		for(int i = 0; i < entities.length(); i++) {
+			double[] rect = entities.getJSONArray(i).getDoubleArray();
+			rects[i] = new float[rect.length];
+			for(int j = 0; j < rect.length; j++) {
+				rects[i][j] = (float) rect[j];
+			}
+		}
+		addEntities(rects);
 	}
 	
 	public void updateEnemies(int delta) {
@@ -206,5 +282,13 @@ public class Level {
 	
 	public float getPjInitialY() {
 		return playerInitialY;
+	}
+
+	public void setPjInitialX(float initialX) {
+		playerInitialX = initialX;
+	}
+	
+	public void setPjInitialY(float initialY) {
+		playerInitialY = initialY;
 	}
 }
