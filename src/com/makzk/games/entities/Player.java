@@ -52,7 +52,7 @@ public class Player extends EntityRect {
 		super.move(level, delta);
 		
 		// Reiniciar al caer hacia el olvido
-		if(getY() > gc.getHeight()) {
+		if(getY() > level.getHeight()) {
 			reset();
 		}
 		
