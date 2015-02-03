@@ -55,5 +55,6 @@ public class Enemy extends EntityRect {
 		speedY = 0;
 		rect.setX(initialX);
 		rect.setY(initialY);
+		enabled = true;
 	}
 }

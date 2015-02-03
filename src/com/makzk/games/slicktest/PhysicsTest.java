@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
+import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
@@ -108,9 +109,12 @@ public class PhysicsTest extends BasicGame {
 	}
 
 	public void keyPressed(int key, char c) {
-		// Reiniciar la posiciÃ³n del jugador
+		// Reiniciar la posición del jugador y los enemigos
 		if(key == Input.KEY_R) {
 			player.reset();
+			for(Enemy e : level.getEnemies()) {
+				e.reset();
+			}
 		}
 	};
 }
