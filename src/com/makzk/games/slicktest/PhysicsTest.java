@@ -28,10 +28,10 @@ public class PhysicsTest extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		
 		Log.info("Init level");
-		level = new Level(gc, 420,2000);
+		level = new Level(gc, 3000);
 		float[][] rects = new float[][]{
 				
-				{8, 1935, 407, 25, 241, 7, 7},
+				/*8, 1935, 407, 25, 241, 7, 7},
 				{216, 1824, 148, 12, 241, 7, 7},
 				{13, 1674, 180, 12, 241, 7, 7},
 				{221, 1498, 179, 13, 241, 7, 7},
@@ -56,8 +56,8 @@ public class PhysicsTest extends BasicGame {
 				{134, 93, 25, 23, 22, 201, 45},
 				{304, 77, 22, -30, 0, 0, 0},
 				{141, 100, 10, 11, 0, 0, 0}
-
-				/*{212, 338, 266, 44, 128, 74, 0},
+				*/
+				{212, 338, 266, 44, 128, 74, 0},
 				{261, 338, 52, 44, 255, 247, 23},
 				{381, 338, 49, 43, 255, 247, 23},
 				{321, 198, 56, 46, 255, 247, 23},
@@ -67,7 +67,7 @@ public class PhysicsTest extends BasicGame {
 				{-3, 521, 2180, 121, 192, 131, 9},
 				{761, 414, 104, 34, 2, 235, 0},
 				{1185, 347, 124, 37, 2, 235, 0},
-				{1697, 341, 128, 38, 2, 235, 0}*/
+				{1697, 341, 128, 38, 2, 235, 0}
 			};
 
 		level.addRects(rects, null);
