@@ -1,6 +1,7 @@
 package com.makzk.games.slicktest;
 
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -27,9 +28,61 @@ public class PhysicsTest extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		
 		Log.info("Init level");
-		level = new Level(gc, 2000);
+		level = new Level(gc, 420,2000);
 		float[][] rects = new float[][]{
-				{212, 338, 266, 44, 128, 74, 0},
+				
+					{8, 1935, 407, 25, 241, 7, 7},
+					{216, 1824, 148, 12, 241, 7, 7},
+					{13, 1674, 180, 12, 241, 7, 7},
+					{221, 1498, 179, 13, 241, 7, 7},
+					{8, 1304, 191, 11, 241, 7, 7},
+					{259, 1046, 153, 9, 241, 7, 7},
+					{11, 805, 209, 9, 241, 7, 7},
+					{209, 514, 197, 9, 241, 7, 7},
+					{10, 263, 207, 10, 241, 7, 7},
+					{125, 107, 14, 13, 241, 7, 7},
+					{138, 92, 21, 28, 241, 7, 7},
+					{159, 102, 14, 17, 241, 7, 7},
+					{141, 79, 11, 13, 241, 7, 7},
+					{125, 94, 13, 13, 241, 7, 7},
+					{150, 93, 21, 17, 241, 7, 7},
+					{150, 85, 13, 16, 241, 7, 7},
+					{130, 86, 12, 12, 241, 7, 7},
+					{108, 107, 19, 13, 241, 7, 7},
+					{115, 99, 13, 12, 241, 7, 7},
+					{171, 108, 24, 11, 241, 7, 7},
+					{169, 100, 15, 10, 241, 7, 7},
+					{149, 115, 48, 5, 241, 7, 7},
+					{134, 93, 25, 23, 22, 201, 45},
+					{304, 77, 22, -30, 0, 0, 0},
+					{141, 100, 10, 11, 0, 0, 0}
+				
+				/*{8, 1935, 407, 25, 241, 7, 7},
+				{216, 1824, 148, 12, 241, 7, 7},
+				{13, 1674, 180, 12, 241, 7, 7},
+				{221, 1498, 179, 13, 241, 7, 7},
+				{8, 1304, 191, 11, 241, 7, 7},
+				{259, 1046, 153, 9, 241, 7, 7},
+				{11, 805, 209, 9, 241, 7, 7},
+				{209, 514, 197, 9, 241, 7, 7},
+				{10, 263, 207, 10, 241, 7, 7},
+				{125, 107, 14, 13, 241, 7, 7},
+				{138, 92, 21, 28, 241, 7, 7},
+				{159, 102, 14, 17, 241, 7, 7},
+				{141, 79, 11, 13, 241, 7, 7},
+				{125, 94, 13, 13, 241, 7, 7},
+				{150, 93, 21, 17, 241, 7, 7},
+				{150, 85, 13, 16, 241, 7, 7},
+				{130, 86, 12, 12, 241, 7, 7},
+				{108, 107, 19, 13, 241, 7, 7},
+				{115, 99, 13, 12, 241, 7, 7},
+				{171, 108, 24, 11, 241, 7, 7},
+				{169, 100, 15, 10, 241, 7, 7},
+				{149, 115, 48, 5, 241, 7, 7},
+				{134, 93, 25, 23, 22, 201, 45},
+				{304, 77, 22, -30, 0, 0, 0},
+				{141, 100, 10, 11, 0, 0, 0
+				/*{212, 338, 266, 44, 128, 74, 0},
 				{261, 338, 52, 44, 255, 247, 23},
 				{381, 338, 49, 43, 255, 247, 23},
 				{321, 198, 56, 46, 255, 247, 23},
@@ -39,7 +92,7 @@ public class PhysicsTest extends BasicGame {
 				{-3, 521, 2180, 121, 192, 131, 9},
 				{761, 414, 104, 34, 2, 235, 0},
 				{1185, 347, 124, 37, 2, 235, 0},
-				{1697, 341, 128, 38, 2, 235, 0}
+				{1697, 341, 128, 38, 2, 235, 0}*/
 			};
 
 		level.addRects(rects, null);
@@ -47,7 +100,7 @@ public class PhysicsTest extends BasicGame {
 		cam = new Camera(gc, level);
 		
 		Log.info("Init player");
-		Rectangle r = new Rectangle(50, 300, 102, 110);
+		Rectangle r = new Rectangle(50, 1800, 102, 110);
 		player = new Player(gc, r);
 		
 		Log.info("Init enemies");
@@ -65,6 +118,8 @@ public class PhysicsTest extends BasicGame {
 			throws SlickException {
 		level.drawAll(g, cam);
 		player.draw(cam);
+		g.setColor(Color.white);
+		g.drawString(String.format("[Position] X: %.1f Y: %.1f", cam.getX(), cam.getY()), 10, 70);
 	}
 
 	@Override
@@ -74,7 +129,8 @@ public class PhysicsTest extends BasicGame {
 		level.updateEnemies(delta);
 		
 		float pjXOnScreen = player.getRect().getCenterX();
-		cam.autoMove(pjXOnScreen);
+		float pjYOnScreen = player.getRect().getCenterY();
+		cam.autoMove(pjXOnScreen, pjYOnScreen);
 		
 	}
 
