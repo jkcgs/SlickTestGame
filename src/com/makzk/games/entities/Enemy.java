@@ -28,7 +28,7 @@ public class Enemy extends EntityRect {
 		// Configurar animaciones
 		SpriteSheet sprite = new SpriteSheet("data/sprites/bugs_walk.png", 43, 82);
 		setupAnimation(sprite, ANIMATION_STAND, new int[]{0}, 1000);
-		setupAnimation(sprite, ANIMATION_RUN, 0, 0, 4, 0, 50);
+		setupAnimation(sprite, ANIMATION_RUN, 0, 0, 4, 0, 70);
 		setupAnimation(sprite, ANIMATION_FALL, new int[]{0}, 1000);
 		
 		speedX = walkSpeed;
