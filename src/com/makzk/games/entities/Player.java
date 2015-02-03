@@ -5,6 +5,8 @@ import static com.makzk.games.util.PlayerAnimations.ANIMATION_JUMP;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 
+import java.util.Iterator;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -12,6 +14,7 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
+import com.makzk.games.util.Direction;
 
 public class Player extends EntityRect {
 
@@ -103,5 +106,15 @@ public class Player extends EntityRect {
 		speedY = 0;
 		setX(initialX);
 		setY(initialY);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void onCollision(Direction dir, EntityRect other, Iterator it) {
+		if(dir == Direction.SOUTH && other instanceof Enemy) {
+			// Collision with enemy!
+			speedY = gc.getInput().isKeyDown(controlJump) ? -.7f : -.5f;
+			it.remove();
+		}
 	}
 }
