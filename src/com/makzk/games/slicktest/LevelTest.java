@@ -24,7 +24,7 @@ public class LevelTest extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		Log.info("Init level");
-		level = Level.loadFromFile("data/levels/level1.json", gc);
+		level = Level.loadFromFile("data/levels/level3.json", gc);
 
 		cam = new Camera(gc, level);
 		
