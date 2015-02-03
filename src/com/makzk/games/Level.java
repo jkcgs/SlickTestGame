@@ -11,6 +11,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.EntityRect;
+import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
 public class Level {
@@ -19,11 +20,20 @@ public class Level {
 	private List<Enemy> enemies = new ArrayList<Enemy>();
 	private float width;
 	private float height;
+	private float playerInitialX = 0;
+	private float playerInitialY = 0;
 
-	public Level(GameContainer gc, float width, float height) {
+	public Level(GameContainer gc, float width, float height, 
+			float playerInitialX, float playerInitialY) {
 		this.gc = gc;
 		this.width = width;
 		this.height = height;
+		this.playerInitialX = playerInitialX;
+		this.playerInitialY = playerInitialY;
+	}
+	
+	public Level(GameContainer gc, float width, float height) {
+		this(gc, width, height, 0, 0);
 	}
 
 	public Level(GameContainer gc, float width) {
@@ -147,6 +157,25 @@ public class Level {
 			}
 		}
 	}
+	
+	/**
+	 * Reposiciona los enemigos del nivel y al jugador a una posición
+	 * inicial.
+	 * @param player
+	 */
+	public void reset(Player player) {
+		for(Enemy enemy: enemies) {
+			enemy.reset();
+		}
+		if(player != null) {
+			player.reset();
+			player.setPos(playerInitialX, playerInitialY);
+		}
+	}
+	
+	public void reset() {
+		reset(null);
+	}
 
 	public List<EntityRect> getRects() {
 		return rects;
@@ -169,5 +198,13 @@ public class Level {
 
 	public void setHeight(float height) {
 		this.height = height;
+	}
+
+	public float getPjInitialX() {
+		return playerInitialX;
+	}
+	
+	public float getPjInitialY() {
+		return playerInitialY;
 	}
 }

@@ -6,11 +6,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
-import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
@@ -26,7 +24,7 @@ public class PhysicsTest extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		Log.info("Init level");
-		level = new Level(gc, 440, 2000);
+		level = new Level(gc, 440, 2000, 50, 105);
 		float[][] rects = new float[][]{
 				
 				{8, 1935, 407, 25, 241, 7, 7},
@@ -74,8 +72,7 @@ public class PhysicsTest extends BasicGame {
 		cam = new Camera(gc, level);
 		
 		Log.info("Init player");
-		Rectangle r = new Rectangle(50, 10, 50, 105);
-		player = new Player(gc, r);
+		player = new Player(gc, level);
 		
 		Log.info("Init enemies");
 		level.addEnemies(new float[][]{
@@ -111,10 +108,7 @@ public class PhysicsTest extends BasicGame {
 	public void keyPressed(int key, char c) {
 		// Reiniciar la posición del jugador y los enemigos
 		if(key == Input.KEY_R) {
-			player.reset();
-			for(Enemy e : level.getEnemies()) {
-				e.reset();
-			}
+			level.reset(player);
 		}
 	};
 }

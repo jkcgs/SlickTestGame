@@ -48,6 +48,18 @@ public class Player extends EntityRect {
 		setupAnimation(spriteJump, ANIMATION_JUMP, new int[]{0}, 200, drawrect, drawrect2);
 		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200, drawrect, drawrect2);
 	}
+
+	public Player(GameContainer gc, float initialX, float initialY) throws SlickException {
+		this(gc, new Rectangle(initialX, initialY, 50, 105));
+	}
+
+	public Player(GameContainer gc) throws SlickException {
+		this(gc, new Rectangle(0, 0, 50, 105));
+	}
+
+	public Player(GameContainer gc, Level level) throws SlickException {
+		this(gc, new Rectangle(level.getPjInitialX(), level.getPjInitialY(), 50, 105));
+	}
 	
 	/**
 	 * Mover el Player dentro del nivel según los controles presionados

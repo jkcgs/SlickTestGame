@@ -377,6 +377,7 @@ public class EntityRect extends Entity {
 	public void moveX(float x) { setX(getX() + x); }
 	public void moveY(float y) { setY(getY() + y); }
 	public void movePos(float x, float y) { moveX(x); moveY(y); }
+	public void setPos(float x, float y) { setX(x); setY(y); }
 
 	// Shorthands de tamaño
 	public float getWidth() { return collisionBox.getWidth(); }
