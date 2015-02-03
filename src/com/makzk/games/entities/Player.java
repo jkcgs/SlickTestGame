@@ -37,8 +37,9 @@ public class Player extends EntityRect {
 		SpriteSheet spriteIddle = new SpriteSheet("data/sprites/iddle1.png", 410, 425);
 		SpriteSheet spriteJump = new SpriteSheet("data/sprites/jump.png",404,458);
 		SpriteSheet spriteFall = new SpriteSheet("data/sprites/fall.png",458,461);
+		SpriteSheet spriteRun = new SpriteSheet("data/sprites/Run.png",464,390);
 		setupAnimation(spriteIddle, ANIMATION_STAND, new int[]{0,1}, 500);
-		setupAnimation(spriteIddle, ANIMATION_RUN, new int[]{0,1}, 200);
+		setupAnimation(spriteRun, ANIMATION_RUN, new int[]{0,1,2,3,4}, 200);
 		setupAnimation(spriteJump, ANIMATION_JUMP, new int[]{0}, 200);
 		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200);
 	}
