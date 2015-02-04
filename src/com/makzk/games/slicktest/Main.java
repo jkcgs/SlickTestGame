@@ -5,13 +5,15 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 
+import com.makzk.games.Menu;
+
 public class Main {
 
 	public static void main(String[] args) {
 		int winWidth = 1000; // Ancho ventana
 		int winHeight = 700; // Alto ventana
 		String title = "Prueba Slick2D"; // Título de ventana
-		BasicGame test = new LevelTest(title); // Clase a ejecutar
+		BasicGame test = new Menu(title); // Clase a ejecutar
 		
 		try {
 			AppGameContainer appgc;
