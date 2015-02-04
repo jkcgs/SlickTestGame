@@ -1,4 +1,4 @@
-package com.makzk.games.slicktest;
+package com.makzk.games.states;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,6 +9,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.makzk.games.ImageManager;
+import com.makzk.games.Main;
 
 
 public class Menu extends BasicGameState {

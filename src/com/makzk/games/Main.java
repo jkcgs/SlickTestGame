@@ -1,10 +1,13 @@
-package com.makzk.games.slicktest;
+package com.makzk.games;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
+
+import com.makzk.games.slicktest.LevelTest;
+import com.makzk.games.states.Menu;
 
 public class Main extends StateBasedGame {
 	public static final String name = "Prueba Slick2D";
