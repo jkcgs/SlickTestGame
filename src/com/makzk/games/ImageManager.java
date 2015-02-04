@@ -7,7 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class Menu extends BasicGameState {
+public class ImageManager extends BasicGameState {
 	private int state;
 
 	protected Image title;
@@ -16,7 +16,7 @@ public class Menu extends BasicGameState {
 	protected Image nGame;
 	protected Image iluminati;
 
-	public Menu(int state) { this.state = state; }
+	public ImageManager(int state) { this.state = state; }
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
