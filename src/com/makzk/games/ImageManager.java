@@ -17,7 +17,32 @@ public class ImageManager extends BasicGameState {
 	protected Image iluminati;
 
 	public ImageManager(int state) { this.state = state; }
+	
+	private Image [] buttons;
+	
+	 public ImageManager() throws SlickException {
+		 
+			 	buttons = new Image[]{
+					new Image("data/sprites/title1.png"),
+					new Image("data/sprites/Newgame.png"), 
+					new Image("load.png"), new Image("Exit.png"), 
+					new Image("the-Illuminati.jpg")
+				};
+			 	
+	 }
 
+	public Image getImage(int index){
+		return buttons[index];
+	}
+	
+	/*      ***Image Index***
+	 *		0.- Titulo del juego
+	 *		1.- Boton New Game
+	 *		2.- Boton Load
+	 *  	3.- Illuminati  
+	 * 
+	 */
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		
