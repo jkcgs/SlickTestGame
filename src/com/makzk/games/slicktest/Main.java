@@ -22,7 +22,7 @@ public class Main extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
-		//getState(menu).init(gc, this);
+		getState(menu).init(gc, this);
 		getState(play).init(gc, this);
 		enterState(play);
 	}
