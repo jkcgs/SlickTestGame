@@ -12,10 +12,9 @@ import com.makzk.games.ImageManager;
 
 
 public class Menu extends BasicGameState {
-	private int state,index=1;
+	private int state, index = 1;
 	private Rectangle rekt = new Rectangle(0,0,350,80);
 	private ImageManager img;
-	private Input in;
 	private StateBasedGame game;
 	public Menu(int state) { this.state = state; }
 	
@@ -23,7 +22,6 @@ public class Menu extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-			in = container.getInput();
 			img = new ImageManager();
 			this.game = game;
 	}
