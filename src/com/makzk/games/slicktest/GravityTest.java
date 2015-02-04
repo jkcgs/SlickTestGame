@@ -1,12 +1,13 @@
 package com.makzk.games.slicktest;
 
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
@@ -21,16 +22,16 @@ import com.makzk.games.entities.Player;
  * @author japple
  *
  */
-public class GravityTest extends BasicGame {
+public class GravityTest extends BasicGameState {
+	private int state;
+
 	Level level;
 	Player player;
 
-	public GravityTest(String title) {
-		super(title);
-	}
+	public GravityTest(int state) { this.state = state; }
 	
 	@Override
-	public void init(GameContainer gc) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		Log.info("Init level");
 		// Preparar nivel con unos cuantos rectángulos caguais
 		// TODO: Hacer esto en un archivo externo para poder manejar varios niveles
@@ -59,7 +60,7 @@ public class GravityTest extends BasicGame {
 	};
 
 	@Override
-	public void render(GameContainer gc, Graphics g) throws SlickException {
+	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException {
 		level.drawAll(g);
 		player.draw();
 		g.setColor(Color.white);
@@ -69,8 +70,13 @@ public class GravityTest extends BasicGame {
 	}
 
 	@Override
-	public void update(GameContainer gc, int delta) throws SlickException {
+	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
 		player.move(level, delta);
+	}
+
+	@Override
+	public int getID() {
+		return state;
 	}
 
 }

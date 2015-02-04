@@ -1,10 +1,11 @@
 package com.makzk.games.slicktest;
 
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.entities.Ball;
@@ -17,7 +18,8 @@ import com.makzk.games.util.Direction;
  * 
  * @author makzk
  */
-public class PongTest extends BasicGame {
+public class PongTest extends BasicGameState {
+	private int state;
 
 	Pad leftPad, rightPad;
 	Ball ball;
@@ -25,12 +27,10 @@ public class PongTest extends BasicGame {
 	
 	int scoreA, scoreB;
 
-	public PongTest(String title) {
-		super(title);
-	}
+	public PongTest(int state) { this.state = state; }
 	
 	@Override
-	public void init(GameContainer gc) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		gc.setShowFPS(false);
 		gc.getGraphics().drawString("Loading...", 10, 10);
 		
@@ -54,7 +54,7 @@ public class PongTest extends BasicGame {
 	}
 
 	@Override
-	public void render(GameContainer gc, Graphics g) throws SlickException {
+	public void render(GameContainer gc, StateBasedGame gane, Graphics g) throws SlickException {
 		g.drawString(scoreA+"", 10, 10);
 		g.drawString(scoreB+"", gc.getWidth() - 40, 10);
 		
@@ -65,7 +65,7 @@ public class PongTest extends BasicGame {
 
 
 	@Override
-	public void update(GameContainer gc, int delt) throws SlickException {
+	public void update(GameContainer gc, StateBasedGame game, int delt) throws SlickException {
 		leftPad.move(in, delt);
 		rightPad.autoMove(ball, delt);
 		ball.move(delt, leftPad, rightPad);
@@ -79,6 +79,11 @@ public class PongTest extends BasicGame {
 			ball.reset();
 			scoreA++;
 		}
+	}
+
+	@Override
+	public int getID() {
+		return state;
 	}
 
 }

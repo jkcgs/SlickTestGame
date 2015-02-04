@@ -1,12 +1,13 @@
 package com.makzk.games.slicktest;
 
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
@@ -14,18 +15,18 @@ import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
-public class CameraTest extends BasicGame {
+public class CameraTest extends BasicGameState {
+	private int state;
+	
 	Level level;
 	Camera cam;
 	Player player;
 	Enemy enemy;
 	
-	public CameraTest(String title) {
-		super(title);
-	}
+	public CameraTest(int state) { this.state = state; }
 
 	@Override
-	public void init(GameContainer gc) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		
 		Log.info("Init level");
 		level = new Level(gc, 2000);
@@ -57,7 +58,7 @@ public class CameraTest extends BasicGame {
 	}
 
 	@Override
-	public void render(GameContainer container, Graphics g)
+	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
 		level.drawAll(g, cam);
 		enemy.draw(cam);
@@ -70,10 +71,10 @@ public class CameraTest extends BasicGame {
 	}
 
 	@Override
-	public void update(GameContainer container, int delta)
+	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
 		//This is bullshit
-		Input in = container.getInput();
+		Input in = gc.getInput();
 		if(in.isKeyDown(Input.KEY_LEFT)) {
 			cam.moveX(-.5f * delta);
 		} else if(in.isKeyDown(Input.KEY_RIGHT)) {
@@ -87,7 +88,7 @@ public class CameraTest extends BasicGame {
 		cam.autoMove(pjXOnScreen, pjYOnScreen);
 		
 		enemy.move(level, delta);
-		if(enemy.getX() < 0 || enemy.getY() > container.getHeight()) {
+		if(enemy.getX() < 0 || enemy.getY() > gc.getHeight()) {
 			enemy.reset();
 		}
 	}
@@ -97,5 +98,10 @@ public class CameraTest extends BasicGame {
 		if(key == Input.KEY_R) {
 			player.reset();
 		}
+	}
+
+	@Override
+	public int getID() {
+		return state;
 	};
 }

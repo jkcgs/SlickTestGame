@@ -1,27 +1,25 @@
 package com.makzk.games;
 
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
-public class Menu extends BasicGame {
-	
+public class Menu extends BasicGameState {
+	private int state;
 
 	protected Image title;
 	protected Image load;
 	protected Image exit;
 	protected Image nGame;
 	protected Image iluminati;
-	
-	public Menu(String title) {
-		super(title);
-		
-	}
+
+	public Menu(int state) { this.state = state; }
 
 	@Override
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		
 		title = new Image("data/sprites/title1.png");
 		load = new Image("data/sprites/load.png");
@@ -32,7 +30,7 @@ public class Menu extends BasicGame {
 	}
 	
 	@Override
-	public void render(GameContainer container, Graphics g)
+	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
 			iluminati.draw(150,100);
 			title.draw(100,10);
@@ -43,10 +41,15 @@ public class Menu extends BasicGame {
 
 
 	@Override
-	public void update(GameContainer container, int delta)
+	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
 		
 		
+	}
+
+	@Override
+	public int getID() {
+		return state;
 	}
 
 }

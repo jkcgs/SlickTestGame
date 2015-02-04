@@ -1,28 +1,29 @@
 package com.makzk.games.slicktest;
 
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
-public class LevelTest extends BasicGame {
+public class LevelTest extends BasicGameState {
+	private int state;
+	
 	Level level;
 	Camera cam;
 	Player player;
 	
-	public LevelTest(String title) {
-		super(title);
-	}
+	public LevelTest(int state) { this.state = state; }
 
 	@Override
-	public void init(GameContainer gc) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		Log.info("Init level");
 		level = Level.loadFromFile("data/levels/level3.json", gc);
 
@@ -35,7 +36,7 @@ public class LevelTest extends BasicGame {
 	}
 
 	@Override
-	public void render(GameContainer container, Graphics g)
+	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
 		level.drawAll(g, cam);
 		player.draw(cam);
@@ -45,7 +46,7 @@ public class LevelTest extends BasicGame {
 	}
 
 	@Override
-	public void update(GameContainer container, int delta)
+	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
 		player.move(level, delta);
 		level.updateEnemies(delta);
@@ -56,9 +57,14 @@ public class LevelTest extends BasicGame {
 	}
 
 	public void keyPressed(int key, char c) {
-		// Reiniciar la posici�n del jugador y los enemigos
+		// Reiniciar la posición del jugador y los enemigos
 		if(key == Input.KEY_R) {
 			level.reset(player);
 		}
+	}
+
+	@Override
+	public int getID() {
+		return state;
 	};
 }
