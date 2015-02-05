@@ -227,11 +227,8 @@ public class EntityRect extends Entity {
 			wall = false;
 
 			// Revisar colisiones con elementos del nivel
-			for (EntityRect r : level.getRects()) {
-			    resolveCollisions(r);
-			}
-			for (Enemy r : level.getEnemies()) {
-			    resolveCollisions(r);
+			for (Entity e : level.getEntities()) {
+			    resolveCollisions((EntityRect) e);
 			}
 		}
 

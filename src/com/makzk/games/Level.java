@@ -23,8 +23,6 @@ import com.makzk.games.util.Utils;
 public class Level {
 	private GameContainer gc;
 	private List<Entity> entities = new ArrayList<Entity>();
-	private List<EntityRect> rects = new ArrayList<EntityRect>();
-	private List<Enemy> enemies = new ArrayList<Enemy>();
 	private float width;
 	private float height;
 	private float playerInitialX = 0;
@@ -95,7 +93,7 @@ public class Level {
 		case RECT:
 			EntityRect r = new EntityRect(gc, new Rectangle(x, y, width, height), this);
 			r.setColor(color);
-			rects.add(r);
+			entities.add(r);
 			break;
 		case ENEMY:
 			Enemy e = new Enemy(gc, new Rectangle(x, y, width, height), this);
@@ -163,7 +161,7 @@ public class Level {
 
 	public void addRect(EntityRect rect) {
 		rect.setLevel(this);
-		rects.add(rect);
+		entities.add(rect);
 	}
 	
 	public void addRect(float x, float y, float width, float height, Color color) {
@@ -214,21 +212,11 @@ public class Level {
 	}
 
 	public void drawAll(Graphics g, Camera cam) {
-		for(EntityRect r: rects) {
+		for(Entity entity: entities) {
 			if(cam == null) {
-				r.draw();
+				entity.draw();
 			} else {
-				r.draw(cam);
-			}
-		}
-
-		for(Entity enemy: entities) {
-			if(enemy instanceof Enemy) {
-				if(cam == null) {
-					enemy.draw();
-				} else {
-					enemy.draw(cam);
-				}
+				entity.draw(cam);
 			}
 		}
 	}
@@ -239,7 +227,7 @@ public class Level {
 	 * @param player
 	 */
 	public void reset(Player player) {
-		for(Enemy enemy: enemies) {
+		for(Enemy enemy: getEnemies()) {
 			enemy.reset();
 		}
 		if(player != null) {
@@ -253,7 +241,13 @@ public class Level {
 	}
 
 	public List<EntityRect> getRects() {
-		return rects;
+		List<EntityRect> le = new ArrayList<EntityRect>();
+		for(Entity e : entities) {
+			if(e instanceof EntityRect) {
+				le.add((EntityRect) e);
+			}
+		}
+		return le;
 	}
 	public List<Enemy> getEnemies() {
 		List<Enemy> le = new ArrayList<Enemy>();
@@ -295,5 +289,9 @@ public class Level {
 	
 	public void setPjInitialY(float initialY) {
 		playerInitialY = initialY;
+	}
+
+	public List<Entity> getEntities() {
+		return entities;
 	}
 }
