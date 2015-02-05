@@ -21,14 +21,14 @@ public class Main extends StateBasedGame {
 	
 	public Main() {
 		super(name);
-		//addState(new Menu(menu));
+		addState(new Menu(menu));
 		addState(new LevelTest(play));
-		//addState(new PongTest(pong));
+		addState(new PongTest(pong));
 	}
 
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
-		enterState(play);
+		enterState(menu);
 	}
 
 	public static void main(String[] args) {		

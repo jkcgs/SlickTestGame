@@ -288,19 +288,29 @@ public class EntityRect extends Entity {
 		}
 		
 		if((getY() < e.getMaxY()) && (getY() + getHeight() > e.getY())) {
+			float hdif = (getY() + getHeight()) - e.getY();
+			boolean slope = hdif > 2;
 			// Colisión derecha
 			if(getX() + getWidth() <= e.getX() && nextX + getWidth() > e.getX()) {
-				nextX = e.getX() - getWidth();
-				speedX = 0;
-				wall = true;
-				onCollision(EAST, e);
+				if(slope) {
+					nextX = e.getX() - getWidth();
+					speedX = 0;
+					wall = true;
+					onCollision(EAST, e);
+				} else {
+					nextY -= hdif;
+				}
 			}
 			// Colisión izquierda
 			else if(e.getMaxX() <= getX() && e.getMaxX() > nextX) {
-				nextX = getX();
-				speedX = 0;
-				onCollision(WEST, e);
-				wall = true;
+				if(slope) {
+					nextX = getX();
+					speedX = 0;
+					onCollision(WEST, e);
+					wall = true;
+				} else {
+					nextY -= hdif;
+				}
 			}
 		}
 	}

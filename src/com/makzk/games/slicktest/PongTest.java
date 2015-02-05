@@ -66,6 +66,10 @@ public class PongTest extends BasicGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delt) throws SlickException {
+		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)) {
+			game.enterState(0);
+		}
+		
 		leftPad.move(in, delt);
 		rightPad.autoMove(ball, delt);
 		ball.move(delt, leftPad, rightPad);
