@@ -41,7 +41,8 @@ public class LevelTest extends BasicGameState {
 			throws SlickException {
 		level.drawAll(g, cam);
 		player.draw(cam);
-		g.setColor(Color.white);g.drawString(String.format("[PJ] X: %.1f Y: %.1f sX: %.2f sY: %.2f g: %s w: %s", 
+		g.setColor(Color.white);
+		g.drawString(String.format("[PJ] X: %.1f Y: %.1f sX: %.2f sY: %.2f g: %s w: %s", 
 				player.getX(), player.getY(), player.getSpeedX(), player.getSpeedY(), player.isOnGround(), player.isTouchingWall()), 10, 30);
 		g.drawString(String.format("[Position] X: %.1f Y: %.1f", cam.getX(), cam.getY()), 10, 50);
 	}
