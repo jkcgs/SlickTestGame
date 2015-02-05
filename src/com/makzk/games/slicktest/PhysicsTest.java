@@ -52,7 +52,7 @@ public class PhysicsTest extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
-		player.move(level, delta);
+		player.move(delta, level);
 		level.updateEnemies(delta);
 		
 		float pjXOnScreen = player.getCollisionBox().getCenterX();

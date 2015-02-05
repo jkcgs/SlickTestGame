@@ -10,6 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
+import com.makzk.games.Main;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
@@ -48,7 +49,12 @@ public class LevelTest extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
-		player.move(level, delta);
+		if(gc.getInput().isKeyDown(Input.KEY_P)) {
+			game.enterState(Main.pong);
+			return;
+		}
+
+		player.move(delta, level);
 		level.updateEnemies(delta);
 		
 		float pjXOnScreen = player.getCollisionBox().getCenterX();

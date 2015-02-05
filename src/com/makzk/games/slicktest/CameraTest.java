@@ -81,13 +81,13 @@ public class CameraTest extends BasicGameState {
 			cam.moveX(.5f * delta);
 		}
 		//
-		player.move(level, delta);
+		player.move(delta, level);
 		
 		float pjXOnScreen = player.getCollisionBox().getCenterX();
 		float pjYOnScreen = player.getCollisionBox().getCenterY();
 		cam.autoMove(pjXOnScreen, pjYOnScreen);
 		
-		enemy.move(level, delta);
+		enemy.move(delta, level);
 		if(enemy.getX() < 0 || enemy.getY() > gc.getHeight()) {
 			enemy.reset();
 		}

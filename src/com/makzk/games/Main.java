@@ -7,6 +7,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.slicktest.LevelTest;
+import com.makzk.games.slicktest.PongTest;
 import com.makzk.games.states.Menu;
 
 public class Main extends StateBasedGame {
@@ -16,11 +17,13 @@ public class Main extends StateBasedGame {
 	
 	public static final int menu = 0;
 	public static final int play = 1;
+	public static final int pong = 2;
 	
 	public Main() {
 		super(name);
 		addState(new Menu(menu));
 		addState(new LevelTest(play));
+		addState(new PongTest(pong));
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class GravityTest extends BasicGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
-		player.move(level, delta);
+		player.move(delta, level);
 	}
 
 	@Override

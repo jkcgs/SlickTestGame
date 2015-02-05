@@ -65,8 +65,8 @@ public class Player extends EntityRect {
 	 * Mover el Player dentro del nivel según los controles presionados
 	 * y su posición actual
 	 */
-	public void move(Level level, int delta) {
-		super.move(level, delta);
+	public void move(int delta, Level lv) {
+		super.move(delta, lv);
 		
 		// Reiniciar al caer hacia el olvido
 		if(getY() > level.getHeight()) {
@@ -127,7 +127,7 @@ public class Player extends EntityRect {
 	}
 	
 	@Override
-	public void onCollision(Direction dir, EntityRect other) {
+	public void onCollision(Direction dir, Entity other) {
 		if(dir == Direction.SOUTH && other instanceof Enemy) {
 			// Collision with enemy!
 			speedY = gc.getInput().isKeyDown(controlJump) ? -.7f : -.5f;

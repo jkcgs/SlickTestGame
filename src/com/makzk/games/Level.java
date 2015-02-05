@@ -14,6 +14,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.entities.Enemy;
+import com.makzk.games.entities.Entity;
 import com.makzk.games.entities.EntityRect;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
@@ -21,6 +22,7 @@ import com.makzk.games.util.Utils;
 
 public class Level {
 	private GameContainer gc;
+	private List<Entity> entities = new ArrayList<Entity>();
 	private List<EntityRect> rects = new ArrayList<EntityRect>();
 	private List<Enemy> enemies = new ArrayList<Enemy>();
 	private float width;
@@ -130,7 +132,7 @@ public class Level {
 	
 	public void addEnemy(float x, float y, float width, float height) throws SlickException {
 		Enemy e = new Enemy(gc, new Rectangle(x, y, width, height), this);
-		enemies.add(e);
+		entities.add(e);
 	}
 	
 	public void addEnemies(float[][] enemiesPos) throws SlickException {
@@ -141,8 +143,7 @@ public class Level {
 	public void addEnemies(JSONArray enemies) throws JSONException, SlickException {
 		for(int i = 0; i < enemies.length(); i++) {
 			JSONArray enemy = enemies.getJSONArray(i);
-			this.addEnemy(
-					enemy.getInt(0), enemy.getInt(1), enemy.getInt(2), enemy.getInt(3));
+			addEnemy(enemy.getInt(0), enemy.getInt(1), enemy.getInt(2), enemy.getInt(3));
 		}
 	}
 	
@@ -201,10 +202,25 @@ public class Level {
 	}
 	
 	public void updateEnemies(int delta) {
-		for(Enemy enemy : enemies) {
-			enemy.move(this, delta);
-			if(enemy.getX() < 0 || enemy.getY() > this.getHeight()) {
-				enemy.reset();
+		for(Entity entity : entities) {
+			if(entity instanceof Enemy) {
+				entity.move(delta, this);
+
+				if(entity.getX() < 0 || entity.getY() > this.getHeight()) {
+					((Enemy) entity).reset();
+				}
+			}
+		}
+	}
+	
+	public void updateEntities(int delta) {
+		for(Entity entity : entities) {
+			if(entity instanceof Enemy) {
+				entity.move(delta);
+
+				if(entity.getX() < 0 || entity.getY() > this.getHeight()) {
+					((Enemy) entity).reset();
+				}
 			}
 		}
 	}
@@ -222,11 +238,13 @@ public class Level {
 			}
 		}
 
-		for(Enemy enemy: enemies) {
-			if(cam == null) {
-				enemy.draw();
-			} else {
-				enemy.draw(cam);
+		for(Entity enemy: entities) {
+			if(enemy instanceof Enemy) {
+				if(cam == null) {
+					enemy.draw();
+				} else {
+					enemy.draw(cam);
+				}
 			}
 		}
 	}
@@ -254,7 +272,13 @@ public class Level {
 		return rects;
 	}
 	public List<Enemy> getEnemies() {
-		return enemies;
+		List<Enemy> le = new ArrayList<Enemy>();
+		for(Entity e : entities) {
+			if(e instanceof Enemy) {
+				le.add((Enemy) e);
+			}
+		}
+		return le;
 	}
 
 	public float getWidth() {

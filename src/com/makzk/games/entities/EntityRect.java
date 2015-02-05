@@ -11,7 +11,6 @@ import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_TOTAL;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -28,20 +27,9 @@ public class EntityRect extends Entity {
 	protected Rectangle collisionBox;
 	protected float[][] drawBoxes = new float[ANIMATION_TOTAL.ordinal()][4];
 	protected float[][] drawBoxesFlipped = new float[ANIMATION_TOTAL.ordinal()][4];
-	protected Level level;
-	protected Color color = Color.transparent;
-	protected boolean keepOnScreen = false;
-	protected boolean gravity = false;
-	protected float gravityImpulse = .03f;
-	protected boolean solid = true;
-	protected boolean onGround = false;
-	protected boolean wall = false;
 	protected Animation[] animations = new Animation[ANIMATION_TOTAL.ordinal()];
 	protected int actualAnimation = ANIMATION_STAND.ordinal();
 	protected boolean spriteFlipHorizontal = false;
-	protected float nextX = 0;
-	protected float nextY = 0;
-	protected boolean enabled = true;
 
 	public EntityRect(GameContainer gc, Rectangle collisionBox, Level level) {
 		super(gc);
@@ -62,7 +50,7 @@ public class EntityRect extends Entity {
 	 * @param y1 El primer elemento en Y de la grilla de sprites del SpriteSheet
 	 * @param x2 El Ãºltimo elemento en X de la grilla de sprites del SpriteSheet
 	 * @param y2 El Ãºltimo elemento en Y de la grilla de sprites del SpriteSheet
-	 * @param duration La duración de cada animación
+	 * @param duration La duraciï¿½n de cada animaciï¿½n
 	 */
 	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
 			int x1, int y1, int x2, int y2, int duration, float[] drawBox, float[] drawBoxFlipped) {
@@ -89,9 +77,9 @@ public class EntityRect extends Entity {
 	 * @param anim La posiciÃ³n a configurar
 	 * @param xpositions Las posiciones en X a usar
 	 * @param duration La duraciÃ³n de cada posiciÃ³n
-	 * @param drawBox La posición y tamaño de la animación y sprite. Las coordenadas del
-	 * rectángulo se usan como offset en base a la posición del objeto, y no como posición absoluta.
-	 * @param drawBoxFlipped Lo mismo para drawBox, pero para su animación invertida horizontalmente.
+	 * @param drawBox La posiciï¿½n y tamaï¿½o de la animaciï¿½n y sprite. Las coordenadas del
+	 * rectï¿½ngulo se usan como offset en base a la posiciï¿½n del objeto, y no como posiciï¿½n absoluta.
+	 * @param drawBoxFlipped Lo mismo para drawBox, pero para su animaciï¿½n invertida horizontalmente.
 	 */
 	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int[] xpositions, 
 			int duration, float[] drawBox, float[] drawBoxFlipped) {
@@ -117,8 +105,8 @@ public class EntityRect extends Entity {
 	 * @param anim La posiciÃ³n a configurar
 	 * @param xpositions Las posiciones en X a usar
 	 * @param duration La duraciÃ³n de cada posiciÃ³n
-	 * @param drawBox La posición y tamaño de la animación y sprite. Las coordenadas del
-	 * rectángulo se usan como offset en base a la posición del objeto, y no como posición absoluta.
+	 * @param drawBox La posiciï¿½n y tamaï¿½o de la animaciï¿½n y sprite. Las coordenadas del
+	 * rectï¿½ngulo se usan como offset en base a la posiciï¿½n del objeto, y no como posiciï¿½n absoluta.
 	 */
 	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
 			int[] xpositions, int duration, float[] drawBox) {
@@ -226,7 +214,7 @@ public class EntityRect extends Entity {
 	 * @param level El nivel que contiene otras entidades
 	 * @param delta Delta de diferencia de rendimiento del juego para no variar la velocidad
 	 */
-	public void move(Level level, int delta) {
+	public void move(int delta, Level lv) {
 		if(!enabled) {
 			return;
 		}
@@ -321,7 +309,7 @@ public class EntityRect extends Entity {
 	}
 	
 	public void move(int delta) {
-		move(null, delta);
+		move(delta, null);
 	}
 	
 	/**
@@ -351,18 +339,6 @@ public class EntityRect extends Entity {
 		return side == NORTH || side == SOUTH;
 	}
 
-	public void destroy() {
-		if(level != null) {
-			level.getEnemies().remove(this);
-		}
-	}
-
-	// Propiedades fisicas
-	public boolean isGravityAffected() { return gravity; }
-	public boolean isOnGround() { return onGround; }
-	public boolean isSolid() { return solid; }
-	public boolean isTouchingWall() { return wall; }
-
 	// get rekt m7
 	public Rectangle getCollisionBox() { return collisionBox; }
 	public void setCollisionBox(Rectangle collisionBox) { this.collisionBox = collisionBox; }
@@ -386,17 +362,6 @@ public class EntityRect extends Entity {
 	public void setHeight(float h) { collisionBox.setHeight(h); }
 	public void setSize(float size){ setWidth(size); setHeight(size); }
 
-	// Color
-	public Color getColor() { return color; }
-	public void setColor(Color color) { this.color = color; }
-	
-	public void setLevel(Level level) { this.level = level; }
-	public Level getLevel(){ return level; } 
-	
-	public void setEnabled(boolean enabled) { this.enabled = enabled; }
-	public boolean isEnabled() { return enabled; }
-
-	@SuppressWarnings("rawtypes")
-	public void onCollision(Direction dir, EntityRect other, Iterator it) {}
-	public void onCollision(Direction dir, EntityRect other) { onCollision(dir, other, null); }
+	@Override
+	public void onCollision(Direction dir, Entity other) {};
 }

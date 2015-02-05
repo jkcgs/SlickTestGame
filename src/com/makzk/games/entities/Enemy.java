@@ -4,8 +4,6 @@ import static com.makzk.games.util.PlayerAnimations.ANIMATION_FALL;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
 import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
 
-import java.util.Iterator;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -39,14 +37,15 @@ public class Enemy extends EntityRect {
 		this(gc, rect, null);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void onCollision(Direction dir, EntityRect other, Iterator it) {
-		if(dir == Direction.EAST) {
-			speedX = -walkSpeed;
-		}
-		if(dir == Direction.WEST) {
-			speedX = walkSpeed;
+	public void onCollision(Direction dir, Entity other) {
+		if(other instanceof EntityRect) {
+			if(dir == Direction.EAST) {
+				speedX = -walkSpeed;
+			}
+			if(dir == Direction.WEST) {
+				speedX = walkSpeed;
+			}
 		}
 	}
 	
