@@ -8,8 +8,8 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.makzk.games.ImageManager;
 import com.makzk.games.Main;
+import com.makzk.games.util.ImageManager;
 
 
 public class Menu extends BasicGameState {
