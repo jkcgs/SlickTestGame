@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -18,6 +17,7 @@ import com.makzk.games.entities.Entity;
 import com.makzk.games.entities.EntityRect;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
+import com.makzk.games.util.EntityType;
 import com.makzk.games.util.Utils;
 
 public class Level {
@@ -79,9 +79,6 @@ public class Level {
 			if(json.has("rects")) {
 				level.addRects(json.getJSONArray("rects"));
 			}
-			if(json.has("enemies")) {
-				level.addEnemies(json.getJSONArray("enemies"));
-			}
 			if(json.has("entities")) {
 				level.addEntities(json.getJSONArray("entities"));
 			}
@@ -93,58 +90,20 @@ public class Level {
 		return level;
 	}
 	
-	public void addRect(EntityRect rect) {
-		rect.setLevel(this);
-		rects.add(rect);
-	}
-	
-	public void addRect(float x, float y, float width, float height, Color color) {
-		EntityRect r = new EntityRect(gc, new Rectangle(x, y, width, height), this);
-		r.setColor(color);
-		addRect(r);
-	}
-	
-	public void addRect(float x, float y, float width, float height) {
-		addRect(x, y, width, height, Color.white);
-	}
-	
-	public void addRects(float[][] rects, Color color) {
-		for(float[] rect : rects) {
-			if(rect.length == 7) {
-				color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
-			}
-
-			if(color != null) {
-				addRect(rect[0], rect[1], rect[2], rect[3], color);
-			} else {
-				addRect(rect[0], rect[1], rect[2], rect[3]);
-			}
+	public void addEntity(EntityType type, float x, float y, float width, float height, Color color) {
+		switch(type) {
+		case RECT:
+			EntityRect r = new EntityRect(gc, new Rectangle(x, y, width, height), this);
+			r.setColor(color);
+			rects.add(r);
+			break;
+		case ENEMY:
+			Enemy e = new Enemy(gc, new Rectangle(x, y, width, height), this);
+			entities.add(e);
 		}
 	}
-	public void addRects(JSONArray rects) {
-		for(int i = 0; i < rects.length(); i++) {
-			JSONArray rect = rects.getJSONArray(i);
-			this.addRect(
-					rect.getInt(0), rect.getInt(1), rect.getInt(2), rect.getInt(3), 
-					new Color(rect.getInt(4), rect.getInt(5), rect.getInt(6)));
-		}
-	}
-	
-	public void addEnemy(float x, float y, float width, float height) throws SlickException {
-		Enemy e = new Enemy(gc, new Rectangle(x, y, width, height), this);
-		entities.add(e);
-	}
-	
-	public void addEnemies(float[][] enemiesPos) throws SlickException {
-		for(float[] rect: enemiesPos) {
-			addEnemy(rect[0], rect[1], rect[2], rect[3]);
-		}
-	}
-	public void addEnemies(JSONArray enemies) throws JSONException, SlickException {
-		for(int i = 0; i < enemies.length(); i++) {
-			JSONArray enemy = enemies.getJSONArray(i);
-			addEnemy(enemy.getInt(0), enemy.getInt(1), enemy.getInt(2), enemy.getInt(3));
-		}
+	public void addEntity(EntityType type, float x, float y, float width, float height) {
+		addEntity(type, x, y, width, height, Color.transparent);
 	}
 	
 	/**
@@ -167,7 +126,7 @@ public class Level {
 	 * @param rects
 	 * @throws SlickException
 	 */
-	public void addEntities(float[][] rects) throws SlickException {
+	public void addEntities(float[][] rects) {
 		for(float[] rect: rects) {
 			if(rect.length == 4) {
 				addRect(rect[0], rect[1], rect[2], rect[3]);
@@ -177,7 +136,7 @@ public class Level {
 			} else if(rect.length == 8 || rect.length == 5) {
 				switch((int)rect[4]) {
 				case 1: // Enemy
-					addEnemy(rect[0], rect[1], rect[2], rect[3]); break;
+					addEntity(EntityType.ENEMY, rect[0], rect[1], rect[2], rect[3]); break;
 				default: // EntityRect
 					if(rect.length == 5) {
 						addRect(rect[0], rect[1], rect[2], rect[3]);
@@ -189,7 +148,7 @@ public class Level {
 			}
 		}
 	}
-	public void addEntities(JSONArray entities) throws SlickException {
+	public void addEntities(JSONArray entities) {
 		float[][] rects = new float[entities.length()][];
 		for(int i = 0; i < entities.length(); i++) {
 			double[] rect = entities.getJSONArray(i).getDoubleArray();
@@ -201,22 +160,47 @@ public class Level {
 		addEntities(rects);
 	}
 	
-	public void updateEnemies(int delta) {
-		for(Entity entity : entities) {
-			if(entity instanceof Enemy) {
-				entity.move(delta, this);
 
-				if(entity.getX() < 0 || entity.getY() > this.getHeight()) {
-					((Enemy) entity).reset();
-				}
+	public void addRect(EntityRect rect) {
+		rect.setLevel(this);
+		rects.add(rect);
+	}
+	
+	public void addRect(float x, float y, float width, float height, Color color) {
+		addEntity(EntityType.RECT, x, y, width, height, color);
+	}
+	
+	public void addRect(float x, float y, float width, float height) {
+		addEntity(EntityType.RECT, x, y, width, height);
+	}
+	
+	public void addRects(float[][] rects, Color color) {
+		for(float[] rect : rects) {
+			if(rect.length == 7) {
+				color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
+			}
+
+			if(color != null) {
+				addRect(rect[0], rect[1], rect[2], rect[3], color);
+			} else {
+				addRect(rect[0], rect[1], rect[2], rect[3]);
 			}
 		}
 	}
-	
+
+	public void addRects(JSONArray rects) {
+		for(int i = 0; i < rects.length(); i++) {
+			JSONArray rect = rects.getJSONArray(i);
+			addRect(
+					rect.getInt(0), rect.getInt(1), rect.getInt(2), rect.getInt(3), 
+					new Color(rect.getInt(4), rect.getInt(5), rect.getInt(6)));
+		}
+	}
+
 	public void updateEntities(int delta) {
 		for(Entity entity : entities) {
 			if(entity instanceof Enemy) {
-				entity.move(delta);
+				entity.move(delta, this);
 
 				if(entity.getX() < 0 || entity.getY() > this.getHeight()) {
 					((Enemy) entity).reset();

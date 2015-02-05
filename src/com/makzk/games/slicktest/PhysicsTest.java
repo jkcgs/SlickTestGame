@@ -30,10 +30,10 @@ public class PhysicsTest extends BasicGameState {
 		player = new Player(gc, level);
 		
 		Log.info("Init enemies");
-		level.addEnemies(new float[][]{
-				{700, 100, 38, 82},
-				{1200, 100, 38, 82},
-				{1300, 100, 38, 82},
+		level.addEntities(new float[][]{
+				{700, 100, 38, 82, 1},
+				{1200, 100, 38, 82, 1},
+				{1300, 100, 38, 82, 1},
 		});
 
 		Log.info("Done");
@@ -53,7 +53,7 @@ public class PhysicsTest extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
 		player.move(delta, level);
-		level.updateEnemies(delta);
+		level.updateEntities(delta);
 		
 		float pjXOnScreen = player.getCollisionBox().getCenterX();
 		float pjYOnScreen = player.getCollisionBox().getCenterY();

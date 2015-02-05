@@ -54,9 +54,9 @@ public class LevelTest extends BasicGameState {
 			return;
 		}
 
-		player.move(delta, level);
-		level.updateEnemies(delta);
-		
+		player.move(delta);
+		level.updateEntities(delta);
+
 		float pjXOnScreen = player.getCollisionBox().getCenterX();
 		float pjYOnScreen = player.getCollisionBox().getCenterY();
 		cam.autoMove(pjXOnScreen, pjYOnScreen);

@@ -59,6 +59,7 @@ public class Player extends EntityRect {
 
 	public Player(GameContainer gc, Level level) throws SlickException {
 		this(gc, new Rectangle(level.getPjInitialX(), level.getPjInitialY(), 50, 105));
+		setLevel(level);
 	}
 	
 	/**
@@ -69,7 +70,7 @@ public class Player extends EntityRect {
 		super.move(delta, lv);
 		
 		// Reiniciar al caer hacia el olvido
-		if(getY() > level.getHeight()) {
+		if(getY() > lv.getHeight()) {
 			reset();
 		}
 		
@@ -114,6 +115,9 @@ public class Player extends EntityRect {
 				}
 			}
 		}
+	}
+	public void move(int delta) {
+		this.move(delta, level);
 	}
 	
 	/**
