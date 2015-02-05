@@ -53,6 +53,10 @@ public class LevelTest extends BasicGameState {
 			game.enterState(Main.pong);
 			return;
 		}
+		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)) {
+			game.enterState(Main.menu);
+			return;
+		}
 
 		player.move(delta);
 		level.updateEntities(delta);

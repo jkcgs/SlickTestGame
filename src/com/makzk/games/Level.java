@@ -75,7 +75,7 @@ public class Level {
 			}
 
 			if(json.has("rects")) {
-				level.addRects(json.getJSONArray("rects"));
+				level.addEntities(json.getJSONArray("rects"));
 			}
 			if(json.has("entities")) {
 				level.addEntities(json.getJSONArray("entities"));
@@ -101,7 +101,7 @@ public class Level {
 		}
 	}
 	public void addEntity(EntityType type, float x, float y, float width, float height) {
-		addEntity(type, x, y, width, height, Color.transparent);
+		addEntity(type, x, y, width, height, null);
 	}
 	
 	/**
@@ -127,20 +127,20 @@ public class Level {
 	public void addEntities(float[][] rects) {
 		for(float[] rect: rects) {
 			if(rect.length == 4) {
-				addRect(rect[0], rect[1], rect[2], rect[3]);
+				addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3]);
 			} else if(rect.length == 7) {
 				Color color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
-				addRect(rect[0], rect[1], rect[2], rect[3], color);
+				addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3], color);
 			} else if(rect.length == 8 || rect.length == 5) {
 				switch((int)rect[4]) {
 				case 1: // Enemy
 					addEntity(EntityType.ENEMY, rect[0], rect[1], rect[2], rect[3]); break;
 				default: // EntityRect
 					if(rect.length == 5) {
-						addRect(rect[0], rect[1], rect[2], rect[3]);
+						addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3]);
 					} else if(rect.length == 8) {
 						Color color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
-						addRect(rect[0], rect[1], rect[2], rect[3], color);
+						addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3], color);
 					}
 				}
 			}
@@ -156,43 +156,6 @@ public class Level {
 			}
 		}
 		addEntities(rects);
-	}
-	
-
-	public void addRect(EntityRect rect) {
-		rect.setLevel(this);
-		entities.add(rect);
-	}
-	
-	public void addRect(float x, float y, float width, float height, Color color) {
-		addEntity(EntityType.RECT, x, y, width, height, color);
-	}
-	
-	public void addRect(float x, float y, float width, float height) {
-		addEntity(EntityType.RECT, x, y, width, height);
-	}
-	
-	public void addRects(float[][] rects, Color color) {
-		for(float[] rect : rects) {
-			if(rect.length == 7) {
-				color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
-			}
-
-			if(color != null) {
-				addRect(rect[0], rect[1], rect[2], rect[3], color);
-			} else {
-				addRect(rect[0], rect[1], rect[2], rect[3]);
-			}
-		}
-	}
-
-	public void addRects(JSONArray rects) {
-		for(int i = 0; i < rects.length(); i++) {
-			JSONArray rect = rects.getJSONArray(i);
-			addRect(
-					rect.getInt(0), rect.getInt(1), rect.getInt(2), rect.getInt(3), 
-					new Color(rect.getInt(4), rect.getInt(5), rect.getInt(6)));
-		}
 	}
 
 	public void updateEntities(int delta) {

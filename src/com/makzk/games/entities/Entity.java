@@ -28,7 +28,7 @@ public abstract class Entity {
 	}
 
 	public Color getColor() { return color; }
-	public void setColor(Color color) { this.color = color; }
+	public void setColor(Color color) { this.color = color == null ? Color.transparent : color; }
 
 	public boolean isGravityAffected() { return gravity; }
 	public boolean isSolid() { return solid; }
