@@ -7,7 +7,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
 import com.makzk.games.Main;
@@ -25,15 +24,9 @@ public class LevelTest extends BasicGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
-		Log.info("Init level");
 		level = Level.loadFromFile("data/levels/level3.json", gc);
-
 		cam = new Camera(gc, level);
-		
-		Log.info("Init player");
 		player = new Player(gc, level);
-
-		Log.info("Done");
 	}
 
 	@Override

@@ -160,9 +160,9 @@ public class Level {
 
 	public void updateEntities(int delta) {
 		for(Entity entity : entities) {
-			if(entity instanceof Enemy) {
-				entity.move(delta, this);
+			entity.move(delta, this);
 
+			if(entity instanceof Enemy) {
 				if(entity.getX() < 0 || entity.getY() > this.getHeight()) {
 					((Enemy) entity).reset();
 				}

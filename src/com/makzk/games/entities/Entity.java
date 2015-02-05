@@ -51,6 +51,8 @@ public abstract class Entity {
 	public abstract float getY();
 	public abstract void setX(float x);
 	public abstract void setY(float y);
+	public abstract float getMaxX();
+	public abstract float getMaxY();
 	public abstract void draw();
 	public abstract void draw(Camera cam);
 	public abstract void move(int delta);

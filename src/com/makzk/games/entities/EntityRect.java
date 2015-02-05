@@ -219,6 +219,15 @@ public class EntityRect extends Entity {
 			return;
 		}
 
+		// Gravedad
+		if(gravity && !onGround) {
+			speedY += gravityImpulse;
+			// Limitar gravedad a 1
+			if(speedY > 1) {
+				speedY = 1;
+			}
+		}
+
 		nextY = speedY * delta + getY();
 		nextX = speedX * delta + getX();
 		onGround = false;
@@ -228,7 +237,7 @@ public class EntityRect extends Entity {
 
 			// Revisar colisiones con elementos del nivel
 			for (Entity e : level.getEntities()) {
-			    resolveCollisions((EntityRect) e);
+				resolveCollisions(e);
 			}
 		}
 
@@ -251,55 +260,46 @@ public class EntityRect extends Entity {
 			}
 		}
 
-		// Gravedad
-		if(gravity && !onGround) {
-			speedY += gravityImpulse;
-			// Limitar gravedad a 1
-			if(speedY > 1) {
-				speedY = 1;
-			}
-		}
-
 		if(animations[actualAnimation] != null) {
 			animations[actualAnimation].update(delta);
 		}
 	}
 
-	public void resolveCollisions(EntityRect r) {
+	public void resolveCollisions(Entity e) {
 		// Si el elemento no es sólido, no hay qué revisar
-		if(!r.isSolid() || !r.isEnabled()) {
+		if(!e.isSolid() || !e.isEnabled()) {
 			return;
 		}
 		
-		if(getX() < r.getX() + r.getWidth() && getX() > r.getX() - getWidth()) {
+		if(nextX <= e.getMaxX() && nextX + getWidth() > e.getX()) {
 			// Colisión abajo
-			if(getY() + getHeight() <= r.getY() && nextY + getHeight() >= r.getY()) {
-				nextY = r.getY() - getHeight();
+			if(getY() + getHeight() <= e.getY() && nextY + getHeight() >= e.getY()) {
+				nextY = e.getY() - getHeight();
 				speedY = 0;
 				onGround = true;
-				onCollision(SOUTH, r);
+				onCollision(SOUTH, e);
 			}
 			// Colisión arriba
-			else if(r.getY() + r.getHeight() <= getY() && r.getY() + r.getHeight() > nextY) {
-				nextY = r.getY() + r.getHeight();
+			else if(e.getMaxY() <= getY() && e.getMaxY() >= nextY) {
+				nextY = e.getMaxY();
 				speedY = 0;
-				onCollision(NORTH, r);
+				onCollision(NORTH, e);
 			}
 		}
 		
-		if((getY() < r.getY() + r.getHeight()) && (getY() + getHeight() > r.getY())) {
+		if((getY() < e.getMaxY()) && (getY() + getHeight() > e.getY())) {
 			// Colisión derecha
-			if(getX() + getWidth() <= r.getX() && nextX + getWidth() > r.getX()) {
-				nextX = r.getX() - getWidth();
+			if(getX() + getWidth() <= e.getX() && nextX + getWidth() > e.getX()) {
+				nextX = e.getX() - getWidth();
 				speedX = 0;
 				wall = true;
-				onCollision(EAST, r);
+				onCollision(EAST, e);
 			}
 			// Colisión izquierda
-			else if(r.getX() + r.getWidth() <= getX() && r.getX() + r.getWidth() > nextX) {
-				nextX = r.getX() + r.getWidth();
+			else if(e.getMaxX() <= getX() && e.getMaxX() > nextX) {
+				nextX = getX();
 				speedX = 0;
-				onCollision(WEST, r);
+				onCollision(WEST, e);
 				wall = true;
 			}
 		}
