@@ -1,8 +1,5 @@
 package com.makzk.games;
 
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +17,7 @@ import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.EntityRect;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
+import com.makzk.games.util.Utils;
 
 public class Level {
 	private GameContainer gc;
@@ -53,15 +51,14 @@ public class Level {
 	
 	/**
 	 * Crear un nivel desde un archivo json
-	 * @param filepath La ubicación del archivo. Normalmente estarían en data/levels
+	 * @param filepath La ubicaciï¿½n del archivo. Normalmente estarï¿½an en data/levels
 	 * @param gc El contenedor del juego
-	 * @return El nivel diseñado en base al archivo json
+	 * @return El nivel diseï¿½ado en base al archivo json
 	 */
 	public static Level loadFromFile(String filepath, GameContainer gc) {
 		Level level = null;
 		try {
-			byte[] lines = Files.readAllBytes(Paths.get(filepath));
-			String content = new String(lines, Charset.defaultCharset());
+			String content = Utils.getResourceContent(filepath);
 			JSONObject json = new JSONObject(content);
 
 			float width = json.has("width") ? json.getInt("width") : gc.getWidth();
@@ -235,7 +232,7 @@ public class Level {
 	}
 	
 	/**
-	 * Reposiciona los enemigos del nivel y al jugador a una posición
+	 * Reposiciona los enemigos del nivel y al jugador a una posiciï¿½n
 	 * inicial.
 	 * @param player
 	 */
