@@ -1,9 +1,9 @@
 package com.makzk.games.entities;
 
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_FALL;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_JUMP;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
+import static com.makzk.games.util.Animations.ANIMATION_FALL;
+import static com.makzk.games.util.Animations.ANIMATION_JUMP;
+import static com.makzk.games.util.Animations.ANIMATION_RUN;
+import static com.makzk.games.util.Animations.ANIMATION_STAND;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;

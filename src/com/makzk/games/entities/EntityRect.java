@@ -4,11 +4,11 @@ import static com.makzk.games.util.Direction.EAST;
 import static com.makzk.games.util.Direction.NORTH;
 import static com.makzk.games.util.Direction.SOUTH;
 import static com.makzk.games.util.Direction.WEST;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_FALL;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_JUMP;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_RUN;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_STAND;
-import static com.makzk.games.util.PlayerAnimations.ANIMATION_TOTAL;
+import static com.makzk.games.util.Animations.ANIMATION_FALL;
+import static com.makzk.games.util.Animations.ANIMATION_JUMP;
+import static com.makzk.games.util.Animations.ANIMATION_RUN;
+import static com.makzk.games.util.Animations.ANIMATION_STAND;
+import static com.makzk.games.util.Animations.ANIMATION_TOTAL;
 
 import java.util.Arrays;
 
@@ -21,7 +21,7 @@ import org.newdawn.slick.geom.Rectangle;
 import com.makzk.games.Level;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
-import com.makzk.games.util.PlayerAnimations;
+import com.makzk.games.util.Animations;
 
 public class EntityRect extends Entity {
 	protected Rectangle collisionBox;
@@ -52,19 +52,19 @@ public class EntityRect extends Entity {
 	 * @param y2 El último elemento en Y de la grilla de sprites del SpriteSheet
 	 * @param duration La duraci�n de cada animaci�n
 	 */
-	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+	public void setupAnimation(SpriteSheet sprite, Animations anim, 
 			int x1, int y1, int x2, int y2, int duration, float[] drawBox, float[] drawBoxFlipped) {
 		animations[anim.ordinal()] = new Animation(sprite, x1, y1, x2, y2, true, duration, true);
 		this.drawBoxes[anim.ordinal()] = drawBox;
 		this.drawBoxesFlipped[anim.ordinal()] = drawBoxFlipped;
 	}
 
-	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+	public void setupAnimation(SpriteSheet sprite, Animations anim, 
 			int x1, int y1, int x2, int y2, int duration, float[] drawBox) {
 		setupAnimation(sprite, anim, x1, y1, x2, y2, duration, drawBox, null);
 	}
 
-	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+	public void setupAnimation(SpriteSheet sprite, Animations anim, 
 			int x1, int y1, int x2, int y2, int duration) {
 		setupAnimation(sprite, anim, x1, y1, x2, y2, duration, null, null);
 	}
@@ -81,7 +81,7 @@ public class EntityRect extends Entity {
 	 * rect�ngulo se usan como offset en base a la posici�n del objeto, y no como posici�n absoluta.
 	 * @param drawBoxFlipped Lo mismo para drawBox, pero para su animaci�n invertida horizontalmente.
 	 */
-	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int[] xpositions, 
+	public void setupAnimation(SpriteSheet sprite, Animations anim, int[] xpositions, 
 			int duration, float[] drawBox, float[] drawBoxFlipped) {
 		int[] frames = new int[xpositions.length*2];
 		int[] durations = new int[xpositions.length];
@@ -108,7 +108,7 @@ public class EntityRect extends Entity {
 	 * @param drawBox La posici�n y tama�o de la animaci�n y sprite. Las coordenadas del
 	 * rect�ngulo se usan como offset en base a la posici�n del objeto, y no como posici�n absoluta.
 	 */
-	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, 
+	public void setupAnimation(SpriteSheet sprite, Animations anim, 
 			int[] xpositions, int duration, float[] drawBox) {
 		setupAnimation(sprite, anim, xpositions, duration, drawBox, null);
 	}
@@ -122,7 +122,7 @@ public class EntityRect extends Entity {
 	 * @param xpositions Las posiciones en X a usar
 	 * @param duration La duración de cada posición
 	 */
-	public void setupAnimation(SpriteSheet sprite, PlayerAnimations anim, int[] xpositions, int duration) {
+	public void setupAnimation(SpriteSheet sprite, Animations anim, int[] xpositions, int duration) {
 		setupAnimation(sprite, anim, xpositions, duration, null, null);
 	}
 	
@@ -160,20 +160,24 @@ public class EntityRect extends Entity {
 			spriteFlipHorizontal = false;
 		}
 		
-		if(speedY < 0) {
+		Animations anim = null;
+
+		if(speedY < -.1) {
 			// La entity está saltando
-			actualAnimation = ANIMATION_JUMP.ordinal();
-		} else if (!onGround && speedY > 0) {
-			// La entity esta cayenda
-			actualAnimation = ANIMATION_FALL.ordinal();
-		} else if(speedX != 0) {
+			anim = ANIMATION_JUMP;
+		} else if (speedY > .2) {
+			// La entity esta cayendo
+			anim = ANIMATION_FALL;
+		} else if (speedX != 0) {
 			// La entity está yendo hacia los lados, pero no saltando (else if)
-			actualAnimation = ANIMATION_RUN.ordinal();
+			anim = getTimeOffGround() < 100 ? ANIMATION_RUN : ANIMATION_FALL;
 		} else {
 			// La entity está detenida
-			actualAnimation = ANIMATION_STAND.ordinal();
+			anim = getTimeOffGround() < 100 ? ANIMATION_STAND : ANIMATION_FALL;
 		}
 	
+		actualAnimation = anim.ordinal();
+		
 		// Dibujar el sprite, con su volteo correspondiente si corresponde, y
 		// según el rectángulo del elemento
 		if(animations[actualAnimation] != null) {
@@ -262,6 +266,10 @@ public class EntityRect extends Entity {
 
 		if(animations[actualAnimation] != null) {
 			animations[actualAnimation].update(delta);
+		}
+
+		if(onGround) {
+			lastTimeOnGround = System.currentTimeMillis();
 		}
 	}
 
@@ -368,6 +376,12 @@ public class EntityRect extends Entity {
 	public void setWidth(float w) { collisionBox.setWidth(w); }
 	public void setHeight(float h) { collisionBox.setHeight(h); }
 	public void setSize(float size){ setWidth(size); setHeight(size); }
+	
+	public int getActualAnimation() { return actualAnimation; }
+
+	public long getTimeOffGround() {
+		return onGround ? 0 : System.currentTimeMillis() - lastTimeOnGround;
+	}
 
 	@Override
 	public void onCollision(Direction dir, Entity other) {};

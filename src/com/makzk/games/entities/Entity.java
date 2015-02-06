@@ -22,6 +22,7 @@ public abstract class Entity {
 	protected float nextX = 0;
 	protected float nextY = 0;
 	protected boolean enabled = true;
+	protected long lastTimeOnGround = 0;
 
 	public Entity(GameContainer gc) {
 		this.gc = gc;
