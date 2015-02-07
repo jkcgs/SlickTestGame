@@ -24,10 +24,22 @@ public class SoundManager {
 	}
 	
 	public Sound get(String name) {
-		if(sounds.containsKey(name)) {
+		if(loaded(name)) {
 			return sounds.get(name);
 		} else {
 			return null;
+		}
+	}
+	
+	public boolean loaded(String name) {
+		return sounds.containsKey(name);
+	}
+	
+	public void play(String name) {
+		if(loaded(name)) {
+			get(name).play();
+		} else {
+			Log.warn("The requested sound to play '" + name + "' is not loaded.");
 		}
 	}
 }

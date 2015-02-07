@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.entities.Enemy;
@@ -22,31 +23,33 @@ import com.makzk.games.util.Utils;
 
 public class Level {
 	private GameContainer gc;
+	private Main game;
 	private List<Entity> entities = new ArrayList<Entity>();
 	private float width;
 	private float height;
 	private float playerInitialX = 0;
 	private float playerInitialY = 0;
 
-	public Level(GameContainer gc, float width, float height, 
+	public Level(GameContainer gc, Main game, float width, float height, 
 			float playerInitialX, float playerInitialY) {
 		this.gc = gc;
+		this.game = game;
 		this.width = width;
 		this.height = height;
 		this.playerInitialX = playerInitialX;
 		this.playerInitialY = playerInitialY;
 	}
 	
-	public Level(GameContainer gc, float width, float height) {
-		this(gc, width, height, 0, 0);
+	public Level(GameContainer gc, Main game, float width, float height) {
+		this(gc, game, width, height, 0, 0);
 	}
 
-	public Level(GameContainer gc, float width) {
-		this(gc, width, gc.getHeight());
+	public Level(GameContainer gc, Main game, float width) {
+		this(gc, game, width, gc.getHeight());
 	}
 
-	public Level(GameContainer gc) {
-		this(gc, gc.getWidth(), gc.getHeight());
+	public Level(GameContainer gc, Main game) {
+		this(gc, game, gc.getWidth(), gc.getHeight());
 	}
 	
 	/**
@@ -55,7 +58,7 @@ public class Level {
 	 * @param gc El contenedor del juego
 	 * @return El nivel dise�ado en base al archivo json
 	 */
-	public static Level loadFromFile(String filepath, GameContainer gc) {
+	public static Level loadFromFile(String filepath, GameContainer gc, Main game) {
 		Level level = null;
 		try {
 			String content = Utils.getResourceContent(filepath);
@@ -63,7 +66,7 @@ public class Level {
 
 			float width = json.has("width") ? json.getInt("width") : gc.getWidth();
 			float height = json.has("height") ? json.getInt("height") : gc.getHeight();
-			level = new Level(gc, width, height);
+			level = new Level(gc, game, width, height);
 
 			if(json.has("playerInitial")) {
 				JSONObject pjInitial = json.getJSONObject("playerInitial");
@@ -91,7 +94,7 @@ public class Level {
 	public void addEntity(EntityType type, float x, float y, float width, float height, Color color) {
 		switch(type) {
 		case RECT:
-			EntityRect r = new EntityRect(gc, new Rectangle(x, y, width, height), this);
+			EntityRect r = new EntityRect(gc, game, new Rectangle(x, y, width, height), this);
 			r.setColor(color);
 			entities.add(r);
 			break;
@@ -256,5 +259,9 @@ public class Level {
 
 	public List<Entity> getEntities() {
 		return entities;
+	}
+	
+	public StateBasedGame getGame() {
+		return game;
 	}
 }

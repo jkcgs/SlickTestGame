@@ -4,11 +4,13 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 
 import com.makzk.games.Level;
+import com.makzk.games.Main;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
 
 public abstract class Entity {
 	protected GameContainer gc;
+	protected Main game;
 	protected float speedX = 0;
 	protected float speedY = 0;
 	protected Color color = Color.transparent;
@@ -24,8 +26,9 @@ public abstract class Entity {
 	protected boolean enabled = true;
 	protected long lastTimeOnGround = 0;
 
-	public Entity(GameContainer gc) {
+	public Entity(GameContainer gc, Main game) {
 		this.gc = gc;
+		this.game = game;
 	}
 
 	public Color getColor() { return color; }

@@ -10,6 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
+import com.makzk.games.Main;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 
@@ -22,7 +23,7 @@ public class PhysicsTest extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		Log.info("Init level");
-		level = Level.loadFromFile("data/levels/level2.json", gc);
+		level = Level.loadFromFile("data/levels/level2.json", gc, (Main) game);
 
 		cam = new Camera(gc, level);
 		

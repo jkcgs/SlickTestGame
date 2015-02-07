@@ -5,15 +5,20 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
+import com.makzk.games.Main;
 import com.makzk.games.util.Direction;
 
 public class Ball extends EntityRect {
 	private float speed;
 
-	public Ball(GameContainer gc) {
-		super(gc, new Rectangle(0, 0, 10, 10));
+	public Ball(GameContainer gc, Main game) {
+		super(gc, game, new Rectangle(0, 0, 10, 10));
 		speed = .5f;
 		color = Color.white;
+	}
+
+	public Ball(GameContainer gc) {
+		this(gc, null);
 	}
 	
 	public void move(int delta, Pad leftPad, Pad rightPad) {

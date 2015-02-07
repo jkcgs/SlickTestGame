@@ -11,6 +11,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
 import com.makzk.games.Level;
+import com.makzk.games.Main;
 import com.makzk.games.util.Direction;
 
 public class Enemy extends EntityRect {
@@ -18,8 +19,8 @@ public class Enemy extends EntityRect {
 	private float initialY;
 	private float walkSpeed = .1f;
 
-	public Enemy(GameContainer gc, Rectangle rect, Level level) {
-		super(gc, rect, level);
+	public Enemy(GameContainer gc, Main game, Rectangle rect, Level level) {
+		super(gc, game, rect, level);
 		gravity = true;
 		solid = true;
 		keepOnScreen = false;
@@ -38,8 +39,16 @@ public class Enemy extends EntityRect {
 		initialX = rect.getX();
 		initialY = rect.getY();
 	}
-	public Enemy(GameContainer gc, Rectangle rect) throws SlickException {
-		this(gc, rect, null);
+	public Enemy(GameContainer gc, Main game, Rectangle rect) {
+		this(gc, game, rect, null);
+	}
+
+	public Enemy(GameContainer gc, Rectangle rect) {
+		this(gc, null, rect, null);
+	}
+
+	public Enemy(GameContainer gc, Rectangle rect, Level lv) {
+		this(gc, null, rect, lv);
 	}
 
 	@Override

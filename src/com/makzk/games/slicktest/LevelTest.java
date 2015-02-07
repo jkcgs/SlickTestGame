@@ -25,9 +25,9 @@ public class LevelTest extends BasicGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
-		level = Level.loadFromFile("data/levels/level3.json", gc);
+		level = Level.loadFromFile("data/levels/level3.json", gc, (Main) game);
 		cam = new Camera(gc, level);
-		player = new Player(gc, level);
+		player = new Player(gc, (Main) game, level);
 		this.game = game;
 	}
 

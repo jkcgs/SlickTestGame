@@ -6,6 +6,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 
+import com.makzk.games.Main;
 import com.makzk.games.util.Direction;
 
 public class Pad extends EntityRect {
@@ -13,10 +14,14 @@ public class Pad extends EntityRect {
 	private int controlUp = Input.KEY_UP;
 	private int controlDown = Input.KEY_DOWN;
 
-	public Pad(GameContainer gc) {
-		super(gc, new Rectangle(0, 0, 10, 100));
+	public Pad(GameContainer gc, Main game) {
+		super(gc, game, new Rectangle(0, 0, 10, 100));
 		keepOnScreen = true;
 		color = Color.white;
+	}
+	
+	public Pad(GameContainer gc) {
+		this(gc, null);
 	}
 	
 	public void setDirection(Direction dir) {

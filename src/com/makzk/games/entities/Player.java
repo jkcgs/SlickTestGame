@@ -13,6 +13,7 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
+import com.makzk.games.Main;
 import com.makzk.games.util.Direction;
 
 public class Player extends EntityRect {
@@ -26,8 +27,8 @@ public class Player extends EntityRect {
 	private float initialX;
 	private float initialY;
 
-	public Player(GameContainer gc, Rectangle rect) throws SlickException {
-		super(gc, rect);
+	public Player(GameContainer gc, Main game, Rectangle rect) throws SlickException {
+		super(gc, game, rect);
 		gravity = true;
 		initialX = rect.getX();
 		initialY = rect.getY();
@@ -47,18 +48,27 @@ public class Player extends EntityRect {
 		setupAnimation(spriteRun, ANIMATION_RUN, new int[]{0,1,2,3,4}, 70, drawrect3, drawrect4);
 		setupAnimation(spriteJump, ANIMATION_JUMP, new int[]{0}, 200, drawrect, drawrect2);
 		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200, drawrect, drawrect2);
+		
+		if(game != null) {
+			game.sndManager.add("horn", "data/sounds/horn.ogg");
+		}
 	}
 
-	public Player(GameContainer gc, float initialX, float initialY) throws SlickException {
-		this(gc, new Rectangle(initialX, initialY, 50, 105));
+	public Player(GameContainer gc, Main game, float initialX, float initialY) throws SlickException {
+		this(gc, game, new Rectangle(initialX, initialY, 50, 105));
 	}
 
-	public Player(GameContainer gc) throws SlickException {
-		this(gc, new Rectangle(0, 0, 50, 105));
+	public Player(GameContainer gc, Main game) throws SlickException {
+		this(gc, game, new Rectangle(0, 0, 50, 105));
 	}
 
+	public Player(GameContainer gc, Main game, Level level) throws SlickException {
+		this(gc, game, new Rectangle(level.getPjInitialX(), level.getPjInitialY(), 50, 105));
+		setLevel(level);
+	}
+	
 	public Player(GameContainer gc, Level level) throws SlickException {
-		this(gc, new Rectangle(level.getPjInitialX(), level.getPjInitialY(), 50, 105));
+		this(gc, null, new Rectangle(level.getPjInitialX(), level.getPjInitialY(), 50, 105));
 		setLevel(level);
 	}
 	
@@ -137,6 +147,10 @@ public class Player extends EntityRect {
 				// Collision with enemy!
 				speedY = gc.getInput().isKeyDown(controlJump) ? -.7f : -.5f;
 				other.setEnabled(false);
+
+				if(game != null) {
+					game.sndManager.play("horn");
+				}
 			}
 		}
 	}

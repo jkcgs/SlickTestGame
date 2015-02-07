@@ -1,14 +1,14 @@
 package com.makzk.games.entities;
 
-import static com.makzk.games.util.Direction.EAST;
-import static com.makzk.games.util.Direction.NORTH;
-import static com.makzk.games.util.Direction.SOUTH;
-import static com.makzk.games.util.Direction.WEST;
 import static com.makzk.games.util.Animations.ANIMATION_FALL;
 import static com.makzk.games.util.Animations.ANIMATION_JUMP;
 import static com.makzk.games.util.Animations.ANIMATION_RUN;
 import static com.makzk.games.util.Animations.ANIMATION_STAND;
 import static com.makzk.games.util.Animations.ANIMATION_TOTAL;
+import static com.makzk.games.util.Direction.EAST;
+import static com.makzk.games.util.Direction.NORTH;
+import static com.makzk.games.util.Direction.SOUTH;
+import static com.makzk.games.util.Direction.WEST;
 
 import java.util.Arrays;
 
@@ -19,9 +19,10 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
 import com.makzk.games.Level;
+import com.makzk.games.Main;
+import com.makzk.games.util.Animations;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
-import com.makzk.games.util.Animations;
 
 public class EntityRect extends Entity {
 	protected Rectangle collisionBox;
@@ -31,14 +32,14 @@ public class EntityRect extends Entity {
 	protected int actualAnimation = ANIMATION_STAND.ordinal();
 	protected boolean spriteFlipHorizontal = false;
 
-	public EntityRect(GameContainer gc, Rectangle collisionBox, Level level) {
-		super(gc);
+	public EntityRect(GameContainer gc, Main game, Rectangle collisionBox, Level level) {
+		super(gc, game);
 		this.collisionBox = collisionBox;
 		this.level = level;
 	}
 
-	public EntityRect(GameContainer gc, Rectangle collisionBox) {
-		this(gc, collisionBox, null);
+	public EntityRect(GameContainer gc, Main game, Rectangle collisionBox) {
+		this(gc, game, collisionBox, null);
 	}
 
 	/**
