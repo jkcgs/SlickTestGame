@@ -9,6 +9,7 @@ import org.newdawn.slick.util.Log;
 import com.makzk.games.slicktest.LevelTest;
 import com.makzk.games.slicktest.PongTest;
 import com.makzk.games.states.Menu;
+import com.makzk.games.util.SoundManager;
 
 public class Main extends StateBasedGame {
 	public static final String name = "Prueba Slick2D";
@@ -19,11 +20,15 @@ public class Main extends StateBasedGame {
 	public static final int play = 1;
 	public static final int pong = 2;
 	
+	public SoundManager sndManager;
+	
 	public Main() {
 		super(name);
 		addState(new Menu(menu));
 		addState(new LevelTest(play));
 		addState(new PongTest(pong));
+		
+		sndManager = new SoundManager();
 	}
 
 	@Override

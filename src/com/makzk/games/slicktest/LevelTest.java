@@ -19,6 +19,7 @@ public class LevelTest extends BasicGameState {
 	Level level;
 	Camera cam;
 	Player player;
+	StateBasedGame game;
 	
 	public LevelTest(int state) { this.state = state; }
 
@@ -27,6 +28,7 @@ public class LevelTest extends BasicGameState {
 		level = Level.loadFromFile("data/levels/level3.json", gc);
 		cam = new Camera(gc, level);
 		player = new Player(gc, level);
+		this.game = game;
 	}
 
 	@Override
