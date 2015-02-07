@@ -9,6 +9,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.makzk.games.Main;
+import com.makzk.games.elements.Buttons;
 import com.makzk.games.util.ImageManager;
 
 
@@ -17,6 +18,7 @@ public class Menu extends BasicGameState {
 	private Rectangle rekt = new Rectangle(0,0,350,80);
 	private ImageManager img;
 	private StateBasedGame game;
+	private Buttons logo,news,load,exit,wallpaper;
 	public Menu(int state) { this.state = state; }
 	
 	
@@ -24,19 +26,30 @@ public class Menu extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 			img = new ImageManager();
+			logo = new Buttons();
+			news = new Buttons();
+			load = new Buttons();
+			exit = new Buttons();
+			wallpaper = new Buttons();
+			wallpaper.setImage(img.getImage(4));
+			logo.setImage(img.getImage(0));
+			news.setImage(img.getImage(1));
+			load.setImage(img.getImage(2));
+			exit.setImage(img.getImage(3));
 			this.game = game;
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
-			img.getImage(4).drawCentered(gc.getWidth()/2, 350);
+		
+			wallpaper.getImage().drawCentered(gc.getWidth()/2, 350);
 			g.fill(rekt);
-			img.getImage(0).drawCentered(gc.getWidth()/2, 100);
-			img.getImage(1).drawCentered(gc.getWidth()/2, 250);
-			img.getImage(2).drawCentered(gc.getWidth()/2, 350);
-			img.getImage(3).drawCentered(gc.getWidth()/2, 450);
-	
+			logo.getImage().drawCentered(gc.getWidth()/2, 100);
+			news.getImage().drawCentered(gc.getWidth()/2, 250);
+			load.getImage().drawCentered(gc.getWidth()/2, 350);
+			exit.getImage().drawCentered(gc.getWidth()/2, 450);
+
 		
 	}
 

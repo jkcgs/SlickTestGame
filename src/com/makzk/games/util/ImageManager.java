@@ -32,7 +32,8 @@ public class ImageManager {
 	 *		0.- Titulo del juego
 	 *		1.- Boton New Game
 	 *		2.- Boton Load
-	 *  	3.- Illuminati  
+	 *		3.- Exit
+	 *  	4.- Illuminati  
 	 * 
 	 */
 	
