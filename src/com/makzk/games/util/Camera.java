@@ -3,7 +3,7 @@ package com.makzk.games.util;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 
-import com.makzk.games.Level;
+import com.makzk.games.elements.Level;
 
 public class Camera {
 	private Rectangle rect;

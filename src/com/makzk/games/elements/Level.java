@@ -1,4 +1,4 @@
-package com.makzk.games;
+package com.makzk.games.elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
+import com.makzk.games.Main;
 import com.makzk.games.entities.Enemy;
 import com.makzk.games.entities.Entity;
 import com.makzk.games.entities.EntityRect;
@@ -29,6 +30,7 @@ public class Level {
 	private float height;
 	private float playerInitialX = 0;
 	private float playerInitialY = 0;
+	private Color bgColor = Color.black;
 
 	public Level(GameContainer gc, Main game, float width, float height, 
 			float playerInitialX, float playerInitialY) {
@@ -75,6 +77,11 @@ public class Level {
 			} else {
 				level.setPjInitialX(0);
 				level.setPjInitialY(0);
+			}
+			
+			if(json.has("bgColor")) {
+				int[] colorArr = json.getJSONArray("bgColor").getIntArray();
+				level.setBgColor(new Color(colorArr[0], colorArr[1], colorArr[2]));
 			}
 
 			if(json.has("rects")) {
@@ -178,6 +185,11 @@ public class Level {
 	}
 
 	public void drawAll(Graphics g, Camera cam) {
+		// Set color only if different
+		if(!g.getBackground().equals(bgColor)) {
+			g.setBackground(bgColor);
+		}
+
 		for(Entity entity: entities) {
 			if(cam == null) {
 				entity.draw();
@@ -225,43 +237,19 @@ public class Level {
 		return le;
 	}
 
-	public float getWidth() {
-		return width;
-	}
+	public float getWidth() { return width; }
+	public void setWidth(float width) { this.width = width; }
+	public float getHeight() { return height; }
+	public void setHeight(float height) { this.height = height; }
 
-	public void setWidth(float width) {
-		this.width = width;
-	}
+	public float getPjInitialX() { return playerInitialX; }
+	public float getPjInitialY() { return playerInitialY; }
+	public void setPjInitialX(float initialX) { playerInitialX = initialX; }
+	public void setPjInitialY(float initialY) { playerInitialY = initialY; }
 
-	public float getHeight() {
-		return height;
-	}
-
-	public void setHeight(float height) {
-		this.height = height;
-	}
-
-	public float getPjInitialX() {
-		return playerInitialX;
-	}
+	public List<Entity> getEntities() { return entities; }
+	public StateBasedGame getGame() { return game; }
 	
-	public float getPjInitialY() {
-		return playerInitialY;
-	}
-
-	public void setPjInitialX(float initialX) {
-		playerInitialX = initialX;
-	}
-	
-	public void setPjInitialY(float initialY) {
-		playerInitialY = initialY;
-	}
-
-	public List<Entity> getEntities() {
-		return entities;
-	}
-	
-	public StateBasedGame getGame() {
-		return game;
-	}
+	public Color getBgColor() { return bgColor; }
+	public void setBgColor(Color bgColor) { this.bgColor = bgColor; }
 }

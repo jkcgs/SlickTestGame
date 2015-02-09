@@ -3,8 +3,8 @@ package com.makzk.games.entities;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 
-import com.makzk.games.Level;
 import com.makzk.games.Main;
+import com.makzk.games.elements.Level;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
 

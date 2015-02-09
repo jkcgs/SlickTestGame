@@ -9,8 +9,8 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
-import com.makzk.games.Level;
 import com.makzk.games.Main;
+import com.makzk.games.elements.Level;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 

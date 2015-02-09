@@ -12,8 +12,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
-import com.makzk.games.Level;
 import com.makzk.games.Main;
+import com.makzk.games.elements.Level;
 import com.makzk.games.util.Direction;
 
 public class Player extends EntityRect {
