@@ -4,11 +4,11 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 
-public class Buttons {
+public class Button {
 	
 	private Image buttonImage;
 	
-	public Buttons() {
+	public Button() {
 		try {
 			//solucion temporal
 			buttonImage = new Image("data/sprites/title1.png");

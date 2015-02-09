@@ -9,7 +9,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.makzk.games.Main;
-import com.makzk.games.elements.Buttons;
+import com.makzk.games.elements.Button;
 import com.makzk.games.util.ImageManager;
 
 
@@ -18,7 +18,7 @@ public class Menu extends BasicGameState {
 	private Rectangle rekt = new Rectangle(0,0,350,80);
 	private ImageManager img;
 	private StateBasedGame game;
-	private Buttons logo,news,load,exit,wallpaper,engilogo;
+	private Button logo,news,load,exit,wallpaper,engilogo;
 	public Menu(int state) { this.state = state; }
 	
 	
@@ -26,12 +26,12 @@ public class Menu extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 			img = new ImageManager();
-			logo = new Buttons();
-			news = new Buttons();
-			load = new Buttons();
-			exit = new Buttons();
-			wallpaper = new Buttons();
-			engilogo = new Buttons();
+			logo = new Button();
+			news = new Button();
+			load = new Button();
+			exit = new Button();
+			wallpaper = new Button();
+			engilogo = new Button();
 			wallpaper.setImage(img.getImage(4));
 			logo.setImage(img.getImage(0));
 			news.setImage(img.getImage(1));
@@ -51,7 +51,7 @@ public class Menu extends BasicGameState {
 			news.getImage().drawCentered(gc.getWidth()/2, 250);
 			load.getImage().drawCentered(gc.getWidth()/2, 350);
 			exit.getImage().drawCentered(gc.getWidth()/2, 450);
-			engilogo.getImage().draw(1010, 460);
+			engilogo.getImage().draw(1000, 450);
 
 		
 	}
