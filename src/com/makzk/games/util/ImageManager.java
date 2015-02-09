@@ -12,11 +12,12 @@ public class ImageManager {
 	 public ImageManager() {
 		try {
 			buttons = new Image[]{
-				new Image("data/sprites/title1.png"),
+				new Image("data/sprites/title.png"),
 				new Image("data/sprites/Newgame.png"), 
-				new Image("data/sprites/load.png"), 
+				new Image("data/sprites/LoadGame.png"), 
 				new Image("data/sprites/Exit.png"), 
-				new Image("data/sprites/the-Illuminati.jpg")
+				new Image("data/sprites/Wallpaper.png"),
+				new Image("data/sprites/clocksmall.png")
 			};
 		} catch (SlickException e) {
 			Log.error("Error Malvado");
@@ -33,7 +34,8 @@ public class ImageManager {
 	 *		1.- Boton New Game
 	 *		2.- Boton Load
 	 *		3.- Exit
-	 *  	4.- Illuminati  
+	 *  	4.- Wallpaper
+	 *  	5.- Clockwork Logo 
 	 * 
 	 */
 	

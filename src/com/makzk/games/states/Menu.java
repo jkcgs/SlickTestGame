@@ -18,7 +18,7 @@ public class Menu extends BasicGameState {
 	private Rectangle rekt = new Rectangle(0,0,350,80);
 	private ImageManager img;
 	private StateBasedGame game;
-	private Buttons logo,news,load,exit,wallpaper;
+	private Buttons logo,news,load,exit,wallpaper,engilogo;
 	public Menu(int state) { this.state = state; }
 	
 	
@@ -31,11 +31,13 @@ public class Menu extends BasicGameState {
 			load = new Buttons();
 			exit = new Buttons();
 			wallpaper = new Buttons();
+			engilogo = new Buttons();
 			wallpaper.setImage(img.getImage(4));
 			logo.setImage(img.getImage(0));
 			news.setImage(img.getImage(1));
 			load.setImage(img.getImage(2));
 			exit.setImage(img.getImage(3));
+			engilogo.setImage(img.getImage(5));
 			this.game = game;
 	}
 
@@ -49,6 +51,7 @@ public class Menu extends BasicGameState {
 			news.getImage().drawCentered(gc.getWidth()/2, 250);
 			load.getImage().drawCentered(gc.getWidth()/2, 350);
 			exit.getImage().drawCentered(gc.getWidth()/2, 450);
+			engilogo.getImage().draw(1010, 460);
 
 		
 	}
