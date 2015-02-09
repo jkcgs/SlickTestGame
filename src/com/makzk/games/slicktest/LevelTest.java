@@ -37,7 +37,6 @@ public class LevelTest extends BasicGameState {
 		level.drawAll(g, cam);
 		player.draw(cam);
 		g.setColor(Color.white);
-		g.drawString(System.currentTimeMillis()+"", 10, 10);
 		g.drawString(String.format("[PJ] X: %.1f Y: %.1f sX: %.2f sY: %.2f g: %s t: %s w: %s a: %s", 
 				player.getX(), player.getY(), player.getSpeedX(), player.getSpeedY(), 
 				player.isOnGround(), player.getTimeOffGround(), 
