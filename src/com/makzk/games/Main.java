@@ -24,11 +24,11 @@ public class Main extends StateBasedGame {
 	
 	public Main() {
 		super(name);
+		sndManager = new SoundManager();
+
 		addState(new Menu(menu));
 		addState(new LevelTest(play));
 		addState(new PongTest(pong));
-		
-		sndManager = new SoundManager();
 	}
 
 	@Override

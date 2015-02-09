@@ -149,7 +149,7 @@ public class Player extends EntityRect {
 				other.setEnabled(false);
 
 				if(game != null) {
-					game.sndManager.play("horn");
+					game.sndManager.play("horn", .2f);
 				}
 			}
 		}

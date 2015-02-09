@@ -34,12 +34,16 @@ public class SoundManager {
 	public boolean loaded(String name) {
 		return sounds.containsKey(name);
 	}
-	
-	public void play(String name) {
+
+	public void play(String name, float volume) {
 		if(loaded(name)) {
-			get(name).play();
+			get(name).play(1.0f, volume);
 		} else {
 			Log.warn("The requested sound to play '" + name + "' is not loaded.");
 		}
+	}
+
+	public void play(String name) {
+		play(name, 1);
 	}
 }
