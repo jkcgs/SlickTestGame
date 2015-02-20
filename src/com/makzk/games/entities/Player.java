@@ -154,4 +154,8 @@ public class Player extends EntityRect {
 			}
 		}
 	}
+
+	public int getControlLeft() { return controlLeft; }
+	public int getControlRight() { return controlRight; }
+	public int getControlJump() { return controlJump; }
 }

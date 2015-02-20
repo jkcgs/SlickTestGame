@@ -12,6 +12,7 @@ import com.makzk.games.Main;
 import com.makzk.games.elements.Level;
 import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
+import com.makzk.games.util.Utils;
 
 public class LevelTest extends BasicGameState {
 	private int state;
@@ -25,6 +26,7 @@ public class LevelTest extends BasicGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
+		gc.setShowFPS(true);
 		level = Level.loadFromFile("data/levels/level3.json", gc, (Main) game);
 		cam = new Camera(gc, level);
 		player = new Player(gc, (Main) game, level);
@@ -42,6 +44,10 @@ public class LevelTest extends BasicGameState {
 				player.isOnGround(), player.getTimeOffGround(), 
 				player.isTouchingWall(), player.getActualAnimation()), 10, 30);
 		g.drawString(String.format("[Cam] X: %.1f Y: %.1f", cam.getX(), cam.getY()), 10, 50);
+		Utils.drawPlayerInput(gc.getInput(), g, player, 10, 85);
+		if(gc.getInput().isKeyDown(Input.KEY_T)) {
+			Utils.drawTriforce(g, gc.getWidth() - 40, 10, 10);
+		}
 	}
 
 	@Override
