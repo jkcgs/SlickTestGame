@@ -50,7 +50,7 @@ public class Player extends EntityRect {
 		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200, drawrect, drawrect2);
 		
 		if(game != null) {
-			game.sndManager.add("horn", "data/sounds/horn.ogg");
+			game.sndManager.add("horn", "data/sounds/Jump.ogg");
 		}
 	}
 
