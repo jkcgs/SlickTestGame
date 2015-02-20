@@ -280,7 +280,8 @@ public class EntityRect extends Entity {
 			return;
 		}
 		
-		if(nextX <= e.getMaxX() && nextX + getWidth() > e.getX()) {
+		// Colisión vertical
+		if(getX() <= e.getMaxX() && getX() + getWidth() > e.getX()) {
 			// Colisión abajo
 			if(getY() + getHeight() <= e.getY() && nextY + getHeight() >= e.getY()) {
 				nextY = e.getY() - getHeight();
@@ -296,7 +297,8 @@ public class EntityRect extends Entity {
 			}
 		}
 		
-		if((getY() < e.getMaxY()) && (getY() + getHeight() > e.getY())) {
+		// Colisión horizontal
+		if((nextY < e.getMaxY()) && (nextY + getHeight() > e.getY())) {
 			float hdif = (getY() + getHeight()) - e.getY();
 			boolean slope = hdif > 2;
 			// Colisión derecha
