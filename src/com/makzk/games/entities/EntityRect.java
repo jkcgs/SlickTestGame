@@ -281,7 +281,7 @@ public class EntityRect extends Entity {
 		}
 		
 		// Colisión vertical
-		if(getX() <= e.getMaxX() && getX() + getWidth() >= e.getX()) {
+		if(getX() <= e.getMaxX() && getX() + getWidth() > e.getX()) {
 			// Colisión abajo
 			if(getY() + getHeight() <= e.getY() && nextY + getHeight() >= e.getY()) {
 				nextY = e.getY() - getHeight();
@@ -299,30 +299,41 @@ public class EntityRect extends Entity {
 		
 		// Colisión horizontal
 		if((nextY < e.getMaxY()) && (nextY + getHeight() > e.getY())) {
-			float hdif = (getY() + getHeight()) - e.getY();
-			boolean slope = hdif > 2;
+			// Slope: subir al jugador al Entity colisionador si choca horizontalmente
+			// a cierta altura. 
+			boolean slope = ((getY() + getHeight()) - e.getY()) <= 2;
+			// Se conserva la posición siguiente en caso de chocar con slope
+			float auxX = nextX;
+
 			// Colisión derecha
-			if(getX() + getWidth() <= e.getX() && nextX + getWidth() > e.getX()) {
-				if(slope) {
-					nextX = e.getX() - getWidth();
+			if(getX() + getWidth() <= e.getX() && nextX + getWidth() >= e.getX()) {
+				nextX = e.getX() - getWidth(); // Colisión, se retrocede al jugador
+				if(slope && nextX != getX()) {
+					// Se detecta slope sólo si el personaje puede moverse en X
+					nextX = auxX; // Se permite avanzar al jugador
+					nextY = e.getY() - getHeight(); // Se sube al jugador a la sgte plataforma
+				} else {
+					// Si no hay slope, se procede con la detención y el evento de colisión
 					speedX = 0;
 					wall = true;
 					onCollision(EAST, e);
-				} else {
-					nextY = e.getY() - getHeight();
 				}
 			}
 			// Colisión izquierda
 			else if(e.getMaxX() <= getX() && e.getMaxX() > nextX) {
-				if(slope) {
-					nextX = getX();
-					speedX = 0;
-					onCollision(WEST, e);
-					wall = true;
-				} else {
+				nextX = getX();
+				// Las condiciones de slope aquí son iguales a las de colisión derecha
+				if(slope && nextX != getX()) {
+					nextX = auxX;
 					nextY = e.getY() - getHeight();
+				} else {
+					speedX = 0;
+					wall = true;
+					onCollision(WEST, e);
 				}
 			}
+
+			
 		}
 	}
 	
