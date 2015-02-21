@@ -166,15 +166,15 @@ public class EntityRect extends Entity {
 		if(speedY < -.1) {
 			// La entity está saltando
 			anim = ANIMATION_JUMP;
-		} else if (speedY > .2) {
+		} else if (speedY > .2 && getTimeOffGround() > 150) {
 			// La entity esta cayendo
 			anim = ANIMATION_FALL;
 		} else if (speedX != 0) {
 			// La entity está yendo hacia los lados, pero no saltando (else if)
-			anim = getTimeOffGround() < 100 ? ANIMATION_RUN : ANIMATION_FALL;
+			anim = getTimeOffGround() < 150 ? ANIMATION_RUN : ANIMATION_FALL;
 		} else {
 			// La entity está detenida
-			anim = getTimeOffGround() < 100 ? ANIMATION_STAND : ANIMATION_FALL;
+			anim = onGround && getTimeOffGround() < 150 ? ANIMATION_STAND : ANIMATION_FALL;
 		}
 	
 		actualAnimation = anim.ordinal();

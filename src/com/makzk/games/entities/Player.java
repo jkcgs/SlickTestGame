@@ -5,7 +5,6 @@ import static com.makzk.games.util.Animations.ANIMATION_JUMP;
 import static com.makzk.games.util.Animations.ANIMATION_RUN;
 import static com.makzk.games.util.Animations.ANIMATION_STAND;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -32,7 +31,6 @@ public class Player extends EntityRect {
 		gravity = true;
 		initialX = rect.getX();
 		initialY = rect.getY();
-		setColor(Color.gray);
 		
 		// Configurar animaciones
 		float[] drawrect = new float[]{ 0, -5, 102, 110 };
