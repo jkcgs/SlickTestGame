@@ -128,6 +128,25 @@ public class EntityRect extends Entity {
 	}
 	
 	/**
+	 * Actualizar la animación del jugador dependiendo de su estado actual
+	 */
+	public void updateAnimation() {
+		if(speedY < -.1) {
+			// La entity está saltando
+			actualAnimation = ANIMATION_JUMP.ordinal();
+		} else if (speedY > .2 && getTimeOffGround() > 150) {
+			// La entity esta cayendo
+			actualAnimation = ANIMATION_FALL.ordinal();
+		} else if (speedX != 0) {
+			// La entity está yendo hacia los lados, pero no saltando (else if)
+			actualAnimation = (getTimeOffGround() < 150 ? ANIMATION_RUN : ANIMATION_FALL).ordinal();
+		} else {
+			// La entity está detenida
+			actualAnimation = (onGround && getTimeOffGround() < 150 ? ANIMATION_STAND : ANIMATION_FALL).ordinal();
+		}
+	}
+	
+	/**
 	 * Dibuja el elemento sólo si no se trata de un rectángulo transparente
 	 */
 	public void draw() {
@@ -161,23 +180,7 @@ public class EntityRect extends Entity {
 			spriteFlipHorizontal = false;
 		}
 		
-		Animations anim = null;
-
-		if(speedY < -.1) {
-			// La entity está saltando
-			anim = ANIMATION_JUMP;
-		} else if (speedY > .2 && getTimeOffGround() > 150) {
-			// La entity esta cayendo
-			anim = ANIMATION_FALL;
-		} else if (speedX != 0) {
-			// La entity está yendo hacia los lados, pero no saltando (else if)
-			anim = getTimeOffGround() < 150 ? ANIMATION_RUN : ANIMATION_FALL;
-		} else {
-			// La entity está detenida
-			anim = onGround && getTimeOffGround() < 150 ? ANIMATION_STAND : ANIMATION_FALL;
-		}
-	
-		actualAnimation = anim.ordinal();
+		updateAnimation(); // Actualizar la animación actual		
 		
 		// Dibujar el sprite, con su volteo correspondiente si corresponde, y
 		// según el rectángulo del elemento

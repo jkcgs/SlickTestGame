@@ -24,7 +24,6 @@ import org.newdawn.slick.util.ResourceLoader;
 import com.makzk.games.entities.Player;
 
 public class Utils {
-	
 	/**
 	 * Crear un triángulo (equilátero?) en la dirección deseada
 	 * @param x La posición inicial X
@@ -34,8 +33,7 @@ public class Utils {
 	 * @return El triángulo (Polygon) generado
 	 */
 	public static Polygon createEqTriangle(float x, float y, float a, Direction dir) {
-		float points[] = new float[]{(x+(a/2)), y, x, (y+a), (x+a), (y+a)};
-		Polygon p = new Polygon(points);
+		Polygon p = new Polygon(new float[]{(x+(a/2)), y, x, (y+a), (x+a), (y+a)});
 
 		double rotAngle = 0;
 		switch(dir) {
