@@ -35,7 +35,7 @@ public class Utils {
 	public static Polygon createEqTriangle(float x, float y, float a, Direction dir) {
 		Polygon p = new Polygon(new float[]{(x+(a/2)), y, x, (y+a), (x+a), (y+a)});
 
-		double rotAngle = 0;
+		double rotAngle;
 		switch(dir) {
 			case SOUTH: rotAngle = Math.PI; break;
 			case EAST: rotAngle = Math.PI / 2; break;
@@ -66,7 +66,7 @@ public class Utils {
 		String content = null;
 		FileSystem fs = null;
 		try {
-			Path path = null;
+			Path path;
 			final URL url = ResourceLoader.getResource(filepath);
 
 			if(url.toString().contains("!")) {

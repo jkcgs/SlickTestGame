@@ -16,28 +16,20 @@ import com.makzk.games.util.ImageManager;
 public class Menu extends BasicGameState {
 	private int state, index = 1;
 	private Rectangle rekt = new Rectangle(0,0,350,80);
-	private ImageManager img;
 	private StateBasedGame game;
 	private Button logo,news,load,exit,wallpaper,engilogo;
 	public Menu(int state) { this.state = state; }
-	
-	
+
 	@Override
-	public void init(GameContainer container, StateBasedGame game)
+	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
-			img = new ImageManager();
-			logo = new Button();
-			news = new Button();
-			load = new Button();
-			exit = new Button();
-			wallpaper = new Button();
-			engilogo = new Button();
-			wallpaper.setImage(img.getImage(4));
-			logo.setImage(img.getImage(0));
-			news.setImage(img.getImage(1));
-			load.setImage(img.getImage(2));
-			exit.setImage(img.getImage(3));
-			engilogo.setImage(img.getImage(5));
+            ImageManager img = new ImageManager();
+			logo = new Button(img.getImage(0), gc.getWidth()/2, 100);
+			news = new Button(img.getImage(1), gc.getWidth()/2, 250);
+			load = new Button(img.getImage(2), gc.getWidth()/2, 350);
+			exit = new Button(img.getImage(3), gc.getWidth()/2, 450);
+			wallpaper = new Button(img.getImage(4), gc.getWidth()/2, 350);
+			engilogo = new Button(img.getImage(5), 1000, 450);
 			this.game = game;
 	}
 
@@ -45,13 +37,14 @@ public class Menu extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
 		
-			wallpaper.getImage().drawCentered(gc.getWidth()/2, 350);
+			wallpaper.drawCentered();
 			g.fill(rekt);
-			logo.getImage().drawCentered(gc.getWidth()/2, 100);
-			news.getImage().drawCentered(gc.getWidth()/2, 250);
-			load.getImage().drawCentered(gc.getWidth()/2, 350);
-			exit.getImage().drawCentered(gc.getWidth()/2, 450);
-			engilogo.getImage().draw(1000, 450);
+
+			logo.drawCentered();
+			news.drawCentered();
+			load.drawCentered();
+			exit.drawCentered();
+			engilogo.draw();
 
 		
 	}
