@@ -9,10 +9,14 @@ public class Button {
     private float y;
     private Runnable runnable = null;
 
-    public Button(Image img, float x, float y) {
+    public Button(Image img, float x, float y, Runnable runnable) {
         this.img = img;
         this.x = x;
         this.y = y;
+        this.runnable = runnable;
+    }
+    public Button(Image img, float x, float y) {
+        this(img, x, y, null);
     }
 
     public void draw() {
