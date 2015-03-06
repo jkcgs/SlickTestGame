@@ -1,0 +1,50 @@
+{
+  "base_example": {
+    "width": 43,
+    "height": 82,
+    "sprite_sheet": "data/sprites/enemy_sprite.png",
+    "background": {
+      "//comment": "Background and color images, the default image is the sprite_sheet",
+      "image": "data/sprites/enemy.png",
+      "image_": "default",
+      "color": [0, 0, 0]
+    },
+    "animations": {
+      "running": {
+        "sprite": {
+          "//comment": "The width and height is the size of each sprite in the sprite sheet image",
+          "image": "data/sprites/enemy_walk.png",
+          "width": 30,
+          "height": 50
+        },
+        "positions": [0,1,2,3],
+        "positions_": [[0,0],[0,5]],
+        "durations": 1000,
+        "durations_": [0,1,2,3]
+      }
+    }
+  },
+  "bugs": {
+    "width": 43,
+    "height": 82,
+    "sprite_sheet": {
+      "image": "data/sprites/bugs_walk.png",
+      "width": 43,
+      "height": 82
+    },
+    "animations": {
+      "stand": {
+        "durations": [0],
+        "positions": 0
+      },
+      "run": {
+        "durations": [0],
+        "positions": [[0,0], [4,0]]
+      },
+      "fall": {
+        "durations": [0],
+        "positions": 0
+      },
+    }
+  }
+}
