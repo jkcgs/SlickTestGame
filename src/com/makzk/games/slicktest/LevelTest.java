@@ -1,26 +1,18 @@
 package com.makzk.games.slicktest;
 
-import com.makzk.games.entities.EntityRect;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
-import org.newdawn.slick.state.StateBasedGame;
-
 import com.makzk.games.Main;
 import com.makzk.games.elements.Level;
-import com.makzk.games.entities.Player;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Utils;
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
 public class LevelTest extends BasicGameState {
 	private int state;
 	
 	Level level;
 	Camera cam;
-	Player player;
 	StateBasedGame game;
 	
 	public LevelTest(int state) { this.state = state; }
@@ -31,7 +23,6 @@ public class LevelTest extends BasicGameState {
 		level = Level.loadFromFile("data/levels/level3.json", gc, (Main) game);
 
 		cam = new Camera(gc, level);
-		player = new Player(gc, (Main) game, level);
 		this.game = game;
 	}
 
@@ -39,14 +30,13 @@ public class LevelTest extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
 		level.drawAll(g, cam);
-		player.draw(cam);
 		g.setColor(Color.white);
 		g.drawString(String.format("[PJ] X: %.1f Y: %.1f sX: %.2f sY: %.2f g: %s t: %s w: %s a: %s", 
-				player.getX(), player.getY(), player.getSpeedX(), player.getSpeedY(), 
-				player.isOnGround(), player.getTimeOffGround(), 
-				player.isTouchingWall(), player.getActualAnimation()), 10, 30);
+				level.getPlayer().getX(), level.getPlayer().getY(), level.getPlayer().getSpeedX(), level.getPlayer().getSpeedY(),
+				level.getPlayer().isOnGround(), level.getPlayer().getTimeOffGround(),
+				level.getPlayer().isTouchingWall(), level.getPlayer().getActualAnimation()), 10, 30);
 		g.drawString(String.format("[Cam] X: %.1f Y: %.1f", cam.getX(), cam.getY()), 10, 50);
-		Utils.drawPlayerInput(gc.getInput(), g, player, 10, 85);
+		Utils.drawPlayerInput(gc.getInput(), g, level.getPlayer(), 10, 85);
 		if(gc.getInput().isKeyDown(Input.KEY_T)) {
 			Utils.drawTriforce(g, gc.getWidth() - 40, 10, 10);
 		}
@@ -64,18 +54,17 @@ public class LevelTest extends BasicGameState {
 			return;
 		}
 
-		player.move(delta);
 		level.updateEntities(delta);
 
-		float pjXOnScreen = player.getCollisionBox().getCenterX();
-		float pjYOnScreen = player.getCollisionBox().getCenterY();
+		float pjXOnScreen = level.getPlayer().getCollisionBox().getCenterX();
+		float pjYOnScreen = level.getPlayer().getCollisionBox().getCenterY();
 		cam.autoMove(pjXOnScreen, pjYOnScreen);
 	}
 
 	public void keyPressed(int key, char c) {
 		// Reiniciar la posición del jugador y los enemigos
 		if(key == Input.KEY_R) {
-			level.reset(player);
+			level.getPlayer().reset();
 		}
 	}
 

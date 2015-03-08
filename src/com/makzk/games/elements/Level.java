@@ -26,6 +26,7 @@ public class Level {
 	private GameContainer gc;
 	private Main game;
 	private List<Entity> entities = new ArrayList<>();
+    private Player player;
 	private float width;
 	private float height;
 	private float playerInitialX = 0;
@@ -40,7 +41,14 @@ public class Level {
 		this.height = height;
 		this.playerInitialX = playerInitialX;
 		this.playerInitialY = playerInitialY;
-	}
+        try {
+            this.player = new Player(gc, game, this);
+            this.player.setPos(playerInitialX, playerInitialY);
+        } catch (SlickException e) {
+            Log.error("Could not load player");
+            Log.error(e);
+        }
+    }
 	
 	public Level(GameContainer gc, Main game, float width, float height) {
 		this(gc, game, width, height, 0, 0);
@@ -68,16 +76,16 @@ public class Level {
 
 			float width = json.has("width") ? json.getInt("width") : gc.getWidth();
 			float height = json.has("height") ? json.getInt("height") : gc.getHeight();
-			level = new Level(gc, game, width, height);
+
+            int pjInitialX = 0, pjInitialY = 0;
 
 			if(json.has("playerInitial")) {
 				JSONObject pjInitial = json.getJSONObject("playerInitial");
-				level.setPjInitialX(pjInitial.has("x") ? pjInitial.getInt("x") : 0);
-				level.setPjInitialY(pjInitial.has("y") ? pjInitial.getInt("y") : 0);
-			} else {
-				level.setPjInitialX(0);
-				level.setPjInitialY(0);
+				pjInitialX = pjInitial.has("x") ? pjInitial.getInt("x") : 0;
+                pjInitialY = pjInitial.has("y") ? pjInitial.getInt("y") : 0;
 			}
+
+            level = new Level(gc, game, width, height, pjInitialX, pjInitialY);
 			
 			if(json.has("bgColor")) {
 				int[] colorArr = json.getJSONArray("bgColor").getIntArray();
@@ -210,6 +218,8 @@ public class Level {
 				}
 			}
 		}
+
+        player.move(delta);
 	}
 
 	public void drawAll(Graphics g) {
@@ -229,14 +239,15 @@ public class Level {
 				entity.draw(cam);
 			}
 		}
+
+        player.draw(cam);
 	}
 	
 	/**
 	 * Reposiciona los enemigos del nivel y al jugador a una posici�n
 	 * inicial.
-	 * @param player El jugador a reposicionar
 	 */
-	public void reset(Player player) {
+	public void reset() {
 		for(Enemy enemy: getEnemies()) {
 			enemy.reset();
 		}
@@ -244,10 +255,6 @@ public class Level {
 			player.reset();
 			player.setPos(playerInitialX, playerInitialY);
 		}
-	}
-	
-	public void reset() {
-		reset(null);
 	}
 
 	public List<EntityRect> getRects() {
@@ -284,4 +291,6 @@ public class Level {
 	
 	public Color getBgColor() { return bgColor; }
 	public void setBgColor(Color bgColor) { this.bgColor = bgColor; }
+    public Player getPlayer() { return player; }
+    public void setPlayer(Player player) { this.player = player; }
 }

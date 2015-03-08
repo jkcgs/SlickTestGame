@@ -64,7 +64,7 @@ public class PhysicsTest extends BasicGameState {
 	public void keyPressed(int key, char c) {
 		// Reiniciar la posici�n del jugador y los enemigos
 		if(key == Input.KEY_R) {
-			level.reset(player);
+			level.getPlayer().reset();
 		}
 	}
 
