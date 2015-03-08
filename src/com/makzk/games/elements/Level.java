@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
@@ -25,7 +24,7 @@ import com.makzk.games.util.Utils;
 public class Level {
 	private GameContainer gc;
 	private Main game;
-	private List<Entity> entities = new ArrayList<Entity>();
+	private List<Entity> entities = new ArrayList<>();
 	private float width;
 	private float height;
 	private float playerInitialX = 0;
@@ -61,7 +60,7 @@ public class Level {
 	 * @return El nivel dise�ado en base al archivo json
 	 */
 	public static Level loadFromFile(String filepath, GameContainer gc, Main game) {
-		Level level = null;
+		Level level;
 		try {
 			String content = Utils.getResourceContent(filepath);
 			JSONObject json = new JSONObject(content);
@@ -113,6 +112,9 @@ public class Level {
 	public void addEntity(EntityType type, float x, float y, float width, float height) {
 		addEntity(type, x, y, width, height, null);
 	}
+    public void addEntity(Entity entity) {
+        entities.add(entity);
+    }
 	
 	/**
 	 * Agrega una entidad según un mapa de posiciones y características.
@@ -131,8 +133,7 @@ public class Level {
 	 * <li>1 - Enemy</li>
 	 * </ul>
 	 * 
-	 * @param rects
-	 * @throws SlickException
+	 * @param rects Las entidades rectangles a añadir
 	 */
 	public void addEntities(float[][] rects) {
 		for(float[] rect: rects) {
@@ -148,7 +149,7 @@ public class Level {
 				default: // EntityRect
 					if(rect.length == 5) {
 						addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3]);
-					} else if(rect.length == 8) {
+					} else {
 						Color color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
 						addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3], color);
 					}
@@ -202,7 +203,7 @@ public class Level {
 	/**
 	 * Reposiciona los enemigos del nivel y al jugador a una posici�n
 	 * inicial.
-	 * @param player
+	 * @param player El jugador a reposicionar
 	 */
 	public void reset(Player player) {
 		for(Enemy enemy: getEnemies()) {
@@ -219,7 +220,7 @@ public class Level {
 	}
 
 	public List<EntityRect> getRects() {
-		List<EntityRect> le = new ArrayList<EntityRect>();
+		List<EntityRect> le = new ArrayList<>();
 		for(Entity e : entities) {
 			if(e instanceof EntityRect) {
 				le.add((EntityRect) e);
@@ -228,7 +229,7 @@ public class Level {
 		return le;
 	}
 	public List<Enemy> getEnemies() {
-		List<Enemy> le = new ArrayList<Enemy>();
+		List<Enemy> le = new ArrayList<>();
 		for(Entity e : entities) {
 			if(e instanceof Enemy) {
 				le.add((Enemy) e);

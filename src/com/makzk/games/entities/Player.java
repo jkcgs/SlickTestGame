@@ -1,19 +1,12 @@
 package com.makzk.games.entities;
 
-import static com.makzk.games.util.Animations.ANIMATION_FALL;
-import static com.makzk.games.util.Animations.ANIMATION_JUMP;
-import static com.makzk.games.util.Animations.ANIMATION_RUN;
-import static com.makzk.games.util.Animations.ANIMATION_STAND;
-
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.geom.Rectangle;
-
 import com.makzk.games.Main;
 import com.makzk.games.elements.Level;
 import com.makzk.games.util.Direction;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 public class Player extends EntityRect {
 
@@ -31,21 +24,8 @@ public class Player extends EntityRect {
 		gravity = true;
 		initialX = rect.getX();
 		initialY = rect.getY();
-		
-		// Configurar animaciones
-		float[] drawrect = new float[]{ 0, -5, 102, 110 };
-		float[] drawrect2 = new float[]{ -34, -5, 102, 110 };
-		float[] drawrect3 = new float[]{ -34, 0, 102, 105 };
-		float[] drawrect4 = new float[]{ -10, 0, 102, 105 };
-		
-		SpriteSheet spriteIddle = new SpriteSheet("data/sprites/iddle1.png", 410, 425);
-		SpriteSheet spriteJump = new SpriteSheet("data/sprites/jump.png",404,458);
-		SpriteSheet spriteFall = new SpriteSheet("data/sprites/fall.png",458,461);
-		SpriteSheet spriteRun = new SpriteSheet("data/sprites/Run.png",464,390);
-		setupAnimation(spriteIddle, ANIMATION_STAND, new int[]{0,1}, 500, drawrect, drawrect2);
-		setupAnimation(spriteRun, ANIMATION_RUN, new int[]{0,1,2,3,4}, 70, drawrect3, drawrect4);
-		setupAnimation(spriteJump, ANIMATION_JUMP, new int[]{0}, 200, drawrect, drawrect2);
-		setupAnimation(spriteFall, ANIMATION_FALL, new int[]{0}, 200, drawrect, drawrect2);
+
+        setupFromConfig("player");
 		
 		if(game != null) {
 			game.sndManager.add("horn", "data/sounds/Jump.ogg");

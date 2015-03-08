@@ -7,6 +7,7 @@ import com.makzk.games.Main;
 import com.makzk.games.elements.Level;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
+import org.newdawn.slick.Image;
 
 public abstract class Entity {
 	protected GameContainer gc;
@@ -14,6 +15,8 @@ public abstract class Entity {
 	protected float speedX = 0;
 	protected float speedY = 0;
 	protected Color color = Color.transparent;
+
+    protected Image bgImage = null;
 	protected boolean keepOnScreen = false;
 	protected boolean gravity = false;
 	protected boolean solid = true;
@@ -49,6 +52,9 @@ public abstract class Entity {
 	
 	public void setEnabled(boolean enabled) { this.enabled = enabled; }
 	public boolean isEnabled() { return enabled; }
+
+    public Image getBgImage() {  return bgImage; }
+    public void setBgImage(Image bgImage) { this.bgImage = bgImage; }
 	
 	public abstract void onCollision(Direction dir, Entity other);
 	public abstract float getX();

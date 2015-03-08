@@ -4,11 +4,13 @@
     "height": 82,
     "sprite_sheet": "data/sprites/enemy_sprite.png",
     "background": {
-      "//comment": "Background and color images, the default image is the sprite_sheet",
+      "//comment": "Background and color images, the default (true) image is the sprite_sheet",
       "image": "data/sprites/enemy.png",
-      "image_": "default",
+      "image_": true,
       "color": [0, 0, 0]
     },
+    "//comment": "If size (w&h) is not defined, but background does, the size will be the background size",
+    "background_": "data/sprites/enemy_sprite.png",
     "animations": {
       "running": {
         "sprite": {
@@ -19,32 +21,80 @@
         },
         "positions": [0,1,2,3],
         "positions_": [[0,0],[0,5]],
-        "durations": 1000,
-        "durations_": [0,1,2,3]
+        "duration": 1000
       }
     }
   },
   "bugs": {
     "width": 43,
     "height": 82,
-    "sprite_sheet": {
-      "image": "data/sprites/bugs_walk.png",
-      "width": 43,
-      "height": 82
-    },
+    "sprite_sheet": "data/sprites/bugs_walk.png",
     "animations": {
       "stand": {
-        "durations": [0],
+        "duration": 1000,
         "positions": 0
       },
       "run": {
-        "durations": [0],
+        "duration": 70,
         "positions": [[0,0], [4,0]]
       },
       "fall": {
-        "durations": [0],
+        "duration": 1000,
         "positions": 0
-      },
+      }
     }
+  },
+  "player": {
+    "width": 50,
+    "height": 105,
+    "animations": {
+      "stand": {
+        "sprite": {
+          "image": "data/sprites/iddle1.png",
+          "width": 410,
+          "height": 425
+        },
+        "draw_rect": [0, -5, 102, 110],
+        "draw_rect_flipped": [-34, -5, 102, 110],
+        "positions": [0, 1],
+        "duration": 500
+      },
+      "jump": {
+        "sprite": {
+          "image": "data/sprites/jump.png",
+          "width": 404,
+          "height": 458
+        },
+        "draw_rect": [0, -5, 102, 110],
+        "draw_rect_flipped": [-34, -5, 102, 110],
+        "positions": 0,
+        "duration": 10000
+      },
+      "run": {
+        "sprite": {
+          "image": "data/sprites/Run.png",
+          "width": 464,
+          "height": 390
+        },
+        "draw_rect": [-34, 0, 102, 105],
+        "draw_rect_flipped": [-10, 0, 102, 105],
+        "positions": [0,1,2,3,4],
+        "duration": 70
+      },
+      "fall": {
+        "sprite": {
+          "image": "data/sprites/fall.png",
+          "width": 458,
+          "height": 461
+        },
+        "draw_rect": [0, -5, 102, 110],
+        "draw_rect_flipped": [-34, -5, 102, 110],
+        "positions": 0,
+        "duration": 10000
+      }
+    }
+  },
+  "tube": {
+    "background": "data/sprites/pipe.png"
   }
 }

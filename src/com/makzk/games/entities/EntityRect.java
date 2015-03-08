@@ -1,28 +1,22 @@
 package com.makzk.games.entities;
 
-import static com.makzk.games.util.Animations.ANIMATION_FALL;
-import static com.makzk.games.util.Animations.ANIMATION_JUMP;
-import static com.makzk.games.util.Animations.ANIMATION_RUN;
-import static com.makzk.games.util.Animations.ANIMATION_STAND;
-import static com.makzk.games.util.Animations.ANIMATION_TOTAL;
-import static com.makzk.games.util.Direction.EAST;
-import static com.makzk.games.util.Direction.NORTH;
-import static com.makzk.games.util.Direction.SOUTH;
-import static com.makzk.games.util.Direction.WEST;
-
-import java.util.Arrays;
-
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.geom.Rectangle;
-
 import com.makzk.games.Main;
 import com.makzk.games.elements.Level;
 import com.makzk.games.util.Animations;
 import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
+import com.makzk.games.util.Utils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
+
+import java.util.Arrays;
+
+import static com.makzk.games.util.Animations.*;
+import static com.makzk.games.util.Direction.*;
 
 public class EntityRect extends Entity {
 	protected Rectangle collisionBox;
@@ -41,6 +35,11 @@ public class EntityRect extends Entity {
 	public EntityRect(GameContainer gc, Main game, Rectangle collisionBox) {
 		this(gc, game, collisionBox, null);
 	}
+
+    public EntityRect(GameContainer gc, Main game, String entityConfigType) throws SlickException {
+        this(gc, game, null, null);
+        setupFromConfig(entityConfigType);
+    }
 
 	/**
 	 * Configurar una animación para una posición determinada, determinado
@@ -126,6 +125,147 @@ public class EntityRect extends Entity {
 	public void setupAnimation(SpriteSheet sprite, Animations anim, int[] xpositions, int duration) {
 		setupAnimation(sprite, anim, xpositions, duration, null, null);
 	}
+
+    /**
+     * Loads entity bounds, background and animations from entity configuration file (data/entity_types.json)
+     * @param name The name of the entity to load from configuration file
+     * @throws SlickException
+     * @throws JSONException
+     */
+    public void setupFromConfig(String name) throws SlickException, JSONException {
+        String content = Utils.getResourceContent("data/entity_types.json");
+        JSONObject json = new JSONObject(content);
+
+        if(!json.has(name)) {
+            throw new IllegalArgumentException("The entity name was not found on entities configuration file.");
+        }
+
+        if(collisionBox == null) {
+            collisionBox = new Rectangle(0,0,0,0);
+        }
+
+        json = json.getJSONObject(name);
+        if(json.has("width") && json.has("height")) {
+            collisionBox.setSize((float) json.getDouble("width"), (float) json.getDouble("height"));
+        }
+
+        if(json.has("posX")) {
+            collisionBox.setX((float) json.getDouble("posX"));
+        }
+
+        if(json.has("posY")) {
+            collisionBox.setY((float) json.getDouble("posY"));
+        }
+
+        SpriteSheet ss = null;
+        // Load default sprite sheet if file is indicated on configuration file
+        if(json.has("sprite_sheet")) {
+            ss = new SpriteSheet(json.getString("sprite_sheet"), json.getInt("width"), json.getInt("height"));
+        }
+
+        if(json.has("background")) {
+            if(json.get("background") instanceof JSONObject) {
+                JSONObject bgObj = json.getJSONObject("background");
+                try {
+                    // If background image is set as "true" and SpriteSheet is loaded, use the first sprite
+                    if (bgObj.has("image")) {
+                        if (bgObj.getBoolean("image") && ss != null) {
+                            bgImage = ss.getSubImage(0, 0);
+                        } else {
+                            bgImage = new Image(bgObj.getString("image"));
+                            if (!json.has("width") && !json.has("height")) {
+                                collisionBox.setSize(bgImage.getWidth(), bgImage.getHeight());
+                            }
+                        }
+                    }
+
+                    // Set background color if set
+                    if (bgObj.has("color")) {
+                        int[] colors = bgObj.getJSONArray("color").getIntArray();
+                        color = new Color(colors[0], colors[1], colors[2]);
+                    }
+                } catch (JSONException e) {
+                    Log.error("There was an error trying to set a background");
+                    Log.error(e);
+                }
+            } else {
+                bgImage = new Image(json.getString("background"));
+                if (!json.has("width") && !json.has("height")) {
+                    collisionBox.setSize(bgImage.getWidth(), bgImage.getHeight());
+                }
+            }
+        }
+
+        // Prepare animations
+        if(json.has("animations")) {
+            JSONObject anims = json.getJSONObject("animations");
+            for(int i = 0; i < Animations.animations.length; i++) {
+                String anim = Animations.animations[i];
+                if(anims.has(Animations.animations[i])) {
+                    JSONObject animJSON = anims.getJSONObject(anim);
+                    int duration = animJSON.has("duration") ? animJSON.getInt("duration") : 10000;
+                    int[] positions;
+                    boolean rangedPos = false;
+                    if(animJSON.get("positions") instanceof JSONArray) {
+                        JSONArray posArray = animJSON.getJSONArray("positions");
+                        if( !(posArray.get(0) instanceof JSONArray)) {
+                            positions = posArray.getIntArray();
+                        } else {
+                            // [x1, y1], [x2, y2]
+                            int[] pos1 = posArray.getJSONArray(0).getIntArray();
+                            int[] pos2 = posArray.getJSONArray(1).getIntArray();
+                            positions = new int[] {pos1[0], pos1[1], pos2[0], pos2[1]};
+                            rangedPos = true;
+                        }
+                    } else {
+                        positions = new int[]{animJSON.getInt("positions")};
+                    }
+
+                    if(ss != null) {
+                        if(rangedPos) {
+                            setupAnimation(ss, Animations.values()[i], positions[0], positions[1], positions[2], positions[3], duration);
+                        } else {
+                            setupAnimation(ss, Animations.values()[i], positions, duration);
+                        }
+                    } else if (animJSON.has("sprite")) {
+                        JSONObject animSprite = animJSON.getJSONObject("sprite");
+                        if (!animSprite.has("image") || !animSprite.has("width") || !animSprite.has("height")) {
+                            throw new IllegalArgumentException(String.format("The animation %s sprite does not have all the required parameters (image, width, height)", anim));
+                        }
+
+                        SpriteSheet animSS = new SpriteSheet(animSprite.getString("image"), animSprite.getInt("width"), animSprite.getInt("height"));
+                        setupAnimation(animSS, Animations.values()[i], positions, duration);
+                    } else {
+                        throw new IllegalStateException(String.format("The animation %s does not have an sprite sheet", anim));
+                    }
+
+                    // Setup animation draw boxes
+
+                    if(animJSON.has("draw_rect")
+                            && animJSON.get("draw_rect") instanceof JSONArray
+                            && animJSON.getJSONArray("draw_rect").length() == 4) {
+                        Log.info(String.format("Animation %s has draw_rect", anim));
+                        double[] pbox = animJSON.getJSONArray("draw_rect").getDoubleArray();
+                        drawBoxes[i] = new float[4];
+                        for(int j = 0; j < 4; j++) {
+                            drawBoxes[i][j] = (float) pbox[j];
+                        }
+                    }
+
+                    if(animJSON.has("draw_rect_flipped")
+                            && animJSON.get("draw_rect_flipped") instanceof JSONArray
+                            && animJSON.getJSONArray("draw_rect_flipped").length() == 4) {
+                        Log.info(String.format("Animation %s has draw_rect_flipped", anim));
+                        drawBoxes[i] = new float[4];
+                        double[] pbox = animJSON.getJSONArray("draw_rect_flipped").getDoubleArray();
+                        for(int j = 0; j < 4; j++) {
+                            drawBoxes[i][j] = (float) pbox[j];
+                        }
+                    }
+                }
+            }
+        }
+    }
 	
 	/**
 	 * Actualizar la animación del jugador dependiendo de su estado actual
@@ -162,15 +302,15 @@ public class EntityRect extends Entity {
 			return;
 		}
 
-		if(color != Color.transparent) {
-			gc.getGraphics().setColor(color);
-			if(cam == null) {
-				gc.getGraphics().fill(collisionBox);
-			} else {
-				gc.getGraphics().fillRect(getX() - cam.getX(), getY() - cam.getY(), 
-						getWidth(), getHeight());
-			}
-		}
+        if(color != Color.transparent) {
+            gc.getGraphics().setColor(color);
+            if(cam == null) {
+                gc.getGraphics().fill(collisionBox);
+            } else {
+                gc.getGraphics().fillRect(getX() - cam.getX(), getY() - cam.getY(),
+                        getWidth(), getHeight());
+            }
+        }
 
 		// Se determina si la entity ha ido a la izquierda o no, para 
 		// voltear al sprite
@@ -179,6 +319,16 @@ public class EntityRect extends Entity {
 		} else if(speedX > 0) {
 			spriteFlipHorizontal = false;
 		}
+
+        if(bgImage != null) {
+            Image bgif = spriteFlipHorizontal ? bgImage.getFlippedCopy(true, false) : bgImage;
+            if(cam == null) {
+                bgif.draw(getX(), getY(), getWidth(), getHeight());
+            } else {
+                bgif.draw(getX() - cam.getX(), getY() - cam.getY(),
+                        getWidth(), getHeight());
+            }
+        }
 		
 		updateAnimation(); // Actualizar la animación actual		
 		
@@ -204,7 +354,7 @@ public class EntityRect extends Entity {
 				width = dbf[2];
 				height = dbf[3];
 			} else if(dbox != null || 
-				( spriteFlipHorizontal && dbf == null && dbox != null )
+				( spriteFlipHorizontal && dbf == null && dbox.length > 0 )
 			) {
 				finalX += dbox[0];
 				finalY += dbox[1];
@@ -219,7 +369,7 @@ public class EntityRect extends Entity {
 
 	/**
 	 * Realiza los movimientos del elemento basado en los elementos de un nivel
-	 * @param level El nivel que contiene otras entidades
+	 * @param lv El nivel que contiene otras entidades
 	 * @param delta Delta de diferencia de rendimiento del juego para no variar la velocidad
 	 */
 	public void move(int delta, Level lv) {
@@ -381,18 +531,24 @@ public class EntityRect extends Entity {
 	public float getY() { return collisionBox.getY(); }
 	public float getMaxY() { return collisionBox.getMaxY(); }
 	public void setX(float x) { collisionBox.setX(x); }
-	public void setY(float y) { collisionBox.setY(y); }
-	public void moveX(float x) { setX(getX() + x); }
-	public void moveY(float y) { setY(getY() + y); }
-	public void movePos(float x, float y) { moveX(x); moveY(y); }
-	public void setPos(float x, float y) { setX(x); setY(y); }
+	public void setY(float y) {
+        collisionBox.setY(y); }
+	public void moveX(float x) {
+        setX(getX() + x); }
+	public void moveY(float y) {
+        setY(getY() + y); }
+	public void movePos(float x, float y) {
+        moveX(x); moveY(y); }
+	public void setPos(float x, float y) {
+        setX(x); setY(y); }
 
 	// Shorthands de tamaño
 	public float getWidth() { return collisionBox.getWidth(); }
 	public float getHeight() { return collisionBox.getHeight(); }
 	public void setWidth(float w) { collisionBox.setWidth(w); }
 	public void setHeight(float h) { collisionBox.setHeight(h); }
-	public void setSize(float size){ setWidth(size); setHeight(size); }
+    public void setSize(float size){ setWidth(size); setHeight(size); }
+    public void setSize(float w, float h){ setWidth(w); setHeight(h); }
 	
 	public int getActualAnimation() { return actualAnimation; }
 
@@ -401,5 +557,5 @@ public class EntityRect extends Entity {
 	}
 
 	@Override
-	public void onCollision(Direction dir, Entity other) {};
+	public void onCollision(Direction dir, Entity other) {}
 }

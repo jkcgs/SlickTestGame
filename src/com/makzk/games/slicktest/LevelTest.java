@@ -1,5 +1,6 @@
 package com.makzk.games.slicktest;
 
+import com.makzk.games.entities.EntityRect;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -28,6 +29,13 @@ public class LevelTest extends BasicGameState {
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
 		gc.setShowFPS(true);
 		level = Level.loadFromFile("data/levels/level3.json", gc, (Main) game);
+
+        // New splendid entity type!! huehuehue
+        EntityRect tube = new EntityRect(gc, (Main) game, "tube");
+        tube.setPos(840, 302);
+        tube.setSize(101, 170);
+        level.addEntity(tube);
+
 		cam = new Camera(gc, level);
 		player = new Player(gc, (Main) game, level);
 		this.game = game;
@@ -80,5 +88,5 @@ public class LevelTest extends BasicGameState {
 	@Override
 	public int getID() {
 		return state;
-	};
+	}
 }

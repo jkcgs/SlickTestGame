@@ -1,18 +1,12 @@
 package com.makzk.games.entities;
 
-import static com.makzk.games.util.Animations.ANIMATION_FALL;
-import static com.makzk.games.util.Animations.ANIMATION_RUN;
-import static com.makzk.games.util.Animations.ANIMATION_STAND;
-
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.util.Log;
-
 import com.makzk.games.Main;
 import com.makzk.games.elements.Level;
 import com.makzk.games.util.Direction;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
 
 public class Enemy extends EntityRect {
 	private float initialX;
@@ -27,10 +21,11 @@ public class Enemy extends EntityRect {
 
 		// Configurar animaciones
 		try {
-			SpriteSheet sprite = new SpriteSheet("data/sprites/bugs_walk.png", 43, 82);
+			/*SpriteSheet sprite = new SpriteSheet("data/sprites/bugs_walk.png", 43, 82);
 			setupAnimation(sprite, ANIMATION_STAND, new int[]{0}, 1000);
 			setupAnimation(sprite, ANIMATION_RUN, 0, 0, 4, 0, 70);
-			setupAnimation(sprite, ANIMATION_FALL, new int[]{0}, 1000);
+			setupAnimation(sprite, ANIMATION_FALL, new int[]{0}, 1000);*/
+            setupFromConfig("bugs");
 		} catch (SlickException e) {
 			Log.error(e);
 		}

@@ -71,5 +71,5 @@ public class PhysicsTest extends BasicGameState {
 	@Override
 	public int getID() {
 		return ID;
-	};
+	}
 }
