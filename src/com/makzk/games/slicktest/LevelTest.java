@@ -30,12 +30,6 @@ public class LevelTest extends BasicGameState {
 		gc.setShowFPS(true);
 		level = Level.loadFromFile("data/levels/level3.json", gc, (Main) game);
 
-        // New splendid entity type!! huehuehue
-        EntityRect tube = new EntityRect(gc, (Main) game, "tube");
-        tube.setPos(840, 302);
-        tube.setSize(101, 170);
-        level.addEntity(tube);
-
 		cam = new Camera(gc, level);
 		player = new Player(gc, (Main) game, level);
 		this.game = game;

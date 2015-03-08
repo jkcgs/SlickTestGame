@@ -144,6 +144,13 @@ public class EntityRect extends Entity {
             collisionBox = new Rectangle(0,0,0,0);
         }
 
+        // JSONObject is a string
+        if(!(json.get(name) instanceof JSONObject)) {
+            bgImage = new Image(json.getString(name));
+            collisionBox.setSize(bgImage.getWidth(), bgImage.getHeight());
+            return;
+        }
+
         json = json.getJSONObject(name);
         if(json.has("width") && json.has("height")) {
             collisionBox.setSize((float) json.getDouble("width"), (float) json.getDouble("height"));
@@ -256,10 +263,10 @@ public class EntityRect extends Entity {
                             && animJSON.get("draw_rect_flipped") instanceof JSONArray
                             && animJSON.getJSONArray("draw_rect_flipped").length() == 4) {
                         Log.info(String.format("Animation %s has draw_rect_flipped", anim));
-                        drawBoxes[i] = new float[4];
+                        drawBoxesFlipped[i] = new float[4];
                         double[] pbox = animJSON.getJSONArray("draw_rect_flipped").getDoubleArray();
                         for(int j = 0; j < 4; j++) {
-                            drawBoxes[i][j] = (float) pbox[j];
+                            drawBoxesFlipped[i][j] = (float) pbox[j];
                         }
                     }
                 }
@@ -353,9 +360,7 @@ public class EntityRect extends Entity {
 				finalY += dbf[1];
 				width = dbf[2];
 				height = dbf[3];
-			} else if(dbox != null || 
-				( spriteFlipHorizontal && dbf == null && dbox.length > 0 )
-			) {
+			} else if( dbox != null ) {
 				finalX += dbox[0];
 				finalY += dbox[1];
 				width = dbox[2];

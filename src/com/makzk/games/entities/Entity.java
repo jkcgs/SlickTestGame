@@ -39,6 +39,7 @@ public abstract class Entity {
 
 	public boolean isGravityAffected() { return gravity; }
 	public boolean isSolid() { return solid; }
+    public void setSolid(boolean solid) { this.solid = solid; }
 	public boolean isTouchingWall() { return wall; }
 	public boolean isOnGround() { return onGround; }
 

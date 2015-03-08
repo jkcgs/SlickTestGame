@@ -95,6 +95,8 @@
     }
   },
   "tube": {
+    "width": 101,
+    "height": 170,
     "background": "data/sprites/pipe.png"
   }
 }

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
@@ -137,37 +138,67 @@ public class Level {
 	 */
 	public void addEntities(float[][] rects) {
 		for(float[] rect: rects) {
-			if(rect.length == 4) {
-				addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3]);
-			} else if(rect.length == 7) {
-				Color color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
-				addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3], color);
-			} else if(rect.length == 8 || rect.length == 5) {
-				switch((int)rect[4]) {
-				case 1: // Enemy
-					addEntity(EntityType.ENEMY, rect[0], rect[1], rect[2], rect[3]); break;
-				default: // EntityRect
-					if(rect.length == 5) {
-						addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3]);
-					} else {
-						Color color = new Color((int)rect[4], (int)rect[5], (int)rect[6]);
-						addEntity(EntityType.RECT, rect[0], rect[1], rect[2], rect[3], color);
-					}
-				}
-			}
+			addEntity(rect);
 		}
 	}
 	public void addEntities(JSONArray entities) {
-		float[][] rects = new float[entities.length()][];
 		for(int i = 0; i < entities.length(); i++) {
-			double[] rect = entities.getJSONArray(i).getDoubleArray();
-			rects[i] = new float[rect.length];
-			for(int j = 0; j < rect.length; j++) {
-				rects[i][j] = (float) rect[j];
-			}
+            // If the entity is an array of values [x,y,w,h,type]
+            if(entities.get(i) instanceof JSONArray) {
+                double[] rect = entities.getJSONArray(i).getDoubleArray();
+                float[] frect = new float[rect.length];
+                for (int j = 0; j < rect.length; j++) {
+                    frect[j] = (float) rect[j];
+                }
+                addEntity(frect);
+            } else if(entities.get(i) instanceof JSONObject) {
+                // If the entity is an object {type,x,y,width,height,solid}
+                JSONObject entity = entities.getJSONObject(i);
+                if(!entity.has("type")) {
+                    Log.error("Entity object from level json does not have a type defined");
+                    continue;
+                }
+
+                EntityRect ejson = null;
+                try {
+                    ejson = new EntityRect(gc, game, entity.getString("type"));
+                } catch (SlickException e) {
+                    Log.error(String.format("Could not create entity type '%s'", entity.getString("type")));
+                    Log.error(e);
+                    continue;
+                }
+
+                if(entity.has("x")) ejson.setX((float) entity.getDouble("x"));
+                if(entity.has("y")) ejson.setY((float) entity.getDouble("y"));
+                if(entity.has("width")) ejson.setWidth((float) entity.getDouble("width"));
+                if(entity.has("height")) ejson.setHeight((float) entity.getDouble("height"));
+
+                if(entity.has("solid")) ejson.setSolid(entity.getBoolean("solid"));
+                addEntity(ejson);
+            }
 		}
-		addEntities(rects);
 	}
+
+    public void addEntity(float[] entity) {
+        if(entity.length == 4) {
+            addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3]);
+        } else if(entity.length == 7) {
+            Color color = new Color((int)entity[4], (int)entity[5], (int)entity[6]);
+            addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3], color);
+        } else if(entity.length == 8 || entity.length == 5) {
+            switch((int)entity[4]) {
+                case 1: // Enemy
+                    addEntity(EntityType.ENEMY, entity[0], entity[1], entity[2], entity[3]); break;
+                default: // EntityRect
+                    if(entity.length == 5) {
+                        addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3]);
+                    } else {
+                        Color color = new Color((int)entity[4], (int)entity[5], (int)entity[6]);
+                        addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3], color);
+                    }
+            }
+        }
+    }
 
 	public void updateEntities(int delta) {
 		for(Entity entity : entities) {
