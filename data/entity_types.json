@@ -98,5 +98,9 @@
     "width": 101,
     "height": 170,
     "background": "data/sprites/pipe.png"
+  },
+  "castle": {
+    "background": "data/sprites/smb_castle.png",
+    "solid": false
   }
 }

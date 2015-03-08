@@ -164,6 +164,10 @@ public class EntityRect extends Entity {
             collisionBox.setY((float) json.getDouble("posY"));
         }
 
+        if(json.has("solid")) {
+            solid = json.getBoolean("solid");
+        }
+
         SpriteSheet ss = null;
         // Load default sprite sheet if file is indicated on configuration file
         if(json.has("sprite_sheet")) {

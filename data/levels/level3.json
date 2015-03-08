@@ -87,6 +87,7 @@
     [1105, 316, 43, 82, 1],
     [524, 365, 43, 82, 1],
     [701, 374, 43, 82, 1],
-    { "type": "tube", "x": 840, "y": 302, "width": 101, "height": 170, "solid": true }
+    { "type": "tube", "x": 840, "y": 302, "width": 101, "height": 170, "solid": true },
+    { "type": "castle", "width": 350, "height": 350, "x": 8000, "y": 122 }
   ]
 }
