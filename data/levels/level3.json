@@ -2,7 +2,13 @@
   "width": 9000,
   "height": 700,
   "playerInitial": { "x": 85, "y": 323 },
-  "bgColor": [10, 10, 10],
+  "background": {
+    "color": [80, 128, 255],
+    "image": "data/sprites/level_bg.png",
+    "height": 473,
+    "width": 582,
+    "repeatY": false
+  },
   "rects": [
     [0, 472, 2164, 105, 196, 153, 0],
     [100, 470, 20, 10, 196, 153, 0],

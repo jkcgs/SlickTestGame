@@ -5,10 +5,7 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
@@ -31,7 +28,13 @@ public class Level {
 	private float height;
 	private float playerInitialX = 0;
 	private float playerInitialY = 0;
-	private Color bgColor = Color.black;
+	private Color backgroundColor = Color.black;
+    private Image background = null;
+    private Image backgroundScaled = null;
+    private boolean bgRepeatX = true;
+    private boolean bgRepeatY = true;
+    private int bgWidth = 0;
+    private int bgHeight = 0;
 
 	public Level(GameContainer gc, Main game, float width, float height, 
 			float playerInitialX, float playerInitialY) {
@@ -86,11 +89,31 @@ public class Level {
 			}
 
             level = new Level(gc, game, width, height, pjInitialX, pjInitialY);
-			
-			if(json.has("bgColor")) {
-				int[] colorArr = json.getJSONArray("bgColor").getIntArray();
-				level.setBgColor(new Color(colorArr[0], colorArr[1], colorArr[2]));
-			}
+
+            if(json.has("background")) {
+                JSONObject bgObj = json.getJSONObject("background");
+                if(bgObj.has("color")) {
+                    try {
+                        int[] colorArr = bgObj.getJSONArray("color").getIntArray();
+                        level.setBackgroundColor(new Color(colorArr[0], colorArr[1], colorArr[2]));
+                    } catch (Exception e) {
+                        Log.error("Could not set a background color from json", e);
+                    }
+                }
+                if(bgObj.has("image")) {
+                    try {
+                        Image bg;
+                        bg = new Image(bgObj.getString("image"));
+                        level.setBackground(bg);
+                        level.setBackgroundWidth(bgObj.has("width") ? bgObj.getInt("width") : bg.getWidth());
+                        level.setBackgroundHeight(bgObj.has("height") ? bgObj.getInt("height") : bg.getHeight());
+                        if(bgObj.has("repeatX")) level.setBackgroundRepeatX(bgObj.getBoolean("repeatX"));
+                        if(bgObj.has("repeatY")) level.setBackgroundRepeatY(bgObj.getBoolean("repeatY"));
+                    } catch(SlickException e) {
+                        Log.error("Could not load background image", e);
+                    }
+                }
+            }
 
 			if(json.has("rects")) {
 				level.addEntities(json.getJSONArray("rects"));
@@ -228,9 +251,14 @@ public class Level {
 
 	public void drawAll(Graphics g, Camera cam) {
 		// Set color only if different
-		if(!g.getBackground().equals(bgColor)) {
-			g.setBackground(bgColor);
+		if(!g.getBackground().equals(backgroundColor)) {
+			g.setBackground(backgroundColor);
 		}
+
+        if(background != null) {
+            g.fillRect(0, 0, bgRepeatX ? width : bgWidth, bgRepeatY ? height : bgHeight, backgroundScaled,
+                    cam != null ? cam.getX() : 0, cam != null ? cam.getY() : 0);
+        }
 
 		for(Entity entity: entities) {
 			if(cam == null) {
@@ -289,8 +317,19 @@ public class Level {
 	public List<Entity> getEntities() { return entities; }
 	public StateBasedGame getGame() { return game; }
 	
-	public Color getBgColor() { return bgColor; }
-	public void setBgColor(Color bgColor) { this.bgColor = bgColor; }
+	public Color getBackgroundColor() { return backgroundColor; }
+	public void setBackgroundColor(Color bgColor) { this.backgroundColor = bgColor; }
     public Player getPlayer() { return player; }
     public void setPlayer(Player player) { this.player = player; }
+
+    public void setBackground(Image img) { background = img; updateBackground(); }
+    public void setBackgroundRepeatX(boolean repeat) { bgRepeatX = repeat; }
+    public void setBackgroundRepeatY(boolean repeat) { bgRepeatY = repeat; }
+    public void setBackgroundWidth(int width) { bgWidth = width; updateBackground(); }
+    public void setBackgroundHeight(int height) { bgHeight = height; updateBackground(); }
+
+    // Updates the scaled background instead of copying it every draw
+    public void updateBackground() {
+        backgroundScaled = background.getScaledCopy(bgWidth == 0 ? (int) width : bgWidth, bgHeight == 0 ? (int) height : bgHeight);
+    }
 }
