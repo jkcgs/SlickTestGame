@@ -56,6 +56,8 @@ public abstract class Entity {
 
     public Image getBgImage() {  return bgImage; }
     public void setBgImage(Image bgImage) { this.bgImage = bgImage; }
+
+    public abstract void reset();
 	
 	public abstract void onCollision(Direction dir, Entity other);
 	public abstract float getX();

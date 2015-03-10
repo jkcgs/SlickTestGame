@@ -136,4 +136,9 @@ public class Player extends EntityRect {
 	public int getControlLeft() { return controlLeft; }
 	public int getControlRight() { return controlRight; }
 	public int getControlJump() { return controlJump; }
+
+    public float getInitialX() { return initialX; }
+    public void setInitialX(float initialX) { this.initialX = initialX; }
+    public float getInitialY() { return initialY; }
+    public void setInitialY(float initialY) { this.initialY = initialY; }
 }

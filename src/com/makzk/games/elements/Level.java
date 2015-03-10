@@ -46,7 +46,9 @@ public class Level {
 		this.playerInitialY = playerInitialY;
         try {
             this.player = new Player(gc, game, this);
-            this.player.setPos(playerInitialX, playerInitialY);
+            this.player.setInitialX(playerInitialX);
+            this.player.setInitialY(playerInitialY);
+            this.player.reset();
         } catch (SlickException e) {
             Log.error("Could not load player");
             Log.error(e);
@@ -276,12 +278,11 @@ public class Level {
 	 * inicial.
 	 */
 	public void reset() {
-		for(Enemy enemy: getEnemies()) {
-			enemy.reset();
+		for(Entity entity: entities) {
+			entity.reset();
 		}
 		if(player != null) {
 			player.reset();
-			player.setPos(playerInitialX, playerInitialY);
 		}
 	}
 

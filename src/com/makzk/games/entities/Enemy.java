@@ -53,12 +53,14 @@ public class Enemy extends EntityRect {
 			}
 		}
 	}
-	
+
+    @Override
 	public void reset() {
 		speedX = .1f;
 		speedY = 0;
 		collisionBox.setX(initialX);
 		collisionBox.setY(initialY);
 		enabled = true;
+        Log.info("Reset enemy");
 	}
 }

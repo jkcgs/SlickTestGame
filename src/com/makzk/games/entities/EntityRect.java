@@ -540,16 +540,11 @@ public class EntityRect extends Entity {
 	public float getY() { return collisionBox.getY(); }
 	public float getMaxY() { return collisionBox.getMaxY(); }
 	public void setX(float x) { collisionBox.setX(x); }
-	public void setY(float y) {
-        collisionBox.setY(y); }
-	public void moveX(float x) {
-        setX(getX() + x); }
-	public void moveY(float y) {
-        setY(getY() + y); }
-	public void movePos(float x, float y) {
-        moveX(x); moveY(y); }
-	public void setPos(float x, float y) {
-        setX(x); setY(y); }
+	public void setY(float y) { collisionBox.setY(y); }
+	public void moveX(float x) { setX(getX() + x); }
+	public void moveY(float y) { setY(getY() + y); }
+	public void movePos(float x, float y) { moveX(x); moveY(y); }
+	public void setPos(float x, float y) { setX(x); setY(y); }
 
 	// Shorthands de tamaño
 	public float getWidth() { return collisionBox.getWidth(); }
@@ -565,6 +560,6 @@ public class EntityRect extends Entity {
 		return onGround ? 0 : System.currentTimeMillis() - lastTimeOnGround;
 	}
 
-	@Override
 	public void onCollision(Direction dir, Entity other) {}
+    public void reset(){}
 }
