@@ -3,7 +3,6 @@ package com.makzk.games.entities;
 import com.makzk.games.Main;
 import com.makzk.games.elements.Level;
 import com.makzk.games.util.Direction;
-import org.json.JSONObject;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;

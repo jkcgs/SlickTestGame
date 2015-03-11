@@ -20,6 +20,9 @@ import com.makzk.games.util.Camera;
 import com.makzk.games.util.EntityType;
 import com.makzk.games.util.Utils;
 
+/**
+ * Un nivel contiene todas las entidades que interactuan entre si, como el jugador y los enemigos
+ */
 public class Level {
 	private GameContainer gc;
 	private Main game;
@@ -37,6 +40,13 @@ public class Level {
     private int bgWidth = 0;
     private int bgHeight = 0;
 
+    /**
+     * Crea un objeto Level según un tamaño
+     * @param gc El contenedor del juego
+     * @param game El juego que contiene carga al nivel
+     * @param width El ancho del nivel
+     * @param height El alto del nivel
+     */
 	public Level(GameContainer gc, Main game, float width, float height) {
 		this.gc = gc;
 		this.game = game;
@@ -44,19 +54,20 @@ public class Level {
 		this.height = height;
     }
 
-	public Level(GameContainer gc, Main game, float width) {
-		this(gc, game, width, gc.getHeight());
-	}
-
+    /**
+     * Crea un objeto Level con el tamaño del contenedor del juego
+     * @param gc El contenedor del juego
+     * @param game El juego que carga el nivel
+     */
 	public Level(GameContainer gc, Main game) {
 		this(gc, game, gc.getWidth(), gc.getHeight());
 	}
 	
 	/**
 	 * Crear un nivel desde un archivo json
-	 * @param filepath La ubicaci�n del archivo. Normalmente estar�an en data/levels
+	 * @param filepath La ubicación del archivo. Normalmente estarían en "data/levels"
 	 * @param gc El contenedor del juego
-	 * @return El nivel dise�ado en base al archivo json
+	 * @return El nivel diseñado en base al archivo json
 	 */
 	public static Level loadFromFile(String filepath, GameContainer gc, Main game) {
 		Level level;
@@ -132,6 +143,11 @@ public class Level {
 	public void addEntity(EntityType type, float x, float y, float width, float height) {
 		addEntity(type, x, y, width, height, null);
 	}
+
+    /**
+     * Agrega un Entity al nivel
+     * @param entity El Entity a agregar
+     */
     public void addEntity(Entity entity) {
         entities.add(entity);
     }
@@ -184,22 +200,16 @@ public class Level {
     }
 
     public void addEntity(float[] entity) {
-        if(entity.length == 4) {
-            addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3]);
-        } else if(entity.length == 7) {
+        if(entity.length == 7) {
             Color color = new Color((int)entity[4], (int)entity[5], (int)entity[6]);
             addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3], color);
-        } else if(entity.length == 8 || entity.length == 5) {
+        } else if(entity.length == 5) {
             switch((int)entity[4]) {
                 case 1: // Enemy
                     addEntity(EntityType.ENEMY, entity[0], entity[1], entity[2], entity[3]); break;
                 default: // EntityRect
-                    if(entity.length == 5) {
-                        addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3]);
-                    } else {
-                        Color color = new Color((int)entity[4], (int)entity[5], (int)entity[6]);
-                        addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3], color);
-                    }
+                    Color color = new Color((int)entity[4], (int)entity[5], (int)entity[6]);
+                    addEntity(EntityType.RECT, entity[0], entity[1], entity[2], entity[3], color);
             }
         }
     }

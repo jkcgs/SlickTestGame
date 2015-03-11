@@ -1,0 +1,32 @@
+{
+  "//": [
+    "Este archivo contiene el tipo de entidades a cargar, que incluye las principales características de una entidad",
+    "Se puede definir el ancho y el alto; las animaciones (stand, jump, run, fall) con sus sprites"
+  ],
+  "base_example": {
+    "width": 43,
+    "height": 82,
+    "sprite_sheet": "data/sprites/enemy_sprite.png",
+    "background": {
+      "//comment": "Color e imagen de fondo. Si la imagen es definida como 'true', se usa el primer sprite del sprite sheet",
+      "image": "data/sprites/enemy.png",
+      "image_": true,
+      "color": [0, 0, 0]
+    },
+    "//comment": "If size (w&h) is not defined, but background does, the size will be the background size",
+    "background_": "data/sprites/enemy_sprite.png",
+    "animations": {
+      "running": {
+        "sprite": {
+          "//comment": "The width and height is the size of each sprite in the sprite sheet image",
+          "image": "data/sprites/enemy_walk.png",
+          "width": 30,
+          "height": 50
+        },
+        "positions": [0,1,2,3],
+        "positions_": [[0,0],[0,5]],
+        "duration": 1000
+      }
+    }
+  },
+}

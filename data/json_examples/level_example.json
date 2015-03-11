@@ -1,0 +1,35 @@
+{
+  "width": 9000,
+  "height": 700,
+  "//_player": "Es el mismo diseño de los entities de abajo",
+  "player": { "type": "player", "x": 85, "y": 323, "zIndex": 1 },
+  "background": {
+    "//color": "[r, g, b], 0-255",
+    "color": [80, 128, 255],
+    "image": "data/sprites/level_bg.png",
+    "height": 473,
+    "width": 582,
+    "//repeat": "Los valores repeat(X/Y) por defecto son true, no es necesario definirlos si necesitas que se repita en ese eje",
+    "repeatY": false,
+    "repeatX": true
+  },
+  "//rects": "[x, y, width, height, color_r, color_g, color_b]",
+  "rects": [
+    [0, 472, 2164, 105, 196, 153, 0]
+  ],
+  "//entity_examples": {
+    "entity": ["x", "y", "width", "height", "entity_type"],
+    "entity_from_json": {"type":"type_name", "x": "double", "y": "double", "width": "double", "height": "double", "solid": "boolean"}
+  },
+  "//entities": [
+    "'type' es el tipo de entity en entity_types.json, desde donde se cargan los ajustes, como el fondo, el tamaño y las animaciones",
+    "El arreglo está en el formato [x, y, ancho, alto, tipo], donde el tipo es {1:Enemy, 2:Rect}, pronto a ser obsoleto",
+    "El valor zIndex define la prioridad de dibujado en el eje Z (delante o detrás), mientras más alto el valor,",
+      "más 'adelante' será dibujado el objeto"
+  ],
+  "entities": [
+    [701, 374, 43, 82, 1],
+    { "type": "tube", "x": 840, "y": 302, "width": 101, "height": 170, "solid": true, "zIndex": 2 },
+    { "type": "castle", "width": 350, "height": 350, "x": 8000, "y": 122 }
+  ]
+}
