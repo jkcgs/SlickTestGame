@@ -18,6 +18,7 @@ public class Enemy extends EntityRect {
 		gravity = true;
 		solid = true;
 		keepOnScreen = false;
+        isStatic = false;
 
 		// Configurar animaciones
 		try {
@@ -61,6 +62,5 @@ public class Enemy extends EntityRect {
 		collisionBox.setX(initialX);
 		collisionBox.setY(initialY);
 		enabled = true;
-        Log.info("Reset enemy");
 	}
 }

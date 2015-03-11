@@ -279,7 +279,9 @@ public class Level {
 	 */
 	public void reset() {
 		for(Entity entity: entities) {
-			entity.reset();
+            if(!entity.isStatic()) {
+                entity.reset();
+            }
 		}
 		if(player != null) {
 			player.reset();

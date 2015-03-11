@@ -28,6 +28,7 @@ public abstract class Entity {
 	protected float nextY = 0;
 	protected boolean enabled = true;
 	protected long lastTimeOnGround = 0;
+    protected boolean isStatic = true;
 
 	public Entity(GameContainer gc, Main game) {
 		this.gc = gc;
@@ -70,4 +71,7 @@ public abstract class Entity {
 	public abstract void draw(Camera cam);
 	public abstract void move(int delta);
 	public abstract void move(int delta, Level lv);
+
+    public boolean isStatic() { return isStatic; }
+    public void setStatic(boolean isStatic) { this.isStatic = isStatic; }
 }

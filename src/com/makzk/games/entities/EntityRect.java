@@ -382,7 +382,7 @@ public class EntityRect extends Entity {
 	 * @param delta Delta de diferencia de rendimiento del juego para no variar la velocidad
 	 */
 	public void move(int delta, Level lv) {
-		if(!enabled) {
+		if(!enabled || isStatic) {
 			return;
 		}
 
@@ -435,6 +435,10 @@ public class EntityRect extends Entity {
 			lastTimeOnGround = System.currentTimeMillis();
 		}
 	}
+
+    public void move(int delta) {
+        move(delta, null);
+    }
 
 	public void resolveCollisions(Entity e) {
 		// Si el elemento no es sólido, no hay qué revisar
@@ -497,10 +501,6 @@ public class EntityRect extends Entity {
 
 			
 		}
-	}
-	
-	public void move(int delta) {
-		move(delta, null);
 	}
 	
 	/**

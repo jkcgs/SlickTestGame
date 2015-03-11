@@ -18,6 +18,7 @@ public class Pad extends EntityRect {
 		super(gc, game, new Rectangle(0, 0, 10, 100));
 		keepOnScreen = true;
 		color = Color.white;
+        isStatic = false;
 	}
 	
 	public Pad(GameContainer gc) {

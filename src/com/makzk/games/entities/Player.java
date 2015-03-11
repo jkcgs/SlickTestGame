@@ -22,6 +22,7 @@ public class Player extends EntityRect {
 	public Player(GameContainer gc, Main game, Rectangle rect) throws SlickException {
 		super(gc, game, rect);
 		gravity = true;
+        isStatic = false;
 		initialX = rect.getX();
 		initialY = rect.getY();
 

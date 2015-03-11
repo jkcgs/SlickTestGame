@@ -15,6 +15,7 @@ public class Ball extends EntityRect {
 		super(gc, game, new Rectangle(0, 0, 10, 10));
 		speed = .5f;
 		color = Color.white;
+        isStatic = false;
 	}
 
 	public Ball(GameContainer gc) {
