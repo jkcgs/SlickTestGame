@@ -45,10 +45,11 @@ public class Level {
 		this.playerInitialX = playerInitialX;
 		this.playerInitialY = playerInitialY;
         try {
-            this.player = new Player(gc, game, this);
-            this.player.setInitialX(playerInitialX);
-            this.player.setInitialY(playerInitialY);
-            this.player.reset();
+            Player player = new Player(gc, game, this);
+            player.setInitialX(playerInitialX);
+            player.setInitialY(playerInitialY);
+            player.reset();
+            setPlayer(player);
         } catch (SlickException e) {
             Log.error("Could not load player");
             Log.error(e);
@@ -136,10 +137,12 @@ public class Level {
 		case RECT:
 			EntityRect r = new EntityRect(gc, game, new Rectangle(x, y, width, height), this);
 			r.setColor(color);
+            r.setLevel(this);
 			entities.add(r);
 			break;
 		case ENEMY:
 			Enemy e = new Enemy(gc, new Rectangle(x, y, width, height), this);
+            e.setLevel(this);
 			entities.add(e);
 		}
 	}
@@ -195,6 +198,7 @@ public class Level {
                 EntityRect ejson = null;
                 try {
                     ejson = new EntityRect(gc, game, entity.getString("type"));
+                    ejson.setLevel(this);
                 } catch (SlickException e) {
                     Log.error(String.format("Could not create entity type '%s'", entity.getString("type")));
                     Log.error(e);
@@ -235,16 +239,14 @@ public class Level {
 
 	public void updateEntities(int delta) {
 		for(Entity entity : entities) {
-			entity.move(delta, this);
+			entity.move(delta);
 
 			if(entity instanceof Enemy) {
 				if(entity.getX() < 0 || entity.getY() > this.getHeight()) {
-					((Enemy) entity).reset();
+					entity.reset();
 				}
 			}
 		}
-
-        player.move(delta);
 	}
 
 	public void drawAll(Graphics g) {
@@ -269,8 +271,6 @@ public class Level {
 				entity.draw(cam);
 			}
 		}
-
-        player.draw(cam);
 	}
 	
 	/**
@@ -282,9 +282,6 @@ public class Level {
             if(!entity.isStatic()) {
                 entity.reset();
             }
-		}
-		if(player != null) {
-			player.reset();
 		}
 	}
 
@@ -323,7 +320,22 @@ public class Level {
 	public Color getBackgroundColor() { return backgroundColor; }
 	public void setBackgroundColor(Color bgColor) { this.backgroundColor = bgColor; }
     public Player getPlayer() { return player; }
-    public void setPlayer(Player player) { this.player = player; }
+
+    /**
+     * Sets the player for the level. It's added/replaced to the level's entities.
+     * @param player The player to add.
+     */
+    public void setPlayer(Player player) {
+        this.player = player;
+        for(int i = 0; i < entities.size(); i++) {
+            if(entities.get(i) instanceof Player) {
+                entities.set(i, player);
+                return;
+            }
+        }
+
+        entities.add(player);
+    }
 
     public void setBackground(Image img) { background = img; updateBackground(); }
     public void setBackgroundRepeatX(boolean repeat) { bgRepeatX = repeat; }
