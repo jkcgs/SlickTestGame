@@ -9,7 +9,7 @@ import com.makzk.games.util.Camera;
 import com.makzk.games.util.Direction;
 import org.newdawn.slick.Image;
 
-public abstract class Entity {
+public abstract class Entity implements Comparable<Entity> {
 	protected GameContainer gc;
 	protected Main game;
 	protected float speedX = 0;
@@ -29,11 +29,16 @@ public abstract class Entity {
 	protected boolean enabled = true;
 	protected long lastTimeOnGround = 0;
     protected boolean isStatic = true;
+    protected int zIndex = 0;
 
 	public Entity(GameContainer gc, Main game) {
 		this.gc = gc;
 		this.game = game;
 	}
+
+    public int compareTo(Entity other) {
+        return ((Integer)this.zIndex).compareTo(other.getzIndex());
+    }
 
 	public Color getColor() { return color; }
 	public void setColor(Color color) { this.color = color == null ? Color.transparent : color; }
@@ -74,4 +79,7 @@ public abstract class Entity {
 
     public boolean isStatic() { return isStatic; }
     public void setStatic(boolean isStatic) { this.isStatic = isStatic; }
+
+    public int getzIndex() { return zIndex; }
+    public void setzIndex(int zIndex) { this.zIndex = zIndex; }
 }

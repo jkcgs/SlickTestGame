@@ -41,6 +41,38 @@ public class EntityRect extends Entity {
         setupFromConfig(entityConfigType);
     }
 
+    /**
+     * Crea una instancia de EntityRect dado un JSONObject con propiedades.
+     * @param json El JSONObject que contiene las propiedades para el EntityRect
+     * @return El EntityRect generado
+     */
+    public static EntityRect createFromJSON(GameContainer gc, Main game, Level level, JSONObject json) {
+        if(!json.has("type")) {
+            Log.error("Entity object from level json does not have a type defined");
+            return null;
+        }
+
+        EntityRect ejson;
+        try {
+            ejson = new EntityRect(gc, game, json.getString("type"));
+            ejson.setLevel(level);
+        } catch (SlickException e) {
+            Log.error(String.format("Could not create entity type '%s'", json.getString("type")));
+            Log.error(e);
+            return null;
+        }
+
+        if(json.has("x")) ejson.setX((float) json.getDouble("x"));
+        if(json.has("y")) ejson.setY((float) json.getDouble("y"));
+        if(json.has("width")) ejson.setWidth((float) json.getDouble("width"));
+        if(json.has("height")) ejson.setHeight((float) json.getDouble("height"));
+
+        if(json.has("solid")) ejson.setSolid(json.getBoolean("solid"));
+        if(json.has("zIndex")) ejson.setzIndex(json.getInt("zIndex"));
+
+        return ejson;
+    }
+
 	/**
 	 * Configurar una animación para una posición determinada, determinado
 	 * por un rango de posiciones de la grilla de sprites del SpriteSheet
@@ -276,6 +308,28 @@ public class EntityRect extends Entity {
                 }
             }
         }
+    }
+
+    /**
+     * Configura el EntityRect desde un JSONObject con sus propiedades
+     * @param json
+     */
+    public void setupFromJSON(JSONObject json) {
+        try {
+            setupFromConfig(json.getString("type"));
+        } catch (SlickException e) {
+            Log.error(String.format("Could not create entity type '%s'", json.getString("type")));
+            Log.error(e);
+            return;
+        }
+
+        if(json.has("x")) setX((float) json.getDouble("x"));
+        if(json.has("y")) setY((float) json.getDouble("y"));
+        if(json.has("width")) setWidth((float) json.getDouble("width"));
+        if(json.has("height")) setHeight((float) json.getDouble("height"));
+
+        if(json.has("solid")) setSolid(json.getBoolean("solid"));
+        if(json.has("zIndex")) setzIndex(json.getInt("zIndex"));
     }
 	
 	/**

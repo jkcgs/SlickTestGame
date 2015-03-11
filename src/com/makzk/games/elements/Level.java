@@ -1,6 +1,7 @@
 package com.makzk.games.elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -36,29 +37,12 @@ public class Level {
     private int bgWidth = 0;
     private int bgHeight = 0;
 
-	public Level(GameContainer gc, Main game, float width, float height, 
-			float playerInitialX, float playerInitialY) {
+	public Level(GameContainer gc, Main game, float width, float height) {
 		this.gc = gc;
 		this.game = game;
 		this.width = width;
 		this.height = height;
-		this.playerInitialX = playerInitialX;
-		this.playerInitialY = playerInitialY;
-        try {
-            Player player = new Player(gc, game, this);
-            player.setInitialX(playerInitialX);
-            player.setInitialY(playerInitialY);
-            player.reset();
-            setPlayer(player);
-        } catch (SlickException e) {
-            Log.error("Could not load player");
-            Log.error(e);
-        }
     }
-	
-	public Level(GameContainer gc, Main game, float width, float height) {
-		this(gc, game, width, height, 0, 0);
-	}
 
 	public Level(GameContainer gc, Main game, float width) {
 		this(gc, game, width, gc.getHeight());
@@ -83,15 +67,13 @@ public class Level {
 			float width = json.has("width") ? json.getInt("width") : gc.getWidth();
 			float height = json.has("height") ? json.getInt("height") : gc.getHeight();
 
-            int pjInitialX = 0, pjInitialY = 0;
+            level = new Level(gc, game, width, height);
 
-			if(json.has("playerInitial")) {
-				JSONObject pjInitial = json.getJSONObject("playerInitial");
-				pjInitialX = pjInitial.has("x") ? pjInitial.getInt("x") : 0;
-                pjInitialY = pjInitial.has("y") ? pjInitial.getInt("y") : 0;
-			}
-
-            level = new Level(gc, game, width, height, pjInitialX, pjInitialY);
+            if(json.has("player")) {
+                Player player = new Player(gc, game, level);
+                player.setupFromJSON(json.getJSONObject("player"));
+                level.setPlayer(player);
+            }
 
             if(json.has("background")) {
                 JSONObject bgObj = json.getJSONObject("background");
@@ -128,7 +110,8 @@ public class Level {
 			Log.error("Error while parsing JSON file", e);
 			return null;
 		}
-		
+
+        level.sortEntities();
 		return level;
 	}
 	
@@ -189,32 +172,16 @@ public class Level {
                 addEntity(frect);
             } else if(entities.get(i) instanceof JSONObject) {
                 // If the entity is an object {type,x,y,width,height,solid}
-                JSONObject entity = entities.getJSONObject(i);
-                if(!entity.has("type")) {
-                    Log.error("Entity object from level json does not have a type defined");
-                    continue;
-                }
-
-                EntityRect ejson = null;
-                try {
-                    ejson = new EntityRect(gc, game, entity.getString("type"));
-                    ejson.setLevel(this);
-                } catch (SlickException e) {
-                    Log.error(String.format("Could not create entity type '%s'", entity.getString("type")));
-                    Log.error(e);
-                    continue;
-                }
-
-                if(entity.has("x")) ejson.setX((float) entity.getDouble("x"));
-                if(entity.has("y")) ejson.setY((float) entity.getDouble("y"));
-                if(entity.has("width")) ejson.setWidth((float) entity.getDouble("width"));
-                if(entity.has("height")) ejson.setHeight((float) entity.getDouble("height"));
-
-                if(entity.has("solid")) ejson.setSolid(entity.getBoolean("solid"));
-                addEntity(ejson);
+                addEntity((JSONObject) entities.get(i));
             }
 		}
+
+        Collections.sort(this.entities);
 	}
+
+    public void addEntity(JSONObject entity) {
+        addEntity(EntityRect.createFromJSON(gc, game, this, entity));
+    }
 
     public void addEntity(float[] entity) {
         if(entity.length == 4) {
@@ -335,7 +302,20 @@ public class Level {
         }
 
         entities.add(player);
+        sortEntities();
     }
+
+    /**
+     * Sets the player from a JSONObject, readed as an entity. Adds it first to the entities list
+     * then sets the field player from that list.
+     * @param json The JSONObject that contains the Player properties
+     */
+    public void setPlayer(JSONObject json) throws SlickException {
+        Player player = new Player(gc, game);
+        player.setupFromConfig(json.getString("type"));
+    }
+
+    public void sortEntities() { Collections.sort(entities); }
 
     public void setBackground(Image img) { background = img; updateBackground(); }
     public void setBackgroundRepeatX(boolean repeat) { bgRepeatX = repeat; }
