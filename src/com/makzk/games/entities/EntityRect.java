@@ -323,8 +323,18 @@ public class EntityRect extends Entity {
             return;
         }
 
-        if(json.has("x")) setX((float) json.getDouble("x"));
-        if(json.has("y")) setY((float) json.getDouble("y"));
+        if(json.has("x")) {
+            setX((float) json.getDouble("x"));
+            if(this instanceof Player) {
+                ((Player) this).setInitialX(json.getInt("x"));
+            }
+        }
+        if(json.has("y")) {
+            setY((float) json.getDouble("y"));
+            if(this instanceof Player) {
+                ((Player) this).setInitialY(json.getInt("y"));
+            }
+        }
         if(json.has("width")) setWidth((float) json.getDouble("width"));
         if(json.has("height")) setHeight((float) json.getDouble("height"));
 

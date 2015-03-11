@@ -33,22 +33,17 @@ public class Player extends EntityRect {
 		}
 	}
 
-	public Player(GameContainer gc, Main game, float initialX, float initialY) throws SlickException {
-		this(gc, game, new Rectangle(initialX, initialY, 50, 105));
-	}
-
 	public Player(GameContainer gc, Main game) throws SlickException {
 		this(gc, game, new Rectangle(0, 0, 50, 105));
 	}
 
 	public Player(GameContainer gc, Main game, Level level) throws SlickException {
-		this(gc, game, new Rectangle(level.getPjInitialX(), level.getPjInitialY(), 50, 105));
+		this(gc, game, new Rectangle(0, 0, 50, 105));
 		setLevel(level);
 	}
 	
 	public Player(GameContainer gc, Level level) throws SlickException {
-		this(gc, null, new Rectangle(level.getPjInitialX(), level.getPjInitialY(), 50, 105));
-		setLevel(level);
+		this(gc, null, level);
 	}
 	
 	/**

@@ -30,8 +30,6 @@ public class Level {
     private Player player;
 	private float width;
 	private float height;
-	private float playerInitialX = 0;
-	private float playerInitialY = 0;
 	private Color backgroundColor = Color.black;
     private Image background = null;
     private Image backgroundScaled = null;
@@ -285,11 +283,6 @@ public class Level {
 	public void setWidth(float width) { this.width = width; }
 	public float getHeight() { return height; }
 	public void setHeight(float height) { this.height = height; }
-
-	public float getPjInitialX() { return playerInitialX; }
-	public float getPjInitialY() { return playerInitialY; }
-	public void setPjInitialX(float initialX) { playerInitialX = initialX; }
-	public void setPjInitialY(float initialY) { playerInitialY = initialY; }
 
 	public List<Entity> getEntities() { return entities; }
 	public StateBasedGame getGame() { return game; }
