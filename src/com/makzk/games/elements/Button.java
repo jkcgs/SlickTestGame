@@ -18,12 +18,20 @@ public class Button {
     public Button(Image img, float x, float y) {
         this(img, x, y, null);
     }
+    
+    public Button(Image img) {
+    	this(img,0,0);
+    }
 
     public void draw() {
         img.draw(x, y);
     }
 
     public void drawCentered() {
+        img.drawCentered(x, y);
+    }
+    
+    public void drawCentered(float x, float y) {
         img.drawCentered(x, y);
     }
 
@@ -51,4 +59,20 @@ public class Button {
     public float getY() {
         return y;
     }
+    
+    public float getHeight () {
+    	return img.getHeight();
+    }
+    
+    public float getWidth () {
+    	return img.getWidth();
+    }
+	public void setX(float x) {
+		this.x = x;
+	}
+	public void setY(float y) {
+		this.y = y;
+	}
+    
+    
 }

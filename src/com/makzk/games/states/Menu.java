@@ -8,16 +8,19 @@ import org.newdawn.slick.state.StateBasedGame;
 import com.makzk.games.Main;
 import com.makzk.games.elements.Button;
 import com.makzk.games.util.ImageManager;
+import com.makzk.games.util.MenuManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Menu extends BasicGameState {
+	private MenuManager menuMan = new MenuManager();
 	private int state, index = 0;
 	private Rectangle rekt = new Rectangle(0,0,350,80);
     private Image imgWallpaper, imgLogo, imgEngine;
     private List<Button> buttons = new ArrayList<>();
 	public Menu(int state) { this.state = state; }
+
 
 	@Override
 	public void init(final GameContainer gc, final StateBasedGame game)
@@ -26,18 +29,31 @@ public class Menu extends BasicGameState {
         imgLogo = img.getImage(0);
         imgWallpaper = img.getImage(4);
         imgEngine = img.getImage(5);
-
-        buttons.add(new Button(img.getImage(1), gc.getWidth()/2, 250)); // new game
-        buttons.add(new Button(img.getImage(2), gc.getWidth()/2, 350)); // load
-        buttons.add(new Button(img.getImage(3), gc.getWidth()/2, 450)); // exit
-
-        buttons.get(0).setRunnable(new Runnable() { // new game
+        
+        menuMan.addButton(new Button(img.getImage(1)), gc); //New game
+        menuMan.addButton(new Button(img.getImage(2)), gc); //Load
+        menuMan.addButton(new Button(img.getImage(6)), gc); //Options
+        menuMan.addButton(new Button(img.getImage(3)), gc); //Exit
+        
+        
+        Runnable runGame = new Runnable() { // new game
             @Override
             public void run() {
                 game.enterState(Main.play);
             }
-        });
-        buttons.get(2).setRunnable(new Runnable() { // exit
+        };
+        
+        menuMan.getButtons().get(0).setRunnable(runGame);
+        
+        /*buttons.get(2).setRunnable(new Runnable() { // options)
+        	@Override
+        	public void run() {
+        		game.enterState(index);
+        	}
+        })*/
+        
+        
+        buttons.get(3).setRunnable(new Runnable() { // exit
             @Override
             public void run() {
                 gc.exit();
@@ -52,12 +68,10 @@ public class Menu extends BasicGameState {
         imgWallpaper.drawCentered(gc.getWidth()/2, 350);
         imgLogo.drawCentered(gc.getWidth()/2, 100);
         imgEngine.draw(1000, 450);
-
+        menuMan.draw();
         g.setColor(Color.white);
         g.fill(rekt);
-        for(Button btn : buttons) {
-            btn.drawCentered();
-        }
+        
 	}
 
 	@Override

@@ -17,7 +17,8 @@ public class ImageManager {
 				new Image("data/sprites/LoadGame.png"), 
 				new Image("data/sprites/Exit.png"), 
 				new Image("data/sprites/Wallpaper.png"),
-				new Image("data/sprites/clocksmall.png")
+				new Image("data/sprites/clocksmall.png"),
+				new Image("data/sprites/options.png")
 			};
 		} catch (SlickException e) {
 			Log.error("Error Malvado");
@@ -36,6 +37,7 @@ public class ImageManager {
 	 *		3.- Exit
 	 *  	4.- Wallpaper
 	 *  	5.- Clockwork Logo 
+	 *  	6.- Options
 	 * 
 	 */
 	
