@@ -8,19 +8,19 @@ import org.newdawn.slick.state.StateBasedGame;
 import com.makzk.games.Main;
 import com.makzk.games.elements.Button;
 import com.makzk.games.util.ImageManager;
-import com.makzk.games.util.MenuManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Menu extends BasicGameState {
-	private MenuManager menuMan = new MenuManager();
-	private int state, index = 0;
-	private Rectangle rekt = new Rectangle(0,0,350,80);
+	private int state;
     private Image imgWallpaper, imgLogo, imgEngine;
-    private List<Button> buttons = new ArrayList<>();
-	public Menu(int state) { this.state = state; }
-
+    private int index = 0;
+    private ArrayList<Button> buttons = new ArrayList<>();
+    private Rectangle bg = new Rectangle(0,0,350,80);
+    private float space = 50f;
+    private float y = 200;
+    private float borderSize = 10;
+    public Menu(int state) { this.state = state; }
 
 	@Override
 	public void init(final GameContainer gc, final StateBasedGame game)
@@ -29,11 +29,11 @@ public class Menu extends BasicGameState {
         imgLogo = img.getImage(0);
         imgWallpaper = img.getImage(4);
         imgEngine = img.getImage(5);
-        
-        menuMan.addButton(new Button(img.getImage(1)), gc); //New game
-        menuMan.addButton(new Button(img.getImage(2)), gc); //Load
-        menuMan.addButton(new Button(img.getImage(6)), gc); //Options
-        menuMan.addButton(new Button(img.getImage(3)), gc); //Exit
+
+        addButton(new Button(img.getImage(1)), gc); //New game
+        addButton(new Button(img.getImage(2)), gc); //Load
+        addButton(new Button(img.getImage(6)), gc); //Options
+        addButton(new Button(img.getImage(3)), gc); //Exit
         
         
         Runnable runGame = new Runnable() { // new game
@@ -43,7 +43,7 @@ public class Menu extends BasicGameState {
             }
         };
         
-        menuMan.getButtons().get(0).setRunnable(runGame);
+        buttons.get(0).setRunnable(runGame);
         
         /*buttons.get(2).setRunnable(new Runnable() { // options)
         	@Override
@@ -64,31 +64,35 @@ public class Menu extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
-		
+
         imgWallpaper.drawCentered(gc.getWidth()/2, 350);
-        imgLogo.drawCentered(gc.getWidth()/2, 100);
+        imgLogo.drawCentered(gc.getWidth() / 2, 100);
         imgEngine.draw(1000, 450);
-        menuMan.draw();
+
         g.setColor(Color.white);
-        g.fill(rekt);
-        
+        g.fill(bg);
+        for (Button button: buttons) {
+            button.draw();
+        }
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
-		rekt.setCenterX(gc.getWidth()/2);
-        rekt.setCenterY(buttons.get(index).getY());
+        bg.setWidth(buttons.get(index).getWidth() + (borderSize * 2));
+        bg.setHeight(buttons.get(index).getHeight() + (borderSize * 2));
+        bg.setCenterX(gc.getWidth()/2);
+        bg.setY(buttons.get(index).getY() - borderSize);
 	}
 
 	public void keyPressed(int key, char c) {
-		if(key == Input.KEY_UP) index--;
-		if(key == Input.KEY_DOWN) index++;
+        if(key == Input.KEY_UP) index--;
+        if(key == Input.KEY_DOWN) index++;
 
-		if(index < 0) index = buttons.size() - 1;
-		if(index >= buttons.size()) index = 0;
+        if(index < 0) index = buttons.size() - 1;
+        if(index >= buttons.size()) index = 0;
 
-		if (key == Input.KEY_ENTER) runAction();
+        if (key == Input.KEY_ENTER) runAction();
 	}
 
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
@@ -123,4 +127,15 @@ public class Menu extends BasicGameState {
 		return state;
 	}
 
+    public void addButton(Button b, GameContainer gc) {
+        buttons.add(b);
+        float lastY = y;
+        for (int i = 0;  i < buttons.size(); i++) {
+            if (i>0) {
+                lastY += space + (buttons.get(i-1).getHeight()/2);
+            }
+            buttons.get(i).setX((float)gc.getWidth()/2-(buttons.get(i).getWidth()/2));
+            buttons.get(i).setY(lastY);
+        }
+    }
 }

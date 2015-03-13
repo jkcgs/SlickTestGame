@@ -27,17 +27,7 @@ public class Button {
         img.draw(x, y);
     }
 
-    public void drawCentered() {
-        img.drawCentered(x, y);
-    }
-    
-    public void drawCentered(float x, float y) {
-        img.drawCentered(x, y);
-    }
-
     public boolean isOver(int mx, int my) {
-        float x = this.x - (img.getWidth() / 2);
-        float y = this.y - (img.getHeight() / 2);
         return (mx >= x && mx < x + img.getWidth())
                 && (my >= y && my < y + img.getHeight());
     }
